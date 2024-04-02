@@ -26,13 +26,28 @@ public class bone : MonoBehaviour
     private float isi;
     public Stopwatch isi_timer = new Stopwatch(); // High precision timer
     public Stopwatch rt_timer = new Stopwatch(); // https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.stopwatch?view=net-8.0&redirectedfrom=MSDN#remarks
-    
+    Color forest = new Color(0.06770712f, 0.5817609f, 0f, 1f);
+
     //data   //private float[,] data; //consider jagged array: https://stackoverflow.com/questions/597720/differences-between-a-multidimensional-array-and-an-array-of-arrays
     private double[] rts;
     ArrayList rts_array = new(); //same as rts - not optimal but easy to code
-    public TextMeshProUGUI scoreText; //scorecard
-    private int score = 0;
+    private double[] early_presses; //stores early button press as nested array
+    
+    [Serializable] public class Data {
+        public string id; //player id
+        public int[] early_presses;
+        public int[] score; //store score one each trial
+        public double[] rts;
+        public float[] isi_array;
+    }
 
+    Data data = new Data();
+
+    //Scorecard
+    public TextMeshProUGUI scoreText; //scorecard
+    public TextMeshProUGUI feedbackText; //feedback
+    private int score = 0;
+    
     //shuffle function for ISIs (Fisher-Yates shuffle should be fine)  https://stackoverflow.com/questions/1150646/card-shuffling-in-c-sharp
     void Shuffle(float[] array) {
         System.Random r = new System.Random();
@@ -42,13 +57,14 @@ public class bone : MonoBehaviour
         }
     }
 
+
     // Start is called before the first frame update
     void Start()
     {
         // Create isi array
-        isi_array_length = Mathf.CeilToInt((isi_high-isi_low)/isi_step +1); //round up for floatin point errors
+        isi_array_length = Mathf.CeilToInt((isi_high-isi_low)/isi_step +1); //round up for floating point errors
 
-        isi_array = new float[isi_array_length*isi_rep];
+        isi_array = new float[isi_array_length*isi_rep]; //length of each set * number of repeats
         for (int j=0; j<isi_rep; j++) { //loop repeats of each number
             int set = isi_array_length*j; //add length of one set of numbers to current index
             for (int i=0; i<isi_array_length; i++) { //loop through each increment to isi
@@ -57,30 +73,42 @@ public class bone : MonoBehaviour
         } // LOG: foreach (float value in isi_array){Debug.Log(value);}
 
         Shuffle(isi_array); //shuffle array
-        
+        data.isi_array = isi_array; //store array
+
         // initialise data arrays //data = new float[isi_array_length,2];
         rts = new double[isi_array_length*isi_rep];
         //setup first trial
         newTrial();
     }
 
+
+
     // Update is called once per frame - maybe use FixedUpdate for inputs?
     void Update()
     {
         if(isi_timer.IsRunning){ //if in isi/ not waiting for reaction
-            // Note timer.ElapsedMilliseconds less precise e.e. 1400, timer.ElapsedTicks is more precise
+            //handle early presses
             if(Input.GetKeyDown("space")){
-                Debug.Log("TOO QUICK");
-                score -= 1;
-
+                Debug.Log("EARLY SPACEBAR PRESS");
+                score -= 2;
+                if(score<0){
+                    score = 0;
+                }
+                scoreText.text = "Score: " + score;
+                feedbackText.color = Color.red;
+                feedbackText.text = "TOO QUICK!\nWait until the bone has appeared.";
+                data.early_presses[trial_number] += 1;
             }
-            if(isi_timer.Elapsed.TotalSeconds >= isi){ //when timer runs out
-                //show bone
-                gameObject.transform.localScale = new Vector3(s,s,s);
+
+            //when timer runs out
+            if(isi_timer.Elapsed.TotalSeconds >= isi){ // Note timer.ElapsedMilliseconds less precise e.e. 1400, timer.ElapsedTicks is more precise
+                feedbackText.text = ""; //hide feedback
+                gameObject.transform.localScale = new Vector3(s,s,s); //show bone
                 //timers
                 isi_timer.Stop();
                 rt_timer.Start();
             }
+
         } else { //when waiting for input
             if(Input.GetKey("space")){
                 
@@ -91,30 +119,25 @@ public class bone : MonoBehaviour
                 rts_array.Add(rt); //ArrayList version for easier median, could deep-copy in function.
                 // median
                 double median_rt = MedianArray(rts_array);
-                if(rt<median_rt){
-                    Debug.Log("SLOW");
+                
+                //float m = (float)(median_rt-rt==0 ? rt : median_rt-rt); // if no difference then return rt
+                //float log_m = m<0 ? Mathf.Log(1+Mathf.Abs(m))*-1 : Mathf.Log(1+m); //cannot take negative log
+                //double before_rounding = 1/rt * log_m;
+                //int logscore = (int)Math.Round(before_rounding); //final score for this method
+                //int mscore = (int)Math.Round(1/rt + (median_rt-rt)*1.5); //simple method
+                Debug.Log(median_rt);
+
+                if(rt<(median_rt+.1)){ //if within 100ms of median
+                    score += 3;
+                    feedbackText.color = forest;
+                    feedbackText.text = "YUMMY!\nDoggo caught the bone!";       
+                } else {
+                    score += 1;
+                    feedbackText.color = Color.blue;
+                    feedbackText.text = "Good!\nDoggo fetched the bone.";
                 }
-                
-                
-                float m = (float)(median_rt-rt==0 ? rt : median_rt-rt); // if no difference then return rt
-                float log_m = m<0 ? Mathf.Log(1+Mathf.Abs(m))*-1 : Mathf.Log(1+m); //cannot take negative log
-                double before_rounding = 1/rt * log_m;
-                int logscore = (int)Math.Round(before_rounding); //final score for this method
-
-                int mscore = (int)Math.Round(1/rt + (median_rt-rt)*1.5); //simple method
-
-                Debug.Log("-------------");
-                Debug.Log("median rt: " + median_rt);
-                Debug.Log("rt: " + rt);
-                Debug.Log("Log(m-rt): " + log_m);
-                Debug.Log("1/rt * log_m: " + before_rounding);
-                Debug.Log("Log score: " + logscore);
-
-                Debug.Log("Alt score: " + mscore);
-
-                score += logscore;
                 scoreText.text = "Score: " + score;
-
+                data.score[trial_number] = score;
                 // END OF TRIAL
                 trial_number++;
                 newTrial();
@@ -122,7 +145,10 @@ public class bone : MonoBehaviour
         }
 
         if(trial_number == isi_array.Length){
+            data.rts = rts;
             //end exp
+            string json = JsonUtility.ToJson(data);
+            Debug.Log(json);
         }
     }
 
@@ -130,6 +156,7 @@ public class bone : MonoBehaviour
     //function to reset variables and set-up for a new trials
     void newTrial() {
         isi = isi_array[trial_number]; // new isi
+        data.early_presses[trial_number] = 0; //consider storing this counter in it's own variable and adding to array later
         gameObject.transform.localScale = Vector3.zero; // reset stim
 
         // reset timers
