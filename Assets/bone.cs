@@ -33,6 +33,10 @@ public class bone : MonoBehaviour
         }
     }
 
+    public double roundTime(double time, int dp){
+        return Math.Round(time *  Math.Pow(10, dp)) /  Math.Pow(10, dp); //remove trailing 0s - avoids double precision errors. or try .ToString("0.00") or .ToString("F2")
+    }
+
     //timers
     public Stopwatch isi_timer = new Stopwatch(); // High precision timer: https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.stopwatch?view=net-8.0&redirectedfrom=MSDN#remarks
     public Stopwatch rt_timer = new Stopwatch(); // https://stackoverflow.com/questions/394020/how-accurate-is-system-diagnostics-stopwatch
@@ -133,7 +137,7 @@ public class bone : MonoBehaviour
         for (int j=0; j<isi_rep; j++) { //loop repeats of each number
             int set = isi_array_length*j; //add length of one set of numbers to current index
             for (int i=0; i<isi_array_length; i++) { //loop through each increment to isi
-                isi_array[set+i] = isi_low + i * isi_step;
+                isi_array[set+i] = roundTime(isi_low + i * isi_step,1);
             }
         } // LOG: foreach (float value in isi_array){Debug.Log(value);}  
         Shuffle(isi_array); //shuffle array
@@ -177,9 +181,6 @@ public class bone : MonoBehaviour
                 //get data
                 rt_timer.Stop();
                 double rt = rt_timer.Elapsed.TotalSeconds; //consider changing data types ElapsedMilliseconds
-                Debug.Log(rt_timer.Elapsed.TotalSeconds);
-                Debug.Log(rt_timer.ElapsedMilliseconds);
-                Debug.Log(rt_timer.ElapsedTicks);
                 //rts[trial_number] = rt; //being lazy and using two copies of rt arrays here
                 rts_array.Add(rt); //ArrayList version for easier median, could deep-copy in function.
                 // median
@@ -236,8 +237,8 @@ public class bone : MonoBehaviour
     void saveTrialData(double rt){
         Trial trial_data = new Trial(); // Create an instance of a Trial
         trial_data.trial_n = trial_number;
-        trial_data.isi = Math.Round(isi *  Math.Pow(10f, 1)) /  Math.Pow(10f, 1); //remove trailing 0s - avoids double precision errors
-        trial_data.rt = rt;
+        trial_data.isi = isi; 
+        trial_data.rt = roundTime(rt,7); // round off to avoid precision errors - 7 is length of ElapsedTicks anyway.
         trial_data.score = score;
         trial_data.early_presses = early_presses;
         data.trials.Add(trial_data); // Add the metadata object to the list
@@ -247,7 +248,7 @@ public class bone : MonoBehaviour
     }
 
     // slow but simple median function - quicker algorithms here: https://stackoverflow.com/questions/4140719/calculate-median-in-c-sharp
-    public static double median(ArrayList array) {
+    public static double median(ArrayList array) { //can maybe remove some of the doubles here?
         int size = array.Count;
         array.Sort(); //note mutates original list
         //get the median
