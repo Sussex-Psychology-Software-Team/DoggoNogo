@@ -827,8 +827,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isi_low: 0.2
   isi_high: 3.5
-  isi_step: 0.5
-  isi_rep: 1
+  isi_step: 0.1
+  isi_rep: 3
   scoreText: {fileID: 1786151914}
   feedbackText: {fileID: 1479691777}
 --- !u!1 &1786151912

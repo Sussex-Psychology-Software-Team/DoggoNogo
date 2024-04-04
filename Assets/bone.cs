@@ -2,11 +2,11 @@ using UnityEngine;
 using Debug = UnityEngine.Debug;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
 using System;
 using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic; //for List
-using System.Runtime.InteropServices;
 using TMPro;
 #if UNITY_WEBGL
     using System.Runtime.InteropServices;
@@ -212,9 +212,10 @@ public class bone : MonoBehaviour
                 //data.score[trial_number] = score;
                 // END OF TRIAL
                 saveTrialData(rt);
-                if(trial_number == isi_array.Length){
+                if(trial_number == isi_array.Length-1){
                     //end exp
                     string json = JsonUtility.ToJson(data);
+                    StartCoroutine(sendData(json));
                     SceneManager.LoadScene("End");
                 } else {
                     newTrial();
@@ -248,6 +249,18 @@ public class bone : MonoBehaviour
 
         string json = JsonUtility.ToJson(data);
         Debug.Log(json);
+    }
+
+    IEnumerator sendData(string json) {
+        UnityWebRequest www = UnityWebRequest.Put("https://users.sussex.ac.uk/~mel29/experiments/doggo-nogo/doggo-nogo.php", json);
+        yield return www.SendWebRequest();
+ 
+        if (www.result != UnityWebRequest.Result.Success) {
+            Debug.Log(www.error);
+        }
+        else {
+            Debug.Log("Upload complete!");
+        }
     }
 
     // slow but simple median function - quicker algorithms here: https://stackoverflow.com/questions/4140719/calculate-median-in-c-sharp
