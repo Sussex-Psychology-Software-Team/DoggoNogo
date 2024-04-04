@@ -1,15 +1,17 @@
 using UnityEngine;
+using Debug = UnityEngine.Debug;
+using UnityEngine.SocialPlatforms.Impl;
+using UnityEngine.SceneManagement;
 using System;
 using System.Diagnostics;
 using System.Collections;
-using Debug = UnityEngine.Debug;
 using System.Collections.Generic; //for List
 using System.Runtime.InteropServices;
 using TMPro;
-using UnityEngine.SocialPlatforms.Impl;
 #if UNITY_WEBGL
     using System.Runtime.InteropServices;
 #endif
+
 
 public class bone : MonoBehaviour
 {
@@ -210,13 +212,14 @@ public class bone : MonoBehaviour
                 //data.score[trial_number] = score;
                 // END OF TRIAL
                 saveTrialData(rt);
-                newTrial();
+                if(trial_number == isi_array.Length){
+                    //end exp
+                    string json = JsonUtility.ToJson(data);
+                    SceneManager.LoadScene("End");
+                } else {
+                    newTrial();
+                } 
             }
-        }
-
-        if(trial_number == isi_array.Length){
-            //end exp
-            string json = JsonUtility.ToJson(data);
         }
     }
 
