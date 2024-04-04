@@ -1,0 +1,2 @@
+Header set Access-Control-Allow-Origin "https://users.sussex.ac.uk"
+Header set Access-Control-Allow-Headers "Content-Type"
