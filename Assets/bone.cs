@@ -252,7 +252,7 @@ public class bone : MonoBehaviour
     }
 
     IEnumerator sendData(string json) {
-        UnityWebRequest www = UnityWebRequest.Put("https://users.sussex.ac.uk/~mel29/experiments/doggo-nogo/doggo-nogo.php", json);
+        UnityWebRequest www = UnityWebRequest.Put("https://users.sussex.ac.uk/~mel29/experiments/doggo-nogo/data/doggo-nogo.php", json);
         yield return www.SendWebRequest();
  
         if (www.result != UnityWebRequest.Result.Success) {
