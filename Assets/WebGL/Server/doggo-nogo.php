@@ -27,7 +27,7 @@
         $result = array_intersect_key($input, array_flip($allowed_keys));
         // Check if the resulting array matches the original input
         if ($input !== $result) {
-            file_put_contents("failure.log", "array contains other keys");
+            //file_put_contents("failure.log", "array contains other keys");
             exit;
         }
 
@@ -38,7 +38,7 @@
 
         foreach ($input as $key => $value) {
             if ($value === false) {
-                file_put_contents("failure.log", print_r("Validation failed for main input key: $key\n",true));
+                //file_put_contents("failure.log", print_r("Validation failed for main input"))// key: $key\n",true));
                 exit;
             }
         }
@@ -81,7 +81,7 @@
                 $innerArray = filter_var_array($innerArray,$metadata_val);
                 foreach ($innerArray as $key => $value) {
                     if ($value === false) {
-                        file_put_contents("failure.log", print_r("Validation failed for metadata variable: $key\n",true));
+                        //file_put_contents("failure.log", print_r("Validation failed for metadata"))// variable: $key\n",true));
                         exit;
                     }
                 }
@@ -122,7 +122,7 @@
                 $innerArray = filter_var_array($innerArray,$trials_val);
                 foreach ($innerArray as $key => $value) {
                     if ($value === false) {
-                        file_put_contents("failure.log", print_r("Validation failed for trials variable: $key\n",true));
+                        //file_put_contents("failure.log", print_r("Validation failed for trials"))// variable: $key\n",true));
                         exit;
                     }
                 }
