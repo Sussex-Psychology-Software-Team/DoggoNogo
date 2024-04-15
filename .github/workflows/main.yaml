@@ -1,0 +1,253 @@
+# .github/workflows/main.yml
+name: Test, Build, and Deploy with GameCI # name of main workflow
+on: # Actions which trigger different events
+  push:
+    branches:
+      — develop # Triggered on push to branch called 'develop'
+    paths:
+      — ‘Assets/**’
+      — ‘Packages/**’
+      — ‘ProjectSettings/**’
+  pull_request: # Triggered on pull request to main
+    types:
+      — opened
+    branches:
+      — main 
+    paths:
+      — ‘Assets/**’
+      — ‘Packages/**’
+      — ‘ProjectSettings/**’
+  release:
+    types:
+      — published
+  workflow_dispatch:
+    inputs:
+      workflow_mode:
+        description: ‘[release] [WebGL]’
+        required: false
+        default: ‘’
+jobs: # All jobs which run on this workflow
+    tests:
+      name: Test Code Quality
+      runs-on: ubuntu-latest # Execute on GitHub virtual machine (Linux recommended?)
+      steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v3 # Checkout the branch to use Repo's code (update v number?)
+          with:
+            fetch-depth: 0
+        - name: Create LFS file list # Large file Storage - not needed?
+          run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id # does something to list and sort files
+        - name: Restore LFS cache
+          uses: actions/cache@v3 
+          id: lfs-cache
+          with:
+            path: .git/lfs
+            key: ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}
+        - name: Git LFS Pull # Pull lfs files to repo
+          run: |
+            git lfs pull
+            git add .
+            git reset --hard
+        - name: Cache Library
+          uses: actions/cache@v3 # Cache dependencies to improve execution time
+          with:
+            path: Library
+            key: Library-test-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+            restore-keys: Library-test-
+        - name: Run Unit Tests
+          uses: game-ci/unity-test-runner@v2 # Game-ci hosted on GitHub Marketplace?
+          env:
+            UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }} # Pull in personal github login info
+            UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+            UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+          with:
+            githubToken: ${{ secrets.GITHUB_TOKEN }} # Create Personal Access Token to login
+        - name: Setup dotnet 5 for SonarQube
+          uses: actions/setup-dotnet@v2
+          with:
+            dotnet-version: '5.0.x'
+        - name: Set up JDK 11 for SonarQube
+          uses: actions/setup-java@v3 # Install Java, commands added to PATH
+          with:
+            distribution: 'zulu'
+            java-version: 11
+        - name: Setup Unity for SonarQube
+          id: setup-unity
+          uses: kuler90/setup-unity@v1
+        - name: Activate Unity for SonarQube
+          uses: kuler90/activate-unity@v1
+          with:
+            unity-username: ${{ secrets.UNITY_EMAIL }}
+            unity-password: ${{ secrets.UNITY_PASSWORD }}
+            unity-serial: ${{ secrets.UNITY_SERIAL }}
+        - name: SonarQube Analysis
+          env:
+            FrameworkPathOverride: ${{ steps.setup-unity.outputs.unity-path }}/../Data/MonoBleedingEdge/
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          run: |
+            sudo rm -rf Library
+            pwd; ls -alh
+            xvfb-run --auto-servernum ${{ steps.setup-unity.outputs.unity-path }} -batchmode -nographics -quit -logFile "-" -customBuildName Card-Game-Simulator -projectPath . -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution
+            pwd; ls -alh
+            sed -i 's/<ReferenceOutputAssembly>false<\/ReferenceOutputAssembly>/<ReferenceOutputAssembly>true<\/ReferenceOutputAssembly>/g' *.csproj
+            sed -i 's/\([A-Za-z0-9.-]\+csproj\)/Card-Game-Simulator\/&/g' Card-Game-Simulator.sln
+            mv Card-Game-Simulator.sln ..
+            cd ..
+            dotnet tool install --global dotnet-sonarscanner
+            dotnet sonarscanner begin \
+              /o:"finol-digital" \
+              /k:"finol-digital_Card-Game-Simulator" \
+              /d:sonar.login="$SONAR_TOKEN" \
+              /d:sonar.host.url=https://sonarcloud.io \
+              /d:sonar.exclusions=Assets/Plugins/**,Assets/Mirror/**, \
+              /d:sonar.cpd.exclusions=Assets/Tests/** \
+              /d:sonar.coverage.exclusions=Assets/Tests/** \
+              /d:sonar.cs.nunit.reportsPaths=Card-Game-Simulator/artifacts/editmode-results.xml,Card-Game-Simulator/artifacts/playmode-results.xml \
+              /d:sonar.cs.opencover.reportsPaths=Card-Game-Simulator/CodeCoverage/Card-Game-Simulator-opencov/EditMode/TestCoverageResults_0000.xml,Card-Game-Simulator/CodeCoverage/Card-Game-Simulator-opencov/PlayMode/TestCoverageResults_0000.xml
+            dotnet build Card-Game-Simulator.sln
+            dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
+            cd Card-Game-Simulator
+        - name: SonarQube Quality Gate Check
+          uses: SonarSource/sonarqube-quality-gate-action@v1.0.0
+          with:
+            scanMetadataReportFile: ../.sonarqube/out/.sonar/report-task.txt
+          env:
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        - name: Update Release Notes
+          if: github.event.action == 'published'
+          env:
+            RELEASE_NOTES: ${{ github.event.release.body }}
+          run: |
+            echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
+            echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
+        - name: Auto-Commit Release Notes
+          if: github.event.action == 'published'
+          uses: stefanzweifel/git-auto-commit-action@v4
+          with:
+            branch: main
+            file_pattern: fastlane/metadata
+            commit_message: Update Release Notes
+
+    # note can use filepaths here https://docs.github.com/en/actions/learn-github-actions/finding-and-customizing-actions#adding-an-action-from-the-same-repository
+    buildWithLinux:
+      name: Build for ${{ matrix.targetPlatform }}
+      runs-on: ubuntu-latest
+      needs: tests # Previous action is a dependency
+      strategy:
+        fail-fast: false
+        matrix:
+          targetPlatform: # Delete non-target platforms?
+            - WebGL
+      outputs:
+        buildVersion: ${{ steps.build.outputs.buildVersion }}
+      steps:
+        - name: Free Disk Space for Android  # Delete?
+          if: matrix.targetPlatform == 'Android'
+          run: |
+            df -h
+            sudo swapoff -a
+            sudo rm -f /swapfile
+            sudo rm -rf /usr/share/dotnet
+            sudo rm -rf /opt/ghc
+            sudo rm -rf "/usr/local/share/boost"
+            sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+            df -h
+        - name: Checkout Repository
+          uses: actions/checkout@v3
+          with:
+            fetch-depth: 0
+        - name: Create LFS file list
+          run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
+        - name: Restore LFS cache
+          uses: actions/cache@v3
+          id: lfs-cache
+          with:
+            path: .git/lfs
+            key: ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}
+        - name: Git LFS Pull
+          run: |
+            git lfs pull
+            git add .
+            git reset --hard
+        - uses: actions/cache@v3
+          with:
+            path: Library
+            key: Library-build-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+            restore-keys: |
+              Library-build-${{ matrix.targetPlatform }}-
+              Library-build-
+        - name: Build Unity Project
+          id: build
+          uses: game-ci/unity-builder@v2
+          env:
+            UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+            UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+            UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+          with:
+            targetPlatform: ${{ matrix.targetPlatform }}
+            buildMethod: Cgs.Editor.BuildCgs.BuildOptions
+            androidAppBundle: true
+            androidKeystoreName: finoldigital.keystore
+            androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+            androidKeystorePass: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+            androidKeyaliasName: cgs
+            androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
+            androidTargetSdkVersion: AndroidApiLevel31
+        - name: Upload Build  # Rest of these are for Linux - Delete? or does this include the server?
+          uses: actions/upload-artifact@v3
+          if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, matrix.targetPlatform) || (contains(github.event.inputs.workflow_mode, 'Steam') && matrix.targetPlatform == 'StandaloneLinux64')
+          with:
+            name: cgs-${{ matrix.targetPlatform }}
+            path: build/${{ matrix.targetPlatform }}
+        - name: Zip Build
+          uses: montudor/action-zip@v1
+          if: github.event.action == 'published' && matrix.targetPlatform == 'StandaloneLinux64'
+          with:
+            args: zip -qq -r build/cgs-${{ matrix.targetPlatform }}.zip build/${{ matrix.targetPlatform }}
+        - name: Upload Zip to GitHub Release
+          uses: svenstaro/upload-release-action@v2
+          if: github.event.action == 'published' && matrix.targetPlatform == 'StandaloneLinux64'
+          with:
+            repo_token: ${{ secrets.CGS_PAT }}
+            asset_name: cgs-${{ matrix.targetPlatform }}.zip
+            file: build/cgs-${{ matrix.targetPlatform }}.zip
+            tag: ${{ github.ref }}
+            overwrite: true
+            body: ${{ github.event.release.body }}
+
+
+    deployToGitHubPages:
+      name: Deploy to the Web via GitHub Pages
+      runs-on: ubuntu-latest
+      needs: buildWithLinux
+      if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WebGL'))
+      steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v3
+        - name: Download WebGL Artifact
+          uses: actions/download-artifact@v3
+          with:
+            name: cgs-WebGL
+            path: build/WebGL
+        - name: Copy the WebGL build artifacts to the GitHub Pages directory
+          env:
+            WEBGL_BUILD_PATH: ${{ format('{0}/build/WebGL', github.workspace) }}
+            WEBGL_PAGES_PATH: ${{ format('{0}/docs/WebGL', github.workspace) }}
+          run: find $WEBGL_BUILD_PATH -type f -name "**WebGL.*" -exec cp {} $WEBGL_PAGES_PATH \;
+        - name: Deploy to GitHub Pages
+          uses: stefanzweifel/git-auto-commit-action@v4
+          with:
+            branch: main
+            file_pattern: docs/**
+            commit_message: Deploy to GitHub Pages
+
+
+# READING:
+  #1 https://docs.github.com/en/actions
+  #2 https://davidmfinol.com/gameci-1_intro.html
+  #3 https://github.com/NextFaze/github-action-unity-example/tree/main
+  #3 https://game.ci/docs/github/getting-started
+
+# NOTES:
+  # consider dependabot
