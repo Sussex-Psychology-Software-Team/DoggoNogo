@@ -28,8 +28,7 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          unityVersion: "auto"
-
+          
       # Build
       - name: Build project
         uses: game-ci/unity-builder@v4
