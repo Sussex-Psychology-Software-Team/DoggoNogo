@@ -21,9 +21,6 @@ jobs:
 
     strategy:
       fail-fast: false
-      matrix:
-        targetPlatform:         # These are the definitions from: https://docs.unity3d.com/ScriptReference/BuildTarget.html
-          - WebGL               # Build for WebGL
 
     steps:
       # Checkout
@@ -36,7 +33,7 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: Library
-          key: Library-${{ matrix.targetPlatform }}
+          key: Library-WebGL
 
       # Build
       - name: Build project
@@ -47,22 +44,22 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
           #UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
-          targetPlatform:  ${{ matrix.targetPlatform }}
+          targetPlatform:  WebGL
           buildName: ${{ env.PROJECT_NAME }}
 
       - name: Compress Build
         run: |
-          pushd build/${{ matrix.targetPlatform }}
-          sudo zip -r ${{ env.PROJECT_NAME }}-${{ matrix.targetPlatform }}.zip ./*
+          pushd build/WebGL
+          sudo zip -r ${{ env.PROJECT_NAME }}-WebGL.zip ./*
           popd
-          sudo mv build/${{ matrix.targetPlatform }}/${{ env.PROJECT_NAME }}-${{ matrix.targetPlatform }}.zip build/${{ env.PROJECT_NAME }}-${{ matrix.targetPlatform }}.zip
+          sudo mv build/WebGL/${{ env.PROJECT_NAME }}-WebGL.zip build/${{ env.PROJECT_NAME }}-WebGL.zip
 
       # Upload Artifacts
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.PROJECT_NAME }}-${{ matrix.targetPlatform }}
-          path: build/${{ env.PROJECT_NAME }}-${{ matrix.targetPlatform }}.zip
+          name: ${{ env.PROJECT_NAME }}-WebGL
+          path: build/${{ env.PROJECT_NAME }}-WebGL.zip
 
       #Upload to Pages
       - name: Deploy to GitHub Pages
@@ -80,5 +77,5 @@ jobs:
           allowUpdates: true
           tag: "0.0.1" # Or what ever tag you want, but there must be a tag!
           body: "Pre-release"
-          artifacts: 'build/${{ env.PROJECT_NAME }}-${{ matrix.targetPlatform }}.zip'
+          artifacts: 'build/${{ env.PROJECT_NAME }}-WebGL.zip'
           token: ${{ secrets.GITHUB_TOKEN }}
