@@ -29,6 +29,7 @@ jobs:
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           unityVersion: "auto"
+          allowDirtyBuild: true # Change this to recommended solution later https://game.ci/docs/troubleshooting/common-issues/#branch-is-dirty
 
       # Build
       - name: Build project
