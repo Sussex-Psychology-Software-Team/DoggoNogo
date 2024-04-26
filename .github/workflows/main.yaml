@@ -46,6 +46,8 @@ jobs:
         with:
           targetPlatform:  WebGL
           buildName: ${{ env.PROJECT_NAME }}
+          allowDirtyBuild: true # dunno why but it works, perhaps to do with .gitignore or .gitattributes being added?
+          unityVersion: 2022.3.13f1 # Set your Unity version (defaults to 2019 LTS)
 
       - name: Compress Build
         run: |
