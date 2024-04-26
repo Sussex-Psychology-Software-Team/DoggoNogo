@@ -17,7 +17,7 @@ jobs:
 
     # Enter in project properties here
     env:
-      PROJECT_NAME: Doggo-Nogo
+      PROJECT_NAME: doggo-nogo
 
     strategy:
       fail-fast: false
