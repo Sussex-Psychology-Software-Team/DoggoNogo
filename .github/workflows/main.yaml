@@ -29,7 +29,6 @@ jobs:
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           unityVersion: "auto"
-          allowDirtyBuild: true # Change this to recommended solution later https://game.ci/docs/troubleshooting/common-issues/#branch-is-dirty
 
       # Build
       - name: Build project
@@ -40,6 +39,8 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: WebGL
+          allowDirtyBuild: true # Change this to recommended solution later https://game.ci/docs/troubleshooting/common-issues/#branch-is-dirty
+
 
       # Output
       - uses: actions/upload-artifact@v3
