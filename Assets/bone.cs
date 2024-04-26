@@ -7,6 +7,7 @@ using System;
 using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic; //for List
+using System.Runtime.InteropServices;
 using TMPro;
 #if UNITY_WEBGL
     using System.Runtime.InteropServices;
