@@ -30,6 +30,26 @@ jobs:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           
       # Build
+
+  build:
+    name: Build project
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      # Cache
+      - uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-
+
+      # Build
       - name: Build project
         uses: game-ci/unity-builder@v4
         env:
@@ -39,7 +59,6 @@ jobs:
         with:
           targetPlatform: WebGL
           allowDirtyBuild: true # Change this to recommended solution later https://game.ci/docs/troubleshooting/common-issues/#branch-is-dirty
-
 
       # Output
       - uses: actions/upload-artifact@v3
