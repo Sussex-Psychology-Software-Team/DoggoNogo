@@ -9,10 +9,6 @@ using System.Collections;
 using System.Collections.Generic; //for List
 using System.Runtime.InteropServices; //for DllImport
 using TMPro;
-#if UNITY_WEBGL
-    using System.Runtime.InteropServices;
-#endif
-
 
 public class bone : MonoBehaviour
 {
