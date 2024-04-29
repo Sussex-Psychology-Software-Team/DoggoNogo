@@ -77,12 +77,12 @@ jobs:
       - name: Download WebGL Artifact
         uses: actions/download-artifact@v4
         with:
-          name: cgs-WebGL
-          path: build/WebGL
+          name: Build
+          path: build
       - name: Copy the WebGL build artifacts to the GitHub Pages directory
         env:
-          WEBGL_BUILD_PATH: ${{ format('{0}/build/WebGL', github.workspace) }}
-          WEBGL_PAGES_PATH: ${{ format('{0}/docs/WebGL', github.workspace) }}
+          WEBGL_BUILD_PATH: ${{ format('{0}/build', github.workspace) }}
+          WEBGL_PAGES_PATH: ${{ format('{0}/docs', github.workspace) }}
         run: find $WEBGL_BUILD_PATH -type f -name "**WebGL.*" -exec cp {} $WEBGL_PAGES_PATH \;
       - name: Deploy to GitHub Pages
         uses: stefanzweifel/git-auto-commit-action@v4
