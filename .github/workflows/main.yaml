@@ -69,8 +69,8 @@ jobs:
   # from: https://davidmfinol.com/gameci-3_linux.html#:~:text=the%20release%20notes.-,Deploy%20to%20the%20Web%20via%20GitHub%20Pages,-deployToGitHubPages%3A%0A%20%20%20%20name
     name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
-    needs: build
-    if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WebGL'))
+    needs: build #Only run after new build is completed
+    #if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WebGL')) #run on a publish event?
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
