@@ -20,7 +20,7 @@ public class begin : MonoBehaviour
         string name = name_input.text;
         if(Input.GetKeyDown(KeyCode.Return) && !pressed){
             Debug.Log("Enter");
-            if(name=="Enter your name here" || String.IsNullOrWhiteSpace(name)){ //if not entered valid name
+            if(String.IsNullOrWhiteSpace(name)){ //if name field empty or all whitespace
                 EditorUtility.DisplayDialog("Name field empty", "Please enter a name", "Ok");
             } else {
                 //strip leading/trailing whitespace
