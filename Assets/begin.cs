@@ -29,6 +29,7 @@ public class begin : MonoBehaviour
                 //move to first scene
                 pressed = true;
                 //gameObject.transform.localScale = Vector3.zero; // hide instructions
+                PlayerPrefs.SetString("Name", name);
                 SceneManager.LoadScene("Simple RT");
             }
         }
