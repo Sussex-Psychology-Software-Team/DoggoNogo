@@ -81,7 +81,7 @@ jobs:
           path: build
       - name: Copy the WebGL build artifacts to the GitHub Pages directory
         env:
-          WEBGL_BUILD_PATH: ${{ format('{0}/build', github.workspace) }}
+          WEBGL_BUILD_PATH: ${{ format('{0}/build/WebGL/WebGL/', github.workspace) }}
           WEBGL_PAGES_PATH: ${{ format('{0}/docs', github.workspace) }}
         run: cp -R $WEBGL_BUILD_PATH $WEBGL_PAGES_PATH; #OR: rsync -r $WEBGL_BUILD_PATH $WEBGL_PAGES_PATH #OG: find $WEBGL_BUILD_PATH -exec cp {} $WEBGL_PAGES_PATH \;
       - name: Deploy to GitHub Pages
