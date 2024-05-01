@@ -7,23 +7,23 @@
     <title>{{{ PRODUCT_NAME }}}</title>
   </head>
   <body>
-    <canvas></canvas>
+    <canvas id="unity-canvas"></canvas>
     <script src="Build/{{{ LOADER_FILENAME }}}"></script>
     <script>
-      createUnityInstance(document.querySelector("#unity-canvas"), {
+      createUnityInstance(document.getElementById('unity-canvas'), {
         dataUrl: "Build/{{{ DATA_FILENAME }}}",
         frameworkUrl: "Build/{{{ FRAMEWORK_FILENAME }}}",
         #if USE_THREADS
-                workerUrl: "Build/{{{ WORKER_FILENAME }}}",
+            workerUrl: "Build/{{{ WORKER_FILENAME }}}",
         #endif
         #if USE_WASM
-                codeUrl: "Build/{{{ CODE_FILENAME }}}",
+            codeUrl: "Build/{{{ CODE_FILENAME }}}",
         #endif
         #if MEMORY_FILENAME
-                memoryUrl: "Build/{{{ MEMORY_FILENAME }}}",
+            memoryUrl: "Build/{{{ MEMORY_FILENAME }}}",
         #endif
         #if SYMBOLS_FILENAME
-                symbolsUrl: "Build/{{{ SYMBOLS_FILENAME }}}",
+            symbolsUrl: "Build/{{{ SYMBOLS_FILENAME }}}",
         #endif
         streamingAssetsUrl: "StreamingAssets",
         companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
