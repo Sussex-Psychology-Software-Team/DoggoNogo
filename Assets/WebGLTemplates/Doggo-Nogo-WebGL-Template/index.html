@@ -7,10 +7,10 @@
     <title>{{{ PRODUCT_NAME }}}</title>
   </head>
   <body>
-    <canvas id="unity-canvas"></canvas>
+    <canvas id="canvas" width="1920" height="1080"></canvas>
     <script src="Build/{{{ LOADER_FILENAME }}}"></script>
     <script>
-      createUnityInstance(document.getElementById('unity-canvas'), {
+      createUnityInstance(document.getElementById('canvas'), {
         dataUrl: "Build/{{{ DATA_FILENAME }}}",
         frameworkUrl: "Build/{{{ FRAMEWORK_FILENAME }}}",
         #if USE_THREADS
@@ -29,8 +29,8 @@
         companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
         productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
         productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
-        // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
-        // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+        matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+        devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
       });
     </script>
   </body>
