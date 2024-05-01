@@ -16,7 +16,7 @@ public class begin : MonoBehaviour
     void Start()
     {
         #if UNITY_WEBGL
-            fullpage();
+            //fullpage();
         #endif
         warning.SetActive(false); // false to hide, true to show
     }
