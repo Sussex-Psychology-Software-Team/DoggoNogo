@@ -10,17 +10,24 @@
     <canvas id="canvas" width="1920" height="1080"></canvas>
     <script src="Build/WebGL.loader.js"></script>
     <script>
-      createUnityInstance(document.getElementById('canvas'), {
-        dataUrl: "Build/WebGL.data",
-        frameworkUrl: "Build/WebGL.framework.js",
-            codeUrl: "Build/WebGL.wasm",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "DefaultCompany",
-        productName: "Doggo-Nogo",
-        productVersion: "0.0.98",
-        matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
-        devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
-      });
+        const canvas = document.getElementById('canvas')
+        function resize(){
+            canvas.width = window.innerWidth // canvas.clientWidth;
+            canvas.height = window.innerHeight // canvas.clientHeight;
+        }
+        window.addEventListener("load",resize)
+        
+        createUnityInstance(canvas, {
+            dataUrl: "Build/WebGL.data",
+            frameworkUrl: "Build/WebGL.framework.js",
+                codeUrl: "Build/WebGL.wasm",
+            streamingAssetsUrl: "StreamingAssets",
+            companyName: "DefaultCompany",
+            productName: "Doggo-Nogo",
+            productVersion: "0.0.101",
+            matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+            devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+        })
     </script>
   </body>
 </html>
