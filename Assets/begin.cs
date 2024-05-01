@@ -1,16 +1,23 @@
 using UnityEngine;
 using UnityEngine.SceneManagement; // SceneManager.LoadScene
+using System.Runtime.InteropServices; //for DllImport
 using TMPro; // grab text input field
 using System; // String class
 
 public class begin : MonoBehaviour
 {
+    [DllImport("__Internal")]
+    private static extern void fullpage();
+    
     private bool scene_triggered = false; //make sure next scene can only be loaded once
     public TMP_InputField nameInput;
     public GameObject warning;
     // Start is called before the first frame update
     void Start()
     {
+        #if UNITY_WEBGL
+                fullpage();
+        #endif
         warning.SetActive(false); // false to hide, true to show
     }
 
