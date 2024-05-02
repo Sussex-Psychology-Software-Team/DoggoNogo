@@ -7,18 +7,15 @@
     <title>Doggo-Nogo</title>
   </head>
   <body style="margin: 0">
-    <!--
-    <div id="unity-container" style="position: absolute; width: 100%; height: 100%">
-        <canvas id="unity-canvas" width=1920 height=1080 style="width: 100%; height: 100%"></canvas>
-    </div>
-    -->
-    <canvas id="canvas" width="1920" height="1080"></canvas>
+    <canvas id="canvas" width="1920" height="1080"></canvas> <!--style="width: 100%; height: 100%"-->
     <script src="Build/WebGL.loader.js"></script>
     <script>
         const canvas = document.getElementById('canvas')
         function resize(){
             canvas.width = window.innerWidth // canvas.clientWidth;
             canvas.height = window.innerHeight // canvas.clientHeight;
+            canvas.click() //simulate click to redraw canvas - remove if listening for clicks
+            //consider https://stackoverflow.com/questions/77222633/difference-between-click-and-dispatchevent-click-event
         }
         window.addEventListener("load",resize)
         window.onresize = resize
@@ -30,8 +27,8 @@
             streamingAssetsUrl: "StreamingAssets",
             companyName: "DefaultCompany",
             productName: "Doggo-Nogo",
-            productVersion: "0.0.108",
-            matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+            productVersion: "0.0.112",
+            matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size. but see: https://forum.unity.com/threads/changing-the-resolution-of-the-canvas-on-html-in-webgl-makes-the-game-screen-smaller.1424694/
             devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
         })
     </script>
