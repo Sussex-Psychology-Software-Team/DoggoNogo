@@ -15,6 +15,9 @@
             canvas.width = window.innerWidth // canvas.clientWidth;
             canvas.height = window.innerHeight // canvas.clientHeight;
             canvas.click() //simulate click to redraw canvas - remove if listening for clicks
+            canvas.dispatchEvent(new Event('click', {bubbles: true, cancelable: true}));
+            canvas.dispatchEvent(new PointerEvent('click', {bubbles: true, cancelable: true}));
+            canvas.dispatchEvent(new MouseEvent('click'))
             //consider https://stackoverflow.com/questions/77222633/difference-between-click-and-dispatchevent-click-event
         }
         window.addEventListener("load",resize)
