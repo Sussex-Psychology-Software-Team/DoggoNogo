@@ -50,7 +50,7 @@ public class bone : MonoBehaviour
     private int score = 0; //holds score
     public TextMeshProUGUI scoreText; // displays score
     public TextMeshProUGUI feedbackText; //feedback
-
+    public HealthBar healthBar;
 
     // Data --------------------------------
     // trial-level data (globals)
@@ -205,6 +205,7 @@ public class bone : MonoBehaviour
                     feedbackText.text = "Good!\nDoggo fetched the bone.";
                 }
                 scoreText.text = "Score: " + score;
+                healthBar.SetHealth(score);
                 //store data
                 //data.score[trial_number] = score;
                 // END OF TRIAL
