@@ -220,7 +220,7 @@ public class Bone : MonoBehaviour
                     #if !UNITY_EDITOR && UNITY_WEBGL
                         dataPipe(json, id); // value based on the current browser
                     #else
-                        Debug.Log('Not in WebGL');
+                        Debug.Log("Not in WebGL");
                     #endif
                     // Next scene
                     SceneManager.LoadScene("End");
@@ -258,16 +258,12 @@ public class Bone : MonoBehaviour
         Debug.Log(json);
     }
 
-    IEnumerator sendData(string json) {
-        UnityWebRequest www = UnityWebRequest.Put("https://users.sussex.ac.uk/~mel29/experiments/doggo-nogo/data/doggo-nogo.php", json);
-        yield return www.SendWebRequest();
- 
-        if (www.result != UnityWebRequest.Result.Success) {
-            Debug.Log(www.error);
-        }
-        else {
-            Debug.Log("Upload complete!");
-        }
+    void sendData(string json, string id){
+        #if !UNITY_EDITOR && UNITY_WEBGL
+            dataPipe(json, id); // value based on the current browser
+        #else
+            Debug.Log("Not in WebGL");
+        #endif
     }
 
     // slow but simple median function - quicker algorithms here: https://stackoverflow.com/questions/4140719/calculate-median-in-c-sharp

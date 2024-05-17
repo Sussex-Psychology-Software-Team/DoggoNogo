@@ -1190,23 +1190,9 @@ MonoBehaviour:
   isi_high: 0.4
   isi_step: 0.1
   isi_rep: 1
-  isi_array: []
-  s: 0.4145592
-  forest:
-    r: 0.06770712
-    g: 0.5817609
-    b: 0
-    a: 1
-  score: 0
   scoreText: {fileID: 1786151914}
   feedbackText: {fileID: 1479691777}
   healthBar: {fileID: 126796138}
-  trial_number: -1
-  early_presses: 0
-  isi: 0
-  data:
-    metadata: []
-    trials: []
 --- !u!1 &1786151912
 GameObject:
   m_ObjectHideFlags: 0
