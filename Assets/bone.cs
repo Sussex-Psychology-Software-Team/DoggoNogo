@@ -92,7 +92,7 @@ public class bone : MonoBehaviour
     Data data = new Data(); //create instance
     //Send data
     [DllImport("__Internal")]
-    private static extern void dataPipe();
+    private static extern void dataPipe(string json, string id);
 
     // Metadata Functions --------------------------------
     // Grab userAgent
@@ -215,8 +215,10 @@ public class bone : MonoBehaviour
                 if(trial_number == isi_array.Length-1){
                     //end exp
                     string json = JsonUtility.ToJson(data);
-                    
-                    dataPipe(json,data.metadata.id);
+                    string id = data.metadata[0].id;
+                    #if UNITY_WEBGL
+                        dataPipe(json, id); // value based on the current browser
+                    #endif
                     SceneManager.LoadScene("End");
                 } else {
                     newTrial();
