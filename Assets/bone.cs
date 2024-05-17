@@ -10,7 +10,7 @@ using System.Collections.Generic; //for List
 using System.Runtime.InteropServices; //for DllImport
 using TMPro;
 
-public class bone : MonoBehaviour
+public class Bone : MonoBehaviour
 {
 
     // ******************* SETUP *******************

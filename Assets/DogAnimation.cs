@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class dog_animation : MonoBehaviour {
+public class DogAnimation : MonoBehaviour {
 
     public Animator animator;
 

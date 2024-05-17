@@ -4,7 +4,7 @@ using System.Runtime.InteropServices; //for DllImport
 using TMPro; // grab text input field
 using System; // String class
 
-public class begin : MonoBehaviour
+public class Begin : MonoBehaviour
 {
     [DllImport("__Internal")]
     private static extern void fullpage();

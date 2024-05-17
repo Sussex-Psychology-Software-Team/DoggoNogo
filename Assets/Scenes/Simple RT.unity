@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 126796137}
   - component: {fileID: 126796136}
   m_Layer: 5
-  m_Name: health_bar
+  m_Name: Health bar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -535,7 +535,7 @@ GameObject:
   - component: {fileID: 652906588}
   - component: {fileID: 652906591}
   m_Layer: 0
-  m_Name: dog
+  m_Name: Dog
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -882,7 +882,7 @@ GameObject:
   - component: {fileID: 1026629748}
   - component: {fileID: 1026629747}
   m_Layer: 0
-  m_Name: background
+  m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -967,7 +967,7 @@ GameObject:
   - component: {fileID: 1479691778}
   - component: {fileID: 1479691777}
   m_Layer: 5
-  m_Name: feedback
+  m_Name: Feedback
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1101,7 +1101,7 @@ GameObject:
   - component: {fileID: 1724076666}
   - component: {fileID: 1724076668}
   m_Layer: 0
-  m_Name: bone
+  m_Name: Bone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1190,9 +1190,23 @@ MonoBehaviour:
   isi_high: 0.4
   isi_step: 0.1
   isi_rep: 1
+  isi_array: []
+  s: 0.4145592
+  forest:
+    r: 0.06770712
+    g: 0.5817609
+    b: 0
+    a: 1
+  score: 0
   scoreText: {fileID: 1786151914}
   feedbackText: {fileID: 1479691777}
   healthBar: {fileID: 126796136}
+  trial_number: -1
+  early_presses: 0
+  isi: 0
+  data:
+    metadata: []
+    trials: []
 --- !u!1 &1786151912
 GameObject:
   m_ObjectHideFlags: 0
@@ -1205,7 +1219,7 @@ GameObject:
   - component: {fileID: 1786151915}
   - component: {fileID: 1786151914}
   m_Layer: 5
-  m_Name: score
+  m_Name: Score
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
