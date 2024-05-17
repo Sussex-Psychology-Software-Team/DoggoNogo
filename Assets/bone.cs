@@ -214,11 +214,15 @@ public class Bone : MonoBehaviour
                 saveTrialData(rt);
                 if(trial_number == isi_array.Length-1){
                     //end exp
+                    //Send data
                     string json = JsonUtility.ToJson(data);
                     string id = data.metadata[0].id;
-                    #if UNITY_WEBGL
+                    #if !UNITY_EDITOR && UNITY_WEBGL
                         dataPipe(json, id); // value based on the current browser
+                    #else
+                        Debug.Log('Not in WebGL');
                     #endif
+                    // Next scene
                     SceneManager.LoadScene("End");
                 } else {
                     newTrial();
