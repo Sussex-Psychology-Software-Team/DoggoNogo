@@ -1192,7 +1192,7 @@ MonoBehaviour:
   isi_rep: 1
   scoreText: {fileID: 1786151914}
   feedbackText: {fileID: 1479691777}
-  healthBar: {fileID: 126796136}
+  health_bar: {fileID: 126796136}
 --- !u!1 &1786151912
 GameObject:
   m_ObjectHideFlags: 0
