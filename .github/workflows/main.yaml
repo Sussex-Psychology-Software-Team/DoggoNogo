@@ -41,12 +41,12 @@ jobs:
           lfs: true
 
       # Cache
-      - uses: actions/cache@v4
-        with:
-          path: Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: |
-            Library-
+      #- uses: actions/cache@v4
+      #  with:
+      #    path: Library
+      #    key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+      #    restore-keys: |
+      #      Library-
 
       # Build
       - name: Build project
