@@ -158,7 +158,6 @@ public class Bone : MonoBehaviour
                 if(score<0){ 
                     score = 0; //lowerbound on score of 0
                 }
-                PlayerPrefs.SetInt("Score", score); //save score to local copy
                 scoreText.text = "Score: " + score;
                 feedbackText.color = Color.red;
                 feedbackText.text = "TOO QUICK!\nWait until the bone has appeared.";
@@ -213,6 +212,8 @@ public class Bone : MonoBehaviour
                 if(trial_number == isi_array.Length-1){
                     //end exp
                     //Send data
+                    PlayerPrefs.SetInt("Score", score); //save score to local copy
+                    PlayerPrefs.Save();
                     saveMetadata();
                     string json = JsonUtility.ToJson(data);
                     string id = data.metadata[0].id;
