@@ -76,8 +76,10 @@ public class Bone : MonoBehaviour
     [System.Serializable]
     public class Metadata {
         public string id;
+        public string name;
         public string userAgent;
-        public string date;
+        public string start;
+        public string end;
     }
 
     [System.Serializable]
@@ -90,6 +92,8 @@ public class Bone : MonoBehaviour
     }
 
     Data data = new Data(); //create instance
+    Metadata metadata = new Metadata(); // Create an instance of Metadata here to add start and end separately
+
     //Send data
     [DllImport("__Internal")]
     private static extern void dataPipe(string json, string id);
@@ -124,14 +128,7 @@ public class Bone : MonoBehaviour
     // Start --------------------------------
     void Start()
     {
-        // Create metadata
-        Metadata metadata = new Metadata(); // Create an instance of Metadata
-        metadata.id = GenerateString(24); // Assign id
-        metadata.userAgent = UA.getUserAgent(); // Assign userAgent
-        metadata.date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
-        data.metadata.Add(metadata); // Add the metadata object to the list
-        
-
+        initMetadata();
         // Create isi array
         int isi_array_length = (int)Math.Ceiling((isi_high-isi_low)/isi_step +1); //round up for floating point errors
         isi_array = new double[isi_array_length*isi_rep]; //length of each set * number of repeats
@@ -215,12 +212,14 @@ public class Bone : MonoBehaviour
                 if(trial_number == isi_array.Length-1){
                     //end exp
                     //Send data
+                    saveMetadata();
                     string json = JsonUtility.ToJson(data);
                     string id = data.metadata[0].id;
                     #if !UNITY_EDITOR && UNITY_WEBGL
                         dataPipe(json, id); // value based on the current browser
                     #else
                         Debug.Log("Not in WebGL");
+                        Debug.Log(json);
                     #endif
                     // Next scene
                     SceneManager.LoadScene("End");
@@ -243,6 +242,19 @@ public class Bone : MonoBehaviour
         isi_timer.Reset();
         isi_timer.Start();
         rt_timer.Reset();
+    }
+
+    void initMetadata(){
+        // Create metadata (init saves start time) - void as attached to global var
+        metadata.id = GenerateString(24); // Assign id
+        metadata.name = PlayerPrefs.GetString("Name", "No Name");
+        metadata.userAgent = UA.getUserAgent(); // Assign userAgent
+        metadata.start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
+    }
+
+    void saveMetadata(){
+        metadata.end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
+        data.metadata.Add(metadata); // Add the metadata object to the list
     }
 
     void saveTrialData(double rt){
