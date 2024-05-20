@@ -10,21 +10,24 @@ public class EndScreen : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        scoreBar.SetMaxHealth(15); // figure out what this should be - obviously a maximum of the actual user score is somewhat needed.
-        score = PlayerPrefs.GetInt("Score", score); //get local copy of player score
+        scoreBar.SetMaxHealth(10); // figure out what this should be - obviously a maximum of the actual user score is somewhat needed.
+        score = PlayerPrefs.GetInt("Score", 0); //get local copy of player score
+        StartCoroutine(scoreAnimator());
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(score);
-        StartCoroutine(scoreAnimator());
+        //Debug.Log(score);
     }
 
     IEnumerator scoreAnimator(){
-        for (int s=0; s<=score; s++){
+        for (int s=0; s<=score; s++){ //note can make smoother by making SetHealth take a float.
             scoreBar.SetHealth(s);
-            yield return null;
+            if(s==score){
+                Debug.Log("YAY!");
+            }
+            yield return new WaitForSeconds(.1f);
         }
     }
 }
