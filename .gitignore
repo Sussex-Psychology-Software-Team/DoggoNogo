@@ -77,6 +77,5 @@ crashlytics-build.properties
 
 
 ###my stuff###
-/Assets/**/*.meta
 .DS_Store
 Assets/scraps.cs
