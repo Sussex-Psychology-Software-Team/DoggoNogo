@@ -30,4 +30,10 @@ public class EndScreen : MonoBehaviour
             yield return new WaitForSeconds(.1f);
         }
     }
+
+    void zScore(int score){
+        int mean = 6;
+        int sd = 1;
+        //quantile/percentile function in c# - https://stackoverflow.com/questions/1662943/standard-normal-distribution-z-value-function-in-c-sharp
+    }
 }
