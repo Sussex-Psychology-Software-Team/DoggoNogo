@@ -15,7 +15,7 @@ public class Begin : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        #if UNITY_WEBGL
+        #if !UNITY_EDITOR && UNITY_WEBGL
             //fullpage();
         #endif
         warning.SetActive(false); // false to hide, true to show
