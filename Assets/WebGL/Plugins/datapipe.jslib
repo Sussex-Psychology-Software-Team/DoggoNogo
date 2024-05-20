@@ -8,7 +8,7 @@ mergeInto(LibraryManager.library, {
             },
             body: JSON.stringify({
                 experimentID: "VSyXogVR8oTS",
-                filename: id + ".csv", // Construct using participant ID here
+                filename: id + ".json", // Construct using participant ID here
                 data: data, // Add JSON object here
             }),
         });
