@@ -8,7 +8,7 @@ using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic; //for List
 using System.Runtime.InteropServices; //for DllImport
-using TMPro;
+using TMPro; //for TextMeshProUGUI
 
 public class Bone : MonoBehaviour
 {
