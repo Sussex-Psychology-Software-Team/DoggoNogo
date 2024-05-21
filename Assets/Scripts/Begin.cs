@@ -22,8 +22,8 @@ public class Begin : MonoBehaviour
     {
         #if !UNITY_EDITOR && UNITY_WEBGL
             //fullpage();
-            query = queryString('var'); //note if testing this include ?var=abc after URL
-            Debug.Log(query)
+            query = queryString("var"); //note if testing this include ?var=abc after URL
+            Debug.Log(query);
         #endif
         warning.SetActive(false); // false to hide, true to show
     }
