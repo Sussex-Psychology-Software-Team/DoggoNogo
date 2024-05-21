@@ -6,11 +6,11 @@ public class EndScreen : MonoBehaviour
 {
     public HealthBar scoreBar;
     private int score;
-
+    public int max_health = 10;
     // Start is called before the first frame update
     void Start()
     {
-        scoreBar.SetMaxHealth(10); // figure out what this should be - obviously a maximum of the actual user score is somewhat needed.
+        scoreBar.SetMaxHealth(max_health); // figure out what this should be - obviously a maximum of the actual user score is somewhat needed.
         score = PlayerPrefs.GetInt("Score", 0); //get local copy of player score
         StartCoroutine(scoreAnimator());
     }
@@ -24,7 +24,7 @@ public class EndScreen : MonoBehaviour
     IEnumerator scoreAnimator(){
         for (int s=0; s<=score; s++){ //note can make smoother by making SetHealth take a float.
             scoreBar.SetHealth(s);
-            if(s==score){
+            if(s==score && score<max_health){
                 Debug.Log("YAY!");
             }
             yield return new WaitForSeconds(.1f);
