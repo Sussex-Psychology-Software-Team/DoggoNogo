@@ -45,7 +45,7 @@ public class Bone : MonoBehaviour
 
     // Visuals --------------------------------
     // setup stim display vars
-    private float s = 0.4145592f; // original image is too big - can probably just prefab this in future
+    private float s; // or 0.4145592f original image is too big - can probably just prefab this in future
     Color forest = new Color(0.06770712f, 0.5817609f, 0f, 1f); //colour of positive feedback text
 
     // Scorecard
