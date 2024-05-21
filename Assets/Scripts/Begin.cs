@@ -9,14 +9,21 @@ public class Begin : MonoBehaviour
     [DllImport("__Internal")]
     private static extern void fullpage();
 
+    [DllImport("__Internal")]
+    private static extern void queryString();
+
     private bool scene_triggered = false; //make sure next scene can only be loaded once
     public TMP_InputField nameInput;
     public GameObject warning;
+    private string query;
+
     // Start is called before the first frame update
     void Start()
     {
         #if !UNITY_EDITOR && UNITY_WEBGL
             //fullpage();
+            query = queryString('var'); //note if testing this include ?var=abc after URL
+            Debug.Log(query)
         #endif
         warning.SetActive(false); // false to hide, true to show
     }
