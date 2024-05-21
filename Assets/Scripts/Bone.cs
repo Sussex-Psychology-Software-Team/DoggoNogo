@@ -298,7 +298,6 @@ public class Bone : MonoBehaviour
             dataPipe(json, id); // value based on the current browser
         #else
             Debug.Log("Not in WebGL");
-            Debug.Log(json);
         #endif
         // Next scene
         SceneManager.LoadScene("End");

@@ -880,6 +880,7 @@ MonoBehaviour:
   isi_step: 0.1
   isi_rep: 1
   trial_limit: 3
+  score: 0
   scoreText: {fileID: 1786151914}
   feedbackText: {fileID: 1479691777}
   healthBar: {fileID: 126796138}
@@ -1143,6 +1144,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a13c3cdeb88f24808a2b9e2beb87b4d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  images:
+  - {fileID: 21300000, guid: f43215ce46c880a428acd2fe515aad88, type: 3}
+  - {fileID: 21300000, guid: c56a7fe16d90583468384a58d0c1898a, type: 3}
+  - {fileID: 21300000, guid: 63437b695421db242ab2e5f2f7fc6240, type: 3}
+  bone: {fileID: 1390488369}
 --- !u!1 &1786151912
 GameObject:
   m_ObjectHideFlags: 0
