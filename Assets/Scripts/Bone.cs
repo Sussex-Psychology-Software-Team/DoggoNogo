@@ -22,7 +22,9 @@ public class Bone : MonoBehaviour
     public double isi_step = 0.1;
     public int isi_rep = 2; //how many times to repeat each isi
     private double[] isi_array; // this stores all isis in single array - these are copied to data individually at start of each trial
-    
+    public int trial_limit = 2; //run only 3 trials - set to like -1 and shouldn't ever be actiavted.
+
+
     //shuffle function for ISIs (Fisher-Yates shuffle should be fine)  https://stackoverflow.com/questions/1150646/card-shuffling-in-c-sharp
     void Shuffle(double[] array) {
         System.Random r = new System.Random();

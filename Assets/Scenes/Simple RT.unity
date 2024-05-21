@@ -876,9 +876,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isi_low: 0.2
-  isi_high: 3.5
+  isi_high: 0.4
   isi_step: 0.1
-  isi_rep: 2
+  isi_rep: 1
+  trial_limit: 3
   scoreText: {fileID: 1786151914}
   feedbackText: {fileID: 1479691777}
   healthBar: {fileID: 126796138}
