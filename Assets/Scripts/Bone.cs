@@ -50,7 +50,7 @@ public class Bone : MonoBehaviour
     Color forest = new Color(0.06770712f, 0.5817609f, 0f, 1f); //colour of positive feedback text
 
     // Scorecard
-    private int score = 0; //holds score
+    public int score = 0; //holds score
     public TextMeshProUGUI scoreText; // displays score
     public TextMeshProUGUI feedbackText; //feedback
     public HealthBar healthBar;
