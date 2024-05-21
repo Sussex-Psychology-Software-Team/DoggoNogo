@@ -130,6 +130,7 @@ public class Bone : MonoBehaviour
     // Start --------------------------------
     void Start()
     {
+        s = gameObject.transform.localScale.x;
         initMetadata();
         // Create isi array
         int isi_array_length = (int)Math.Ceiling((isi_high-isi_low)/isi_step +1); //round up for floating point errors
