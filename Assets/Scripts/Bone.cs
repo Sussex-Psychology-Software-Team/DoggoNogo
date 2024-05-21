@@ -212,22 +212,8 @@ public class Bone : MonoBehaviour
                 //data.score[trial_number] = score;
                 // END OF TRIAL
                 saveTrialData(rt);
-                if(trial_number == isi_array.Length-1){
-                    //end exp
-                    //Send data
-                    PlayerPrefs.SetInt("Score", score); //save score to local copy
-                    PlayerPrefs.Save();
-                    saveMetadata();
-                    string json = JsonUtility.ToJson(data);
-                    string id = data.metadata[0].id;
-                    #if !UNITY_EDITOR && UNITY_WEBGL
-                        dataPipe(json, id); // value based on the current browser
-                    #else
-                        Debug.Log("Not in WebGL");
-                        Debug.Log(json);
-                    #endif
-                    // Next scene
-                    SceneManager.LoadScene("End");
+                if(trial_number == isi_array.Length-1 || trial_number == trial_limit ){
+                    endExp();
                 } else {
                     newTrial();
                 } 
@@ -235,9 +221,21 @@ public class Bone : MonoBehaviour
         }
     }
 
+    
+
     // HELPERS --------------------------------
-    //function to reset variables and set-up for a new trials
-    void newTrial() {
+    public static double median(ArrayList array) { // slow but simple median function - quicker algorithms here: https://stackoverflow.com/questions/4140719/calculate-median-in-c-sharp
+        //can maybe remove some of the doubles here?
+        int size = array.Count;
+        array.Sort(); //note mutates original list
+        //get the median
+        int mid = size / 2;
+        double mid_value = (double)array[mid];
+        double median = (size % 2 != 0) ? mid_value : (mid_value + (double)array[mid - 1]) / 2;
+        return median;
+    }
+    
+    void newTrial() { //function to reset variables and set-up for a new trials
         //reset vars
         trial_number++;
         early_presses = 0;
@@ -283,15 +281,21 @@ public class Bone : MonoBehaviour
         #endif
     }
 
-    // slow but simple median function - quicker algorithms here: https://stackoverflow.com/questions/4140719/calculate-median-in-c-sharp
-    public static double median(ArrayList array) { //can maybe remove some of the doubles here?
-        int size = array.Count;
-        array.Sort(); //note mutates original list
-        //get the median
-        int mid = size / 2;
-        double mid_value = (double)array[mid];
-        double median = (size % 2 != 0) ? mid_value : (mid_value + (double)array[mid - 1]) / 2;
-        return median;
+    void endExp(){
+        //Send data
+        PlayerPrefs.SetInt("Score", score); //save score to local copy
+        PlayerPrefs.Save();
+        saveMetadata();
+        string json = JsonUtility.ToJson(data);
+        string id = data.metadata[0].id;
+        #if !UNITY_EDITOR && UNITY_WEBGL
+            dataPipe(json, id); // value based on the current browser
+        #else
+            Debug.Log("Not in WebGL");
+            Debug.Log(json);
+        #endif
+        // Next scene
+        SceneManager.LoadScene("End");
     }
 
 }
