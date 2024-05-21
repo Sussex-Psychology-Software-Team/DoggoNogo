@@ -23,6 +23,7 @@ public class Bone : MonoBehaviour
     public int isi_rep = 2; //how many times to repeat each isi
     private double[] isi_array; // this stores all isis in single array - these are copied to data individually at start of each trial
     public int trial_limit = 2; //run only 3 trials - set to like -1 and shouldn't ever be actiavted.
+    private double median_rt; //store median rt
 
 
     //shuffle function for ISIs (Fisher-Yates shuffle should be fine)  https://stackoverflow.com/questions/1150646/card-shuffling-in-c-sharp
@@ -177,7 +178,14 @@ public class Bone : MonoBehaviour
             }
 
         } else { //when waiting for input
-            if(Input.GetKey("space")){
+            if(rts_array.Count>0 && rt_timer.Elapsed.TotalSeconds>(median_rt+.1)){ //if time is greater than (median + 100 msec) hide the bone
+                gameObject.transform.localScale = Vector3.zero; //hide bone
+            }
+            Debug.Log(rts_array.Count);
+            Debug.Log(rt_timer.Elapsed.TotalSeconds);
+            Debug.Log(median_rt);
+            //on reaction
+            if(Input.GetKey("space")){ 
                 
                 //get data
                 rt_timer.Stop();
@@ -185,7 +193,7 @@ public class Bone : MonoBehaviour
                 //rts[trial_number] = rt; //being lazy and using two copies of rt arrays here
                 rts_array.Add(rt); //ArrayList version for easier median, could deep-copy in function.
                 // median
-                double median_rt = median(rts_array);
+                median_rt = median(rts_array);
                 
                 // CALCULATE SCORE ******************************
 
@@ -221,7 +229,7 @@ public class Bone : MonoBehaviour
         }
     }
 
-    
+
 
     // HELPERS --------------------------------
     public static double median(ArrayList array) { // slow but simple median function - quicker algorithms here: https://stackoverflow.com/questions/4140719/calculate-median-in-c-sharp
