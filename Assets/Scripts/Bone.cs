@@ -178,12 +178,10 @@ public class Bone : MonoBehaviour
             }
 
         } else { //when waiting for input
-            if(rts_array.Count>0 && rt_timer.Elapsed.TotalSeconds>(median_rt+.1)){ //if time is greater than (median + 100 msec) hide the bone
+            if((rts_array.Count>0 && rt_timer.Elapsed.TotalSeconds>(median_rt+.1)) || rt_timer.Elapsed.TotalSeconds>1.5){ //if time is greater than (median + 100 msec) or 1.5sec hide the bone
                 gameObject.transform.localScale = Vector3.zero; //hide bone
             }
-            Debug.Log(rts_array.Count);
-            Debug.Log(rt_timer.Elapsed.TotalSeconds);
-            Debug.Log(median_rt);
+            
             //on reaction
             if(Input.GetKey("space")){ 
                 
