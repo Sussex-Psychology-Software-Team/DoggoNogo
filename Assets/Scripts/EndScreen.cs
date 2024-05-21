@@ -9,16 +9,18 @@ public class EndScreen : MonoBehaviour
     public HealthBar scoreBar;
 
     private int score;
-    public int max_health = 10;
-    public static double mean = 6.0;
-    public static double sd = 1.0;
+    public static double mean = 7.0;
+    public static double sd = 2.0;
+    public double max_health;
     public TextMeshProUGUI percentileText; // displays score
     
     // Start is called before the first frame update
     void Start()
     {
-        scoreBar.SetMaxHealth(max_health); // figure out what this should be - obviously a maximum of the actual user score is somewhat needed.
+        max_health = mean + (sd*3);
+        scoreBar.SetMaxHealth((int)max_health); // figure out what this should be - obviously a maximum of the actual user score is somewhat needed.
         score = PlayerPrefs.GetInt("Score", 0); //get local copy of player score
+        Debug.Log(score);
         StartCoroutine(scoreAnimator());
         string z = Phi(score);
         percentileText.text = "You scored better than " + z + "% of participants!";
@@ -33,14 +35,14 @@ public class EndScreen : MonoBehaviour
     IEnumerator scoreAnimator(){
         for (int s=0; s<=score; s++){ //note can make smoother by making SetHealth take a float.
             scoreBar.SetHealth(s);
-            if(s==score && score<max_health){
+            if(s==score && s<max_health){
                 Debug.Log("YAY!");
             }
             yield return new WaitForSeconds(.1f);
         }
     }
 
-    static string Phi(int x_score) {
+    public static string Phi(int x_score) {
         //quantile/percentile function in c# - https://stackoverflow.com/questions/1662943/standard-normal-distribution-z-value-function-in-c-sharp
         double x = Convert.ToDouble(x_score);
         // constants
