@@ -1,5 +1,5 @@
 mergeInto(LibraryManager.library, {
-    dataPipe: function (data,id) {
+    dataPipe: function (data, id) {
         console.log("data js: ", data)
         fetch("https://pipe.jspsych.org/api/data/", {
             method: "POST",
