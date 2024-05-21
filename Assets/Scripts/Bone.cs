@@ -276,7 +276,10 @@ public class Bone : MonoBehaviour
         data.trials.Add(trial_data); // Add the metadata object to the list
     }
 
-    void sendData(string json, string id){
+    void sendData(){
+        string json = JsonUtility.ToJson(data);
+        Debug.Log(json);
+        string id = data.metadata[0].id;
         #if !UNITY_EDITOR && UNITY_WEBGL
             dataPipe(json, id); // value based on the current browser
         #else
@@ -289,14 +292,7 @@ public class Bone : MonoBehaviour
         PlayerPrefs.SetInt("Score", score); //save score to local copy
         PlayerPrefs.Save();
         saveMetadata();
-        string json = JsonUtility.ToJson(data);
-        string id = data.metadata[0].id;
-        Debug.Log(json);
-        #if !UNITY_EDITOR && UNITY_WEBGL
-            dataPipe(data, id); // value based on the current browser
-        #else
-            Debug.Log("Not in WebGL");
-        #endif
+        sendData();
         // Next scene
         SceneManager.LoadScene("End");
     }
