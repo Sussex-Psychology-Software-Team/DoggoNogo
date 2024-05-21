@@ -181,9 +181,9 @@ public class Bone : MonoBehaviour
             if((rts_array.Count>0 && rt_timer.Elapsed.TotalSeconds>(median_rt+.1)) || rt_timer.Elapsed.TotalSeconds>1.5){ //if time is greater than (median + 100 msec) or 1.5sec hide the bone
                 gameObject.transform.localScale = Vector3.zero; //hide bone
             }
-            
+
             //on reaction
-            if(Input.GetKey("space")){ 
+            if(Input.GetKeyDown("space")){ 
                 
                 //get data
                 rt_timer.Stop();
