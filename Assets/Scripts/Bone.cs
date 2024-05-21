@@ -274,9 +274,6 @@ public class Bone : MonoBehaviour
         trial_data.score = score;
         trial_data.early_presses = early_presses;
         data.trials.Add(trial_data); // Add the metadata object to the list
-
-        string json = JsonUtility.ToJson(data);
-        Debug.Log(json);
     }
 
     void sendData(string json, string id){
@@ -294,6 +291,7 @@ public class Bone : MonoBehaviour
         saveMetadata();
         string json = JsonUtility.ToJson(data);
         string id = data.metadata[0].id;
+        Debug.Log(json);
         #if !UNITY_EDITOR && UNITY_WEBGL
             dataPipe(json, id); // value based on the current browser
         #else
