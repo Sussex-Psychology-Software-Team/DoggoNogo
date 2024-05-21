@@ -293,7 +293,7 @@ public class Bone : MonoBehaviour
         string id = data.metadata[0].id;
         Debug.Log(json);
         #if !UNITY_EDITOR && UNITY_WEBGL
-            dataPipe(json, id); // value based on the current browser
+            dataPipe(data, id); // value based on the current browser
         #else
             Debug.Log("Not in WebGL");
         #endif
