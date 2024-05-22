@@ -278,10 +278,9 @@ public class Bone : MonoBehaviour
 
     void sendData(){
         string json = JsonUtility.ToJson(data);
-        Debug.Log(json);
         string id = data.metadata[0].id;
         #if !UNITY_EDITOR && UNITY_WEBGL
-            dataPipe(data, id); // value based on the current browser
+            dataPipe(json, id); // value based on the current browser
         #else
             Debug.Log("Not in WebGL");
         #endif
