@@ -19,13 +19,13 @@ public class Dog : MonoBehaviour
     {
         if(bone.score>1 && bone.score<=3){
             gameObject.GetComponent<Image>().sprite = images[0];
-            Debug.Log("IMG 0");
+            //Debug.Log("IMG 0");
         } else if(bone.score>3 && bone.score<=5){
             gameObject.GetComponent<Image>().sprite = images[1];
-            Debug.Log("IMG 1");
+            //Debug.Log("IMG 1");
         } else if(bone.score>5){
             gameObject.GetComponent<Image>().sprite = images[2];
-            Debug.Log("IMG 2");
+            //Debug.Log("IMG 2");
         }
     }
 
