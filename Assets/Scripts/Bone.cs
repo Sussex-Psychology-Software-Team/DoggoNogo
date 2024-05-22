@@ -67,6 +67,17 @@ public class Bone : MonoBehaviour
     //Create json-convertable struct to hold data, each trial stored individually https://forum.unity.com/threads/serialize-nested-objects-with-jsonutility.737624/
 
     [System.Serializable]
+    public class DataPipeBody{
+        public string experimentID;
+        public string filename;
+        public List<Data> data;
+
+        public DataPipeBody(){
+            data = new List<Data>();
+        }
+    }
+    
+    [System.Serializable]
     public class Data {
         public List<Metadata> metadata;
         public List<Trial> trials;
@@ -287,13 +298,12 @@ public class Bone : MonoBehaviour
     //     #endif
     // }
 
+
     IEnumerator sendData(){
-        string filename = data.metadata[0].id + ".json";
-        var body = new { 
-            experimentID = "VSyXogVR8oTS",
-            filename = filename, // Construct using participant ID here
-            data = data, // Add JSON object here
-        };
+        DataPipeBody body = new DataPipeBody(); //create instance
+        body.filename = data.metadata[0].id + ".json";
+        body.experimentID = "VSyXogVR8oTS";
+        body.data.Add(data);
         string json = JsonUtility.ToJson(body);
         Debug.Log(json);
 
