@@ -64,30 +64,7 @@ public class Bone : MonoBehaviour
     //consider multidimensional or jagged array? https://stackoverflow.com/questions/597720/differences-between-a-multidimensional-array-and-an-array-of-arrays
     ArrayList rts_array = new(); // Store rts in ArrayList to allow for easier median computation
     
-    //Create json-convertable struct to hold data, each trial stored individually https://forum.unity.com/threads/serialize-nested-objects-with-jsonutility.737624/
-
-    [System.Serializable]
-    public class DataPipeBody{
-        public string experimentID;
-        public string filename;
-        public List<Data> data;
-
-        public DataPipeBody(){
-            data = new List<Data>();
-        }
-    }
-    
-    [System.Serializable]
-    public class Data {
-        public List<Metadata> metadata;
-        public List<Trial> trials;
-
-        public Data() {
-            metadata = new List<Metadata>();
-            trials = new List<Trial>();
-        }
-    }
-
+    //Create json-convertable struct to hold data, each trial stored individually https://forum.unity.com/threads/serialize-nested-objects-with-jsonutility.737624
     [System.Serializable]
     public class Metadata {
         public string id;
@@ -106,6 +83,22 @@ public class Bone : MonoBehaviour
         public int early_presses;
     }
 
+    [System.Serializable]
+    public class Data {
+        public Metadata metadata;
+        public List<Trial> trials;
+        public Data() {
+            trials = new List<Trial>();
+        }
+    }
+
+    [System.Serializable]
+    public class DataPipeBody{
+        public string experimentID;
+        public string filename;
+        public Data data;
+    }
+    
     Data data = new Data(); //create instance
     Metadata metadata = new Metadata(); // Create an instance of Metadata here to add start and end separately
 
@@ -275,7 +268,7 @@ public class Bone : MonoBehaviour
 
     void saveMetadata(){
         metadata.end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
-        data.metadata.Add(metadata); // Add the metadata object to the list
+        data.metadata = metadata; // Add the metadata object to the list
     }
 
     void saveTrialData(double rt){
@@ -298,15 +291,19 @@ public class Bone : MonoBehaviour
     //     #endif
     // }
 
-
-    IEnumerator sendData(){
+    string jsonify(){
         DataPipeBody body = new DataPipeBody(); //create instance
-        body.filename = data.metadata[0].id + ".json";
+        body.filename = data.metadata.id + ".json";
         body.experimentID = "VSyXogVR8oTS";
         body.data = data;
+        
         string json = JsonUtility.ToJson(body);
-        Debug.Log(json);
+        //json = "{\"name\":\"John\", \"age\":30, \"car\":null}";
+        Debug.Log(json); //sends through as 
+        return json;
+    }
 
+    IEnumerator sendData(string json){
         using (UnityWebRequest www = UnityWebRequest.Post("https://pipe.jspsych.org/api/data/", json, "application/json")) {
             yield return www.SendWebRequest();
             if (www.result != UnityWebRequest.Result.Success) {
@@ -323,7 +320,8 @@ public class Bone : MonoBehaviour
         PlayerPrefs.SetInt("Score", score); //save score to local copy
         PlayerPrefs.Save();
         saveMetadata();
-        StartCoroutine(sendData());
+        string json = jsonify();
+        StartCoroutine(sendData(json));
         // Next scene
         SceneManager.LoadScene("End");
     }
