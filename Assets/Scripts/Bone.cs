@@ -303,7 +303,7 @@ public class Bone : MonoBehaviour
         DataPipeBody body = new DataPipeBody(); //create instance
         body.filename = data.metadata[0].id + ".json";
         body.experimentID = "VSyXogVR8oTS";
-        body.data.Add(data);
+        body.data = data;
         string json = JsonUtility.ToJson(body);
         Debug.Log(json);
 
