@@ -88,19 +88,12 @@ public class Bone : MonoBehaviour
         public Metadata metadata;
         public List<Trial> trials;
         public Data() {
+            metadata = new Metadata();
             trials = new List<Trial>();
         }
     }
-
-    [System.Serializable]
-    public class DataPipeBody{
-        public string experimentID;
-        public string filename;
-        public Data data;
-    }
     
     Data data = new Data(); //create instance
-    Metadata metadata = new Metadata(); // Create an instance of Metadata here to add start and end separately
 
     //Send data
     [DllImport("__Internal")]
@@ -137,7 +130,7 @@ public class Bone : MonoBehaviour
     void Start()
     {
         s = gameObject.transform.localScale.x;
-        initMetadata();
+        initMetadata(); //adds most of the global metadata vars
         // Create isi array
         int isi_array_length = (int)Math.Ceiling((isi_high-isi_low)/isi_step +1); //round up for floating point errors
         isi_array = new double[isi_array_length*isi_rep]; //length of each set * number of repeats
@@ -260,15 +253,14 @@ public class Bone : MonoBehaviour
 
     void initMetadata(){
         // Create metadata (init saves start time) - void as attached to global var
-        metadata.id = GenerateString(24); // Assign id
-        metadata.name = PlayerPrefs.GetString("Name", "No Name");
-        metadata.userAgent = UA.getUserAgent(); // Assign userAgent
-        metadata.start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
+        data.metadata.id = GenerateString(24); // Assign id
+        data.metadata.name = PlayerPrefs.GetString("Name", "No Name");
+        data.metadata.userAgent = UA.getUserAgent(); // Assign userAgent
+        data.metadata.start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
     }
 
     void saveMetadata(){
-        metadata.end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
-        data.metadata = metadata; // Add the metadata object to the list
+        data.metadata.end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
     }
 
     void saveTrialData(double rt){
@@ -281,24 +273,22 @@ public class Bone : MonoBehaviour
         data.trials.Add(trial_data); // Add the metadata object to the list
     }
 
-    // void sendData(){
-    //     string json = JsonUtility.ToJson(data);
-    //     string id = data.metadata[0].id;
-    //     #if !UNITY_EDITOR && UNITY_WEBGL
-    //         dataPipe(json, id); // value based on the current browser
-    //     #else
-    //         Debug.Log("Not in WebGL");
-    //     #endif
-    // }
+    [System.Serializable]
+    public class DataPipeBody{
+        public string experimentID;
+        public string filename;
+        public Data data;
+    }
 
     string jsonify(){
         DataPipeBody body = new DataPipeBody(); //create instance
-        body.filename = data.metadata.id + ".json";
         body.experimentID = "VSyXogVR8oTS";
-        body.data = data;
+        body.filename = data.metadata.name + "_" + data.metadata.id + ".json";
+        body.data = data; //THIS WORKS IF string type "{\"name\":\"John\", \"age\":30, \"car\":null}";//data;
         
         string json = JsonUtility.ToJson(body);
-        //json = "{\"name\":\"John\", \"age\":30, \"car\":null}";
+        //string trials_json = JsonHelper.ToJson(data.trials);
+        //json = 
         Debug.Log(json); //sends through as 
         return json;
     }
@@ -324,6 +314,30 @@ public class Bone : MonoBehaviour
         StartCoroutine(sendData(json));
         // Next scene
         SceneManager.LoadScene("End");
+    }
+
+    public static class JsonHelper {
+        public static T[] FromJson<T>(string json){
+            Wrapper<T> wrapper = JsonUtility.FromJson<Wrapper<T>>(json);
+            return wrapper.Items;
+        }
+
+        public static string ToJson<T>(T[] array){
+            Wrapper<T> wrapper = new Wrapper<T>();
+            wrapper.Items = array;
+            return JsonUtility.ToJson(wrapper);
+        }
+
+        public static string ToJson<T>(T[] array, bool prettyPrint){
+            Wrapper<T> wrapper = new Wrapper<T>();
+            wrapper.Items = array;
+            return JsonUtility.ToJson(wrapper, prettyPrint);
+        }
+
+        [Serializable]
+        private class Wrapper<T> {
+            public T[] Items;
+        }
     }
 
 }
