@@ -20,7 +20,7 @@ public class Bone : MonoBehaviour
     public double isi_low = 0.2; //note ISIs are doubles in line with Stopwatch.Elapsed.TotalSeconds - but consider ints e.g. 1400 ms to avoid point representation errors
     public double isi_high = 3.5;
     public double isi_step = 0.1;
-    public int isi_rep = 2; //how many times to repeat each isi
+    public int isi_rep = 3; //how many times to repeat each isi
     private double[] isi_array; // this stores all isis in single array - these are copied to data individually at start of each trial
     public int trial_limit = 2; //run only 3 trials - set to like -1 and shouldn't ever be actiavted.
     private double median_rt; //store median rt
@@ -95,10 +95,6 @@ public class Bone : MonoBehaviour
     
     Data data = new Data(); //create instance
 
-    //Send data
-    [DllImport("__Internal")]
-    private static extern void dataPipe(string json, string id);
-
     // Metadata Functions --------------------------------
     // Grab userAgent
     public class UA : MonoBehaviour { //https://stackoverflow.com/questions/72083612/detect-mobile-client-in-webgl
@@ -125,6 +121,9 @@ public class Bone : MonoBehaviour
         }
         return new string(chars);
     }
+
+
+
 
     // Start --------------------------------
     void Start()
@@ -153,10 +152,10 @@ public class Bone : MonoBehaviour
     // Update is called once per frame - maybe use FixedUpdate for inputs?
     void Update()
     {
-        if(isi_timer.IsRunning){ //if in isi/ not waiting for reaction
+       if(isi_timer.IsRunning){ //if in isi/ not waiting for reaction
             //handle early presses
             if(Input.GetKeyDown("space")){
-                score -= 2; // minus 2 points for an early press
+                 score -= 2; // minus 2 points for an early press
                 if(score<0){ 
                     score = 0; //lowerbound on score of 0
                 }
@@ -212,6 +211,8 @@ public class Bone : MonoBehaviour
                 }
                 scoreText.text = "Score: " + score;
                 healthBar.SetHealth(score);
+                //******************************
+
                 //store data
                 //data.score[trial_number] = score;
                 // END OF TRIAL
@@ -288,7 +289,6 @@ public class Bone : MonoBehaviour
         
         string json = JsonUtility.ToJson(body);
         //string trials_json = JsonHelper.ToJson(data.trials);
-        //json = 
         Debug.Log(json); //sends through as 
         return json;
     }
