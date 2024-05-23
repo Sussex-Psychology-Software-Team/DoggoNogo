@@ -20,7 +20,6 @@ public class EndScreen : MonoBehaviour
         max_health = mean + (sd*3);
         scoreBar.SetMaxHealth((int)max_health); // figure out what this should be - obviously a maximum of the actual user score is somewhat needed.
         score = PlayerPrefs.GetInt("Score", 0); //get local copy of player score
-        Debug.Log(score);
         StartCoroutine(scoreAnimator());
         string z = Phi(score);
         percentileText.text = "You scored better than " + z + "% of participants!";
@@ -36,7 +35,7 @@ public class EndScreen : MonoBehaviour
         for (int s=0; s<=score; s++){ //note can make smoother by making SetHealth take a float.
             scoreBar.SetHealth(s);
             if(s==score && s<max_health){
-                Debug.Log("YAY!");
+                //Debug.Log("YAY!");
             }
             yield return new WaitForSeconds(.1f);
         }

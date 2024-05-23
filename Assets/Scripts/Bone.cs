@@ -2,7 +2,7 @@ using UnityEngine;
 using Debug = UnityEngine.Debug;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.SceneManagement;
-using UnityEngine.Networking;
+using UnityEngine.Networking; //Unity Web Request
 using System;
 using System.Diagnostics;
 using System.Collections;
@@ -65,6 +65,18 @@ public class Bone : MonoBehaviour
     ArrayList rts_array = new(); // Store rts in ArrayList to allow for easier median computation
     
     //Create json-convertable struct to hold data, each trial stored individually https://forum.unity.com/threads/serialize-nested-objects-with-jsonutility.737624/
+
+    [System.Serializable]
+    public class DataPipeBody{
+        public string experimentID;
+        public string filename;
+        public List<Data> data;
+
+        public DataPipeBody(){
+            data = new List<Data>();
+        }
+    }
+    
     [System.Serializable]
     public class Data {
         public List<Metadata> metadata;
@@ -276,15 +288,34 @@ public class Bone : MonoBehaviour
         data.trials.Add(trial_data); // Add the metadata object to the list
     }
 
-    void sendData(){
-        string json = JsonUtility.ToJson(data);
-        Debug.Log("UITY DEBUG: " + json);
-        string id = data.metadata[0].id;
-        #if !UNITY_EDITOR && UNITY_WEBGL
-            dataPipe(data, id); // value based on the current browser
-        #else
-            Debug.Log("Not in WebGL");
-        #endif
+    // void sendData(){
+    //     string json = JsonUtility.ToJson(data);
+    //     string id = data.metadata[0].id;
+    //     #if !UNITY_EDITOR && UNITY_WEBGL
+    //         dataPipe(json, id); // value based on the current browser
+    //     #else
+    //         Debug.Log("Not in WebGL");
+    //     #endif
+    // }
+
+
+    IEnumerator sendData(){
+        DataPipeBody body = new DataPipeBody(); //create instance
+        body.filename = data.metadata[0].id + ".json";
+        body.experimentID = "VSyXogVR8oTS";
+        body.data.Add(data);
+        string json = JsonUtility.ToJson(body);
+        Debug.Log(json);
+
+        using (UnityWebRequest www = UnityWebRequest.Post("https://pipe.jspsych.org/api/data/", json, "application/json")) {
+            yield return www.SendWebRequest();
+            if (www.result != UnityWebRequest.Result.Success) {
+                Debug.LogError(www.error);
+            }
+            else {
+                Debug.Log("Form upload complete!");
+            }
+        }
     }
 
     void endExp(){
@@ -292,7 +323,7 @@ public class Bone : MonoBehaviour
         PlayerPrefs.SetInt("Score", score); //save score to local copy
         PlayerPrefs.Save();
         saveMetadata();
-        sendData();
+        StartCoroutine(sendData());
         // Next scene
         SceneManager.LoadScene("End");
     }
