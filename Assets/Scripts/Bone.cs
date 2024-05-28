@@ -149,11 +149,12 @@ public class Bone : MonoBehaviour
 
 
     // TRIAL MANAGEMENT ------------------------------------------------------------
-    void saveTrialData(double rt){ //save current variables to an instance of the trial class
+    void saveTrialData(double rt, string datetime){ //save current variables to an instance of the trial class
         Trial trial_data = new Trial(); // Create an instance of a Trial
         trial_data.trial_n = trial_number+1;
         trial_data.isi = isi; 
         trial_data.rt = roundTime(rt,7); // round off to avoid precision errors - 7 is length of ElapsedTicks anyway.
+        trial_data.datetime = datetime
         trial_data.score = score;
         trial_data.early_presses = early_presses;
         data.trials.Add(trial_data); // Add trial object to the list of trials
@@ -274,6 +275,7 @@ public class Bone : MonoBehaviour
                 
                 //get data
                 rt_timer.Stop();
+                string datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 double rt = rt_timer.Elapsed.TotalSeconds; //consider changing data types ElapsedMilliseconds
                 //rts[trial_number] = rt; //being lazy and using two copies of rt arrays here
                 rts_array.Add(rt); //ArrayList version for easier median, could deep-copy in function.
@@ -306,7 +308,7 @@ public class Bone : MonoBehaviour
                 //store data
                 //data.score[trial_number] = score;
                 // END OF TRIAL
-                saveTrialData(rt);
+                saveTrialData(rt,datetime);
                 if(trial_number == isi_array.Length-1 || trial_number == trial_limit ){
                     endExp();
                 } else {
