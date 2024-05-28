@@ -61,7 +61,7 @@ public class Bone : MonoBehaviour
         // NOTE below not working - need to figure out constructors and static methods
         public Metadata(){//string id, string name, string UserA, string start){
             id = randomId(24);
-            //name = PlayerPrefs.GetString("Name", "No Name");
+            //name = pName; //PlayerPrefs.GetString("Name", "No Name");
             //userAgent = UA.getUserAgent(); // Assign userAgent
             start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
         }
@@ -101,8 +101,8 @@ public class Bone : MonoBehaviour
         public double stopwatch;
         public string datetime;
 
-        public EarlyPress(int press_count, double time){
-            count = press_count;
+        public EarlyPress(double time){
+            count = current_trial.early_presses.Count+1;
             stopwatch = time;
             datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         }
@@ -163,8 +163,6 @@ public class Bone : MonoBehaviour
             #endif
         }
     }
-
-
 
     void initMetadata(){
         // Create metadata (init saves start time) - void as attached to global var
@@ -277,7 +275,7 @@ public class Bone : MonoBehaviour
                 feedbackText.text = "TOO QUICK!\nWait until the bone has appeared.";
 
                 //save early presses
-                EarlyPress early_press = new EarlyPress(current_trial.early_presses.Count, isi_timer.Elapsed.TotalSeconds);
+                EarlyPress early_press = new EarlyPress(isi_timer.Elapsed.TotalSeconds);
                 current_trial.early_presses.Add(early_press);
             }
 
