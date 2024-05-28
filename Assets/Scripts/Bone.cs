@@ -154,19 +154,19 @@ public class Bone : MonoBehaviour
     }
 
     //random ID generator
-    System.Random rand = new System.Random(); 
-    public const string characters = "abcdefghijklmnopqrstuvwyxzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    public string GenerateString(int size) { //https://stackoverflow.com/a/9995960/7705626
-        char[] chars = new char[size];
+    public string randomId(int size) { //https://stackoverflow.com/a/9995960/7705626
+        System.Random rand = new System.Random(); 
+        string characters = "abcdefghijklmnopqrstuvwyxzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        string rand_id;
         for (int i=0; i < size; i++) {
-            chars[i] = characters[rand.Next(characters.Length)];
+            rand_id += characters[rand.Next(characters.Length)];
         }
-        return new string(chars);
+        return rand_id;
     }
 
     void initMetadata(){
         // Create metadata (init saves start time) - void as attached to global var
-        data.metadata.id = GenerateString(24); // Assign id
+        data.metadata.id = randomId(24); // Assign id
         data.metadata.name = PlayerPrefs.GetString("Name", "No Name");
         data.metadata.userAgent = UA.getUserAgent(); // Assign userAgent
     }
