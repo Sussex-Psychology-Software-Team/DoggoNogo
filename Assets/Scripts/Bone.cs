@@ -151,7 +151,7 @@ public class Bone : MonoBehaviour
     // TRIAL MANAGEMENT ------------------------------------------------------------
     void saveTrialData(double rt){ //save current variables to an instance of the trial class
         Trial trial_data = new Trial(); // Create an instance of a Trial
-        trial_data.trial_n = trial_number;
+        trial_data.trial_n = trial_number+1;
         trial_data.isi = isi; 
         trial_data.rt = roundTime(rt,7); // round off to avoid precision errors - 7 is length of ElapsedTicks anyway.
         trial_data.score = score;
