@@ -60,10 +60,21 @@ public class Bone : MonoBehaviour
         
         // NOTE below not working - need to figure out constructors and static methods
         public Metadata(){//string id, string name, string UserA, string start){
-            //id = GenerateString(24);
+            id = randomId(24);
             //name = PlayerPrefs.GetString("Name", "No Name");
             //userAgent = UA.getUserAgent(); // Assign userAgent
             start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
+        }
+
+        //random ID generator
+        public string randomId(int size) { //https://stackoverflow.com/a/9995960/7705626
+            System.Random rand = new System.Random(); 
+            string characters = "abcdefghijklmnopqrstuvwyxzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            string rand_id = "";
+            for (int i=0; i < size; i++) {
+                rand_id += characters[rand.Next(characters.Length)];
+            }
+            return rand_id;
         }
     }
 
@@ -153,20 +164,10 @@ public class Bone : MonoBehaviour
         }
     }
 
-    //random ID generator
-    public string randomId(int size) { //https://stackoverflow.com/a/9995960/7705626
-        System.Random rand = new System.Random(); 
-        string characters = "abcdefghijklmnopqrstuvwyxzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        string rand_id;
-        for (int i=0; i < size; i++) {
-            rand_id += characters[rand.Next(characters.Length)];
-        }
-        return rand_id;
-    }
+
 
     void initMetadata(){
         // Create metadata (init saves start time) - void as attached to global var
-        data.metadata.id = randomId(24); // Assign id
         data.metadata.name = PlayerPrefs.GetString("Name", "No Name");
         data.metadata.userAgent = UA.getUserAgent(); // Assign userAgent
     }
