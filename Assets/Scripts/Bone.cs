@@ -13,9 +13,9 @@ using TMPro; //for TextMeshProUGUI
 public class Bone : MonoBehaviour
 {
 
-    // ******************* SETUP *******************
+    // ******************* VARIABLES *******************
 
-    // Inter-stimulus Intervals --------------------------------
+    // Inter-stimulus Intervals ------------------------------------------------------------
     // declare ISI array parameters/vars
     public double isi_low = 0.2; //note ISIs are doubles in line with Stopwatch.Elapsed.TotalSeconds - but consider ints e.g. 1400 ms to avoid point representation errors
     public double isi_high = 3.5;
@@ -25,26 +25,11 @@ public class Bone : MonoBehaviour
     public int trial_limit = 2; //run only 3 trials - set to like -1 and shouldn't ever be actiavted.
     private double median_rt; //store median rt
 
-
-    //shuffle function for ISIs (Fisher-Yates shuffle should be fine)  https://stackoverflow.com/questions/1150646/card-shuffling-in-c-sharp
-    void Shuffle(double[] array) {
-        System.Random r = new System.Random();
-        for (int n=array.Length-1; n>0; --n) {
-            int k = r.Next(n+1); //next random on system iterator
-            (array[k], array[n]) = (array[n], array[k]); //use tuple to swap elements
-        }
-    }
-
-    public double roundTime(double time, int dp){
-        return Math.Round(time *  Math.Pow(10, dp)) /  Math.Pow(10, dp); //remove trailing 0s - avoids double precision errors. or try .ToString("0.00") or .ToString("F2")
-    }
-
     //timers
     public Stopwatch isi_timer = new Stopwatch(); // High precision timer: https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.stopwatch?view=net-8.0&redirectedfrom=MSDN#remarks
     public Stopwatch rt_timer = new Stopwatch(); // https://stackoverflow.com/questions/394020/how-accurate-is-system-diagnostics-stopwatch
 
-
-    // Visuals --------------------------------
+    // Visuals ------------------------------------------------------------
     // setup stim display vars
     private float s; // or 0.4145592f original image is too big - can probably just prefab this in future
     Color forest = new Color(0.06770712f, 0.5817609f, 0f, 1f); //colour of positive feedback text
@@ -55,15 +40,16 @@ public class Bone : MonoBehaviour
     public TextMeshProUGUI feedbackText; //feedback
     public HealthBar healthBar;
 
-    // Data --------------------------------
+    // Data ------------------------------------------------------------
     // trial-level data (globals)
     private int trial_number = -1; //tracks trial number
     private int early_presses = 0; // counts early button presses
     private double isi; //stores each trial's isi
 
     //consider multidimensional or jagged array? https://stackoverflow.com/questions/597720/differences-between-a-multidimensional-array-and-an-array-of-arrays
-    ArrayList rts_array = new(); // Store rts in ArrayList to allow for easier median computation
+    ArrayList rts_array = new(); // Store rts in ArrayList to allow for easier median computation and store as sorted list (i.e. rts_array.Sort() method)
     
+    // DATA CLASSES ------------------------------------------------------------
     //Create json-convertable struct to hold data, each trial stored individually https://forum.unity.com/threads/serialize-nested-objects-with-jsonutility.737624
     [System.Serializable]
     public class Metadata {
@@ -95,8 +81,35 @@ public class Bone : MonoBehaviour
     
     Data data = new Data(); //create instance
 
-    // Metadata Functions --------------------------------
-    // Grab userAgent
+
+    // ******************* FUNCTIONS *******************
+    // TIMING Helpers ------------------------------------------------------------
+    //shuffle function for ISIs (Fisher-Yates shuffle should be fine)  https://stackoverflow.com/questions/1150646/card-shuffling-in-c-sharp
+    void Shuffle(double[] array) {
+        System.Random r = new System.Random();
+        for (int n=array.Length-1; n>0; --n) {
+            int k = r.Next(n+1); //next random on system iterator
+            (array[k], array[n]) = (array[n], array[k]); //use tuple to swap elements
+        }
+    }
+
+    public static double median(ArrayList array) { // slow but simple median function - quicker algorithms here: https://stackoverflow.com/questions/4140719/calculate-median-in-c-sharp
+        //can maybe remove some of the doubles here?
+        int size = array.Count;
+        array.Sort(); //note mutates original list
+        //get the median
+        int mid = size / 2;
+        double mid_value = (double)array[mid];
+        double median = (size % 2 != 0) ? mid_value : (mid_value + (double)array[mid - 1]) / 2;
+        return median;
+    }
+
+    public double roundTime(double time, int dp){
+        return Math.Round(time *  Math.Pow(10, dp)) /  Math.Pow(10, dp); //remove trailing 0s - avoids double precision errors. or try .ToString("0.00") or .ToString("F2")
+    }
+
+    // METADATA --------------------------------
+    // Grab userAgent - Not working
     public class UA : MonoBehaviour { //https://stackoverflow.com/questions/72083612/detect-mobile-client-in-webgl
         [DllImport("__Internal")] // imports userAgent() from Assets/WebGL/Plugins/userAgent.jslib
         static extern string userAgent();
@@ -122,6 +135,83 @@ public class Bone : MonoBehaviour
         return new string(chars);
     }
 
+    void initMetadata(){
+        // Create metadata (init saves start time) - void as attached to global var
+        data.metadata.id = GenerateString(24); // Assign id
+        data.metadata.name = PlayerPrefs.GetString("Name", "No Name");
+        data.metadata.userAgent = UA.getUserAgent(); // Assign userAgent
+        data.metadata.start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
+    }
+
+    void saveMetadata(){ //stores end time of exp
+        data.metadata.end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
+    }
+
+
+    // TRIAL MANAGEMENT ------------------------------------------------------------
+    void saveTrialData(double rt){ //save current variables to an instance of the trial class
+        Trial trial_data = new Trial(); // Create an instance of a Trial
+        trial_data.trial_n = trial_number;
+        trial_data.isi = isi; 
+        trial_data.rt = roundTime(rt,7); // round off to avoid precision errors - 7 is length of ElapsedTicks anyway.
+        trial_data.score = score;
+        trial_data.early_presses = early_presses;
+        data.trials.Add(trial_data); // Add trial object to the list of trials
+    }
+
+    void newTrial() { //function to reset variables and set-up for a new trials
+        //reset vars
+        trial_number++;
+        early_presses = 0;
+        gameObject.transform.localScale = Vector3.zero; // reset stim
+        isi = isi_array[trial_number]; // new isi
+        // reset timers
+        isi_timer.Reset();
+        isi_timer.Start();
+        rt_timer.Reset();
+    }
+
+    void endExp(){
+        //Send data
+        PlayerPrefs.SetInt("Score", score); //save score to local copy
+        PlayerPrefs.Save();
+        saveMetadata();
+        string json = jsonify(data);
+        StartCoroutine(sendData(json));
+        // Next scene
+        SceneManager.LoadScene("End");
+    }
+
+    // SENDING DATA -------------------------------------
+    [System.Serializable] //class to format the data as expected by datapipe
+    public class DataPipeBody{
+        public string experimentID;
+        public string filename;
+        public string data; //json string of data object
+    }
+
+    string jsonify(Data data){ //Create data in string as expected by datapipe
+        //Data data passes in function scoped copy - probably unnecessary...
+        DataPipeBody body = new DataPipeBody(); //create instance
+        body.experimentID = "VSyXogVR8oTS";
+        body.filename = data.metadata.name + "_" + data.metadata.id + ".json";
+        body.data = JsonUtility.ToJson(data); 
+        string json = JsonUtility.ToJson(body); //Note double encoding is necessary here as looks like datapipe parses this as an object on their end too
+        Debug.Log(json);
+        return json;
+    }
+
+    IEnumerator sendData(string json){ //sends data - IEnumerator can run over sever frames and wait for 'OK' response from OSF server
+        using (UnityWebRequest www = UnityWebRequest.Post("https://pipe.jspsych.org/api/data/", json, "application/json")) {
+            yield return www.SendWebRequest();
+            if (www.result != UnityWebRequest.Result.Success) {
+                Debug.LogError(www.error);
+            }
+            else {
+                Debug.Log("Form upload complete!");
+            }
+        }
+    }
 
 
 
@@ -225,117 +315,4 @@ public class Bone : MonoBehaviour
             }
         }
     }
-
-
-
-    // HELPERS --------------------------------
-    public static double median(ArrayList array) { // slow but simple median function - quicker algorithms here: https://stackoverflow.com/questions/4140719/calculate-median-in-c-sharp
-        //can maybe remove some of the doubles here?
-        int size = array.Count;
-        array.Sort(); //note mutates original list
-        //get the median
-        int mid = size / 2;
-        double mid_value = (double)array[mid];
-        double median = (size % 2 != 0) ? mid_value : (mid_value + (double)array[mid - 1]) / 2;
-        return median;
-    }
-    
-    void newTrial() { //function to reset variables and set-up for a new trials
-        //reset vars
-        trial_number++;
-        early_presses = 0;
-        gameObject.transform.localScale = Vector3.zero; // reset stim
-        isi = isi_array[trial_number]; // new isi
-        // reset timers
-        isi_timer.Reset();
-        isi_timer.Start();
-        rt_timer.Reset();
-    }
-
-    void initMetadata(){
-        // Create metadata (init saves start time) - void as attached to global var
-        data.metadata.id = GenerateString(24); // Assign id
-        data.metadata.name = PlayerPrefs.GetString("Name", "No Name");
-        data.metadata.userAgent = UA.getUserAgent(); // Assign userAgent
-        data.metadata.start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
-    }
-
-    void saveMetadata(){
-        data.metadata.end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
-    }
-
-    void saveTrialData(double rt){
-        Trial trial_data = new Trial(); // Create an instance of a Trial
-        trial_data.trial_n = trial_number;
-        trial_data.isi = isi; 
-        trial_data.rt = roundTime(rt,7); // round off to avoid precision errors - 7 is length of ElapsedTicks anyway.
-        trial_data.score = score;
-        trial_data.early_presses = early_presses;
-        data.trials.Add(trial_data); // Add the metadata object to the list
-    }
-
-    [System.Serializable]
-    public class DataPipeBody{
-        public string experimentID;
-        public string filename;
-        public string data; //json string of data object
-    }
-
-    string jsonify(Data data){ //pass in function scoped copy - probably unnecessary
-        DataPipeBody body = new DataPipeBody(); //create instance
-        body.experimentID = "VSyXogVR8oTS";
-        body.filename = data.metadata.name + "_" + data.metadata.id + ".json";
-        body.data = JsonUtility.ToJson(data); 
-        string json = JsonUtility.ToJson(body); //Note double encoding is necessary here as looks like datapipe parses this as an object on their end too
-        Debug.Log(json);
-        return json;
-    }
-
-    IEnumerator sendData(string json){
-        using (UnityWebRequest www = UnityWebRequest.Post("https://pipe.jspsych.org/api/data/", json, "application/json")) {
-            yield return www.SendWebRequest();
-            if (www.result != UnityWebRequest.Result.Success) {
-                Debug.LogError(www.error);
-            }
-            else {
-                Debug.Log("Form upload complete!");
-            }
-        }
-    }
-
-    void endExp(){
-        //Send data
-        PlayerPrefs.SetInt("Score", score); //save score to local copy
-        PlayerPrefs.Save();
-        saveMetadata();
-        string json = jsonify(data);
-        StartCoroutine(sendData(json));
-        // Next scene
-        SceneManager.LoadScene("End");
-    }
-
-    public static class JsonHelper {
-        public static T[] FromJson<T>(string json){
-            Wrapper<T> wrapper = JsonUtility.FromJson<Wrapper<T>>(json);
-            return wrapper.Items;
-        }
-
-        public static string ToJson<T>(T[] array){
-            Wrapper<T> wrapper = new Wrapper<T>();
-            wrapper.Items = array;
-            return JsonUtility.ToJson(wrapper);
-        }
-
-        public static string ToJson<T>(T[] array, bool prettyPrint){
-            Wrapper<T> wrapper = new Wrapper<T>();
-            wrapper.Items = array;
-            return JsonUtility.ToJson(wrapper, prettyPrint);
-        }
-
-        [Serializable]
-        private class Wrapper<T> {
-            public T[] Items;
-        }
-    }
-
 }
