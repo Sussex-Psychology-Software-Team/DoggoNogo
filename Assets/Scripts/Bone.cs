@@ -101,8 +101,8 @@ public class Bone : MonoBehaviour
         public double stopwatch;
         public string datetime;
 
-        public EarlyPress(double time){
-            count = current_trial.early_presses.Count+1;
+        public EarlyPress(int press_count, double time){
+            count = press_count;
             stopwatch = time;
             datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         }
@@ -275,7 +275,7 @@ public class Bone : MonoBehaviour
                 feedbackText.text = "TOO QUICK!\nWait until the bone has appeared.";
 
                 //save early presses
-                EarlyPress early_press = new EarlyPress(isi_timer.Elapsed.TotalSeconds);
+                EarlyPress early_press = new EarlyPress(current_trial.early_presses.Count+1, isi_timer.Elapsed.TotalSeconds);
                 current_trial.early_presses.Add(early_press);
             }
 
