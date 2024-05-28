@@ -170,10 +170,6 @@ public class Bone : MonoBehaviour
         data.metadata.userAgent = UA.getUserAgent(); // Assign userAgent
     }
 
-    void saveMetadata(){ //stores end time of exp
-        data.metadata.end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
-    }
-
 
     // TRIAL MANAGEMENT ------------------------------------------------------------
     void newTrial() { //function to reset variables and set-up for a new trials
@@ -191,11 +187,13 @@ public class Bone : MonoBehaviour
 
     void endExp(){
         Debug.Log(JsonUtility.ToJson(data));
-        //Send data
+        // Save data
         PlayerPrefs.SetInt("Score", score); //save score to local copy
         PlayerPrefs.Save();
-        saveMetadata();
-        string json = jsonify(data);
+        data.metadata.end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
+        // Send datapipe Data
+        DataPipeBody body = new DataPipeBody(data); //create instance
+        string json = JsonUtility.ToJson(body); //Note double encoding is necessary here as looks like datapipe parses this as an object on their end too
         StartCoroutine(sendData(json));
         // Next scene
         SceneManager.LoadScene("End");
@@ -213,13 +211,6 @@ public class Bone : MonoBehaviour
             filename = data_obj.metadata.name + "_" + data_obj.metadata.id + ".json";
             data = JsonUtility.ToJson(data_obj);
         }
-    }
-
-    string jsonify(Data data){ //Create data in string as expected by datapipe
-        //Data data passes in function scoped copy - probably unnecessary...
-        DataPipeBody body = new DataPipeBody(data); //create instance
-        string json = JsonUtility.ToJson(body); //Note double encoding is necessary here as looks like datapipe parses this as an object on their end too
-        return json;
     }
 
     IEnumerator sendData(string json){ //sends data - IEnumerator can run over sever frames and wait for 'OK' response from OSF server
