@@ -62,7 +62,7 @@ public class Bone : MonoBehaviour
         public Metadata(){//string id, string name, string UserA, string start){
             id = randomId(24);
             //name = pName; //PlayerPrefs.GetString("Name", "No Name");
-            //userAgent = UA.getUserAgent(); // Assign userAgent
+            userAgent = getUserAgent(); // Assign userAgent
             start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
         }
 
@@ -75,6 +75,16 @@ public class Bone : MonoBehaviour
                 rand_id += characters[rand.Next(characters.Length)];
             }
             return rand_id;
+        }
+
+        public string getUserAgent(){
+            #if UNITY_EDITOR
+                    return "EDITOR"; // value to return in Play Mode (in the editor)
+            #elif UNITY_WEBGL
+                    return userAgent(); // value based on the current browser
+            #else
+                    return "NO_UA";
+            #endif
         }
     }
 
@@ -149,27 +159,15 @@ public class Bone : MonoBehaviour
     }
 
     // METADATA --------------------------------
-    // Grab userAgent - Not working
-    public class UA : MonoBehaviour { //https://stackoverflow.com/questions/72083612/detect-mobile-client-in-webgl
-        [DllImport("__Internal")] // imports userAgent() from Assets/WebGL/Plugins/userAgent.jslib
-        static extern string userAgent();
-        public static string getUserAgent(){
-            #if UNITY_EDITOR
-                    return "EDITOR"; // value to return in Play Mode (in the editor)
-            #elif UNITY_WEBGL
-                    return userAgent(); // value based on the current browser
-            #else
-                    return "NO_UA";
-            #endif
-        }
-    }
+    // Grab userAgent - Not working https://stackoverflow.com/questions/72083612/detect-mobile-client-in-webgl
+    [DllImport("__Internal")] // imports userAgent() from Assets/WebGL/Plugins/userAgent.jslib
+    static extern string userAgent();
 
-    void initMetadata(){
-        // Create metadata (init saves start time) - void as attached to global var
-        data.metadata.name = PlayerPrefs.GetString("Name", "No Name");
-        data.metadata.userAgent = UA.getUserAgent(); // Assign userAgent
-    }
-
+    // void initMetadata(){
+    //     // Create metadata (init saves start time) - void as attached to global var
+    //     data.metadata.name = PlayerPrefs.GetString("Name", "No Name");
+    //     data.metadata.userAgent = getUserAgent(); // Assign userAgent
+    // }
 
     // TRIAL MANAGEMENT ------------------------------------------------------------
     void newTrial() { //function to reset variables and set-up for a new trials
@@ -231,7 +229,7 @@ public class Bone : MonoBehaviour
     void Start()
     {
         s = gameObject.transform.localScale.x;
-        initMetadata(); //adds most of the global metadata vars
+        data.metadata.name = PlayerPrefs.GetString("Name", "No Name"); //initMetadata(); //adds most of the global metadata vars
         // Create isi array
         int isi_array_length = (int)Math.Ceiling((isi_high-isi_low)/isi_step +1); //round up for floating point errors
         isi_array = new double[isi_array_length*isi_rep]; //length of each set * number of repeats
