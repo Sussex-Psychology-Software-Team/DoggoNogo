@@ -65,6 +65,7 @@ public class Bone : MonoBehaviour
         public int trial_n;
         public double isi;
         public double rt;
+        public string datetime;
         public int score;
         public int early_presses;
     }
