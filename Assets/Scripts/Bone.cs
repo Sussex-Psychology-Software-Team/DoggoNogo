@@ -42,8 +42,7 @@ public class Bone : MonoBehaviour
 
     // Data ------------------------------------------------------------
     // trial-level data (globals)
-    private int trial_number = -1; //tracks trial number
-    private int early_presses = 0; // counts early button presses
+    private int trial_number = 0; //tracks trial number
     private double isi; //stores each trial's isi
 
     //consider multidimensional or jagged array? https://stackoverflow.com/questions/597720/differences-between-a-multidimensional-array-and-an-array-of-arrays
@@ -58,6 +57,14 @@ public class Bone : MonoBehaviour
         public string userAgent;
         public string start;
         public string end;
+        
+        // NOTE below not working - need to figure out constructors and static methods
+        public Metadata(){//string id, string name, string UserA, string start){
+            //id = GenerateString(24);
+            //name = PlayerPrefs.GetString("Name", "No Name");
+            //userAgent = UA.getUserAgent(); // Assign userAgent
+            start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
+        }
     }
 
     [System.Serializable]
@@ -67,13 +74,34 @@ public class Bone : MonoBehaviour
         public double rt;
         public string datetime;
         public int score;
-        public int early_presses;
+        public List<EarlyPress> early_presses;
+
+        public Trial(int trial_number, double isi_var){
+            trial_n = trial_number;
+            isi = isi_var;
+            early_presses = new List<EarlyPress>();
+        }
+    }
+
+    [System.Serializable]
+    public class EarlyPress {
+        //private static int early_counter = 0; //need this to reset when Trial is created?
+        public int count;
+        public double stopwatch;
+        public string datetime;
+
+        public EarlyPress(int press_count, double time){
+            count = press_count;
+            stopwatch = time;
+            datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        }
     }
 
     [System.Serializable]
     public class Data {
         public Metadata metadata;
-        public List<Trial> trials;
+        public List<Trial> trials; //make array of isi_length
+
         public Data() {
             metadata = new Metadata();
             trials = new List<Trial>();
@@ -81,7 +109,7 @@ public class Bone : MonoBehaviour
     }
     
     Data data = new Data(); //create instance
-
+    Trial current_trial; //this stores the current trial
 
     // ******************* FUNCTIONS *******************
     // TIMING Helpers ------------------------------------------------------------
@@ -141,7 +169,6 @@ public class Bone : MonoBehaviour
         data.metadata.id = GenerateString(24); // Assign id
         data.metadata.name = PlayerPrefs.GetString("Name", "No Name");
         data.metadata.userAgent = UA.getUserAgent(); // Assign userAgent
-        data.metadata.start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
     }
 
     void saveMetadata(){ //stores end time of exp
@@ -150,23 +177,13 @@ public class Bone : MonoBehaviour
 
 
     // TRIAL MANAGEMENT ------------------------------------------------------------
-    void saveTrialData(double rt, string datetime){ //save current variables to an instance of the trial class
-        Trial trial_data = new Trial(); // Create an instance of a Trial
-        trial_data.trial_n = trial_number+1;
-        trial_data.isi = isi; 
-        trial_data.rt = roundTime(rt,7); // round off to avoid precision errors - 7 is length of ElapsedTicks anyway.
-        trial_data.datetime = datetime
-        trial_data.score = score;
-        trial_data.early_presses = early_presses;
-        data.trials.Add(trial_data); // Add trial object to the list of trials
-    }
-
     void newTrial() { //function to reset variables and set-up for a new trials
         //reset vars
         trial_number++;
-        early_presses = 0;
-        gameObject.transform.localScale = Vector3.zero; // reset stim
         isi = isi_array[trial_number]; // new isi
+        current_trial = new Trial(trial_number, isi);   // Create an instance of a Trial
+        gameObject.transform.localScale = Vector3.zero; // reset stim
+        
         // reset timers
         isi_timer.Reset();
         isi_timer.Start();
@@ -174,6 +191,7 @@ public class Bone : MonoBehaviour
     }
 
     void endExp(){
+        Debug.Log(JsonUtility.ToJson(data));
         //Send data
         PlayerPrefs.SetInt("Score", score); //save score to local copy
         PlayerPrefs.Save();
@@ -190,16 +208,18 @@ public class Bone : MonoBehaviour
         public string experimentID;
         public string filename;
         public string data; //json string of data object
+        
+        public DataPipeBody(Data data_obj){
+            experimentID = "VSyXogVR8oTS";
+            filename = data_obj.metadata.name + "_" + data_obj.metadata.id + ".json";
+            data = JsonUtility.ToJson(data_obj);
+        }
     }
 
     string jsonify(Data data){ //Create data in string as expected by datapipe
         //Data data passes in function scoped copy - probably unnecessary...
-        DataPipeBody body = new DataPipeBody(); //create instance
-        body.experimentID = "VSyXogVR8oTS";
-        body.filename = data.metadata.name + "_" + data.metadata.id + ".json";
-        body.data = JsonUtility.ToJson(data); 
+        DataPipeBody body = new DataPipeBody(data); //create instance
         string json = JsonUtility.ToJson(body); //Note double encoding is necessary here as looks like datapipe parses this as an object on their end too
-        Debug.Log(json);
         return json;
     }
 
@@ -254,36 +274,38 @@ public class Bone : MonoBehaviour
                 scoreText.text = "Score: " + score;
                 feedbackText.color = Color.red;
                 feedbackText.text = "TOO QUICK!\nWait until the bone has appeared.";
-                early_presses++;
+
+                //save early presses
+                EarlyPress early_press = new EarlyPress(current_trial.early_presses.Count, isi_timer.Elapsed.TotalSeconds);
+                current_trial.early_presses.Add(early_press);
             }
 
             //when timer runs out
-            if(isi_timer.Elapsed.TotalSeconds >= isi){ // timer.ElapsedMilliseconds less precise int, Elapsed.TotalSeconds = double, timer.ElapsedTicks most precise
+            if(isi_timer.Elapsed.TotalSeconds >= isi){ // or just access by current trial.isi? timer.ElapsedMilliseconds less precise int, Elapsed.TotalSeconds = double, timer.ElapsedTicks most precise
                 feedbackText.text = ""; //hide feedback
-                gameObject.transform.localScale = new Vector3(s,s,s); //show bone
+                gameObject.transform.localScale = new Vector3(s,s,s); //show bone - make z 0?
                 //timers
                 isi_timer.Stop();
                 rt_timer.Start();
             }
 
         } else { //when waiting for input
-            if((rts_array.Count>0 && rt_timer.Elapsed.TotalSeconds>(median_rt+.1)) || rt_timer.Elapsed.TotalSeconds>1.5){ //if time is greater than (median + 100 msec) or 1.5sec hide the bone
+            if((data.trials.Count>0 && rt_timer.Elapsed.TotalSeconds>(median_rt+.1)) || rt_timer.Elapsed.TotalSeconds>1.5){ //if time is greater than (median + 100 msec) or 1.5sec hide the bone
                 gameObject.transform.localScale = Vector3.zero; //hide bone
             }
 
             //on reaction
             if(Input.GetKeyDown("space")){ 
-                
-                //get data
+                // Store rt
                 rt_timer.Stop();
-                string datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                current_trial.datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 double rt = rt_timer.Elapsed.TotalSeconds; //consider changing data types ElapsedMilliseconds
-                //rts[trial_number] = rt; //being lazy and using two copies of rt arrays here
-                rts_array.Add(rt); //ArrayList version for easier median, could deep-copy in function.
-                // median
-                median_rt = median(rts_array);
+                current_trial.rt = roundTime(rt,7); // round off to avoid precision errors - 7 is length of ElapsedTicks anyway.
                 
                 // CALCULATE SCORE ******************************
+                // Get Median
+                rts_array.Add(rt); //ArrayList version for easier median, could deep-copy in function.
+                median_rt = median(rts_array);
 
                 //float m = (float)(median_rt-rt==0 ? rt : median_rt-rt); // if no difference then return rt
                 //float log_m = m<0 ? Mathf.Log(1+Mathf.Abs(m))*-1 : Mathf.Log(1+m); //cannot take negative log
@@ -306,15 +328,14 @@ public class Bone : MonoBehaviour
                 healthBar.SetHealth(score);
                 //******************************
 
-                //store data
-                //data.score[trial_number] = score;
                 // END OF TRIAL
-                saveTrialData(rt,datetime);
+                current_trial.score = score;
+                data.trials.Add(current_trial); // Add trial object to the list of trials
                 if(trial_number == isi_array.Length-1 || trial_number == trial_limit ){
                     endExp();
                 } else {
                     newTrial();
-                } 
+                }
             }
         }
     }
