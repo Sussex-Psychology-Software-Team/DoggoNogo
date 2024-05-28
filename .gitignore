@@ -79,4 +79,6 @@ crashlytics-build.properties
 ###my stuff###
 .DS_Store
 Assets/scraps.cs
-Assets/scraps.cs.metaAssets/scripts/scraps.csAssets/scripts/scraps.cs.meta
+Assets/scraps.cs.meta
+Assets/scripts/scraps.cs
+Assets/scripts/scraps.cs.meta
