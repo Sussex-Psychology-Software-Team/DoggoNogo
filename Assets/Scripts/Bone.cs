@@ -278,18 +278,16 @@ public class Bone : MonoBehaviour
     public class DataPipeBody{
         public string experimentID;
         public string filename;
-        public Data data;
+        public string data; //json string of data object
     }
 
-    string jsonify(){
+    string jsonify(Data data){ //pass in function scoped copy - probably unnecessary
         DataPipeBody body = new DataPipeBody(); //create instance
         body.experimentID = "VSyXogVR8oTS";
         body.filename = data.metadata.name + "_" + data.metadata.id + ".json";
-        body.data = data; //THIS WORKS IF string type "{\"name\":\"John\", \"age\":30, \"car\":null}";//data;
-        
-        string json = JsonUtility.ToJson(body);
-        //string trials_json = JsonHelper.ToJson(data.trials);
-        Debug.Log(json); //sends through as 
+        body.data = JsonUtility.ToJson(data); 
+        string json = JsonUtility.ToJson(body); //Note double encoding is necessary here as looks like datapipe parses this as an object on their end too
+        Debug.Log(json);
         return json;
     }
 
@@ -310,7 +308,7 @@ public class Bone : MonoBehaviour
         PlayerPrefs.SetInt("Score", score); //save score to local copy
         PlayerPrefs.Save();
         saveMetadata();
-        string json = jsonify();
+        string json = jsonify(data);
         StartCoroutine(sendData(json));
         // Next scene
         SceneManager.LoadScene("End");
