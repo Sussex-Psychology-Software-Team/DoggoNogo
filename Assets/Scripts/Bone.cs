@@ -52,6 +52,7 @@ public class Bone : MonoBehaviour
     // Grab userAgent https://docs.unity3d.com/Manual/web-interacting-code-example.html
     [DllImport("__Internal")] // imports userAgent() from Assets/WebGL/Plugins/userAgent.jslib
     static extern string userAgent();
+
     //Create json-convertable struct to hold data, each trial stored individually https://forum.unity.com/threads/serialize-nested-objects-with-jsonutility.737624
     [System.Serializable]
     public class Metadata {
@@ -130,11 +131,24 @@ public class Bone : MonoBehaviour
             metadata = new Metadata();
             trials = new List<Trial>();
         }
+
+        public void newTrial(double isi){ //adds a new trial using the isi
+            this.trials.Add(new Trial(this.trials.Count, isi));
+        }
+
+        public Trial currentTrial(){ //returns current trial to add to the current data obj
+            int count = this.trials.Count;
+            return this.trials[count-1];
+        }
+
+        public void earlyPress(double rt){ //add early press based on rt
+            int count = this.currentTrial().early_presses.Count+1;
+            EarlyPress early_press = new EarlyPress(count, rt);
+            this.currentTrial().early_presses.Add(early_press);
+        }
     }
     
     Data data = new Data(); //create instance
-    Trial current_trial; //this stores the current trial
-
 
     // ******************* FUNCTIONS *******************
     // ISI Helpers ------------------------------------------------------------
@@ -165,9 +179,8 @@ public class Bone : MonoBehaviour
     // TRIAL MANAGEMENT ------------------------------------------------------------
     void newTrial() { //function to reset variables and set-up for a new trials
         //reset vars
-        trial_number++;
-        isi = isi_array[trial_number]; // new isi
-        current_trial = new Trial(trial_number, isi);   // Create an instance of a Trial
+        isi = isi_array[data.trials.Count]; // new isi
+        data.newTrial(isi);   // Create an instance of a Trial
         gameObject.transform.localScale = Vector3.zero; // reset stim
         
         // reset timers
@@ -248,7 +261,7 @@ public class Bone : MonoBehaviour
        if(isi_timer.IsRunning){ //if in isi/ not waiting for reaction
             //handle early presses
             if(Input.GetKeyDown("space")){
-                 score -= 2; // minus 2 points for an early press
+                score -= 2; // minus 2 points for an early press
                 if(score<0){ 
                     score = 0; //lowerbound on score of 0
                 }
@@ -257,8 +270,7 @@ public class Bone : MonoBehaviour
                 feedbackText.text = "TOO QUICK!\nWait until the bone has appeared.";
 
                 //save early presses
-                EarlyPress early_press = new EarlyPress(current_trial.early_presses.Count+1, isi_timer.Elapsed.TotalSeconds);
-                current_trial.early_presses.Add(early_press);
+                data.earlyPress(isi_timer.Elapsed.TotalSeconds)
             }
 
             //when timer runs out
@@ -279,9 +291,9 @@ public class Bone : MonoBehaviour
             if(Input.GetKeyDown("space")){ 
                 // Store rt
                 rt_timer.Stop();
-                current_trial.datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                data.currentTrial().datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 double rt = rt_timer.Elapsed.TotalSeconds; //consider changing data types ElapsedMilliseconds
-                current_trial.rt = roundTime(rt,7); // round off to avoid precision errors - 7 is length of ElapsedTicks anyway.
+                data.currentTrial().rt = roundTime(rt,7); // round off to avoid precision errors - 7 is length of ElapsedTicks anyway.
                 
                 // CALCULATE SCORE ******************************
                 // Get Median
@@ -310,9 +322,9 @@ public class Bone : MonoBehaviour
                 //******************************
 
                 // END OF TRIAL
-                current_trial.score = score;
-                data.trials.Add(current_trial); // Add trial object to the list of trials
-                if(trial_number == isi_array.Length-1 || trial_number == trial_limit ){
+                data.currentTrial().score = score;
+                //data.trials.Add(current_trial); // Add trial object to the list of trials
+                if(data.trials.Count == isi_array.Length-1 || data.trials.Count == trial_limit ){
                     endExp();
                 } else {
                     newTrial();
