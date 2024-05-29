@@ -109,6 +109,9 @@ public class Bone : MonoBehaviour
         public Trial(int trial_number, double isi_var){
             trial_n = trial_number;
             isi = isi_var;
+            rt = -1.0f; //this indicates no response
+            datetime = "";
+            score = score;
             early_presses = new List<EarlyPress>();
         }
     }
@@ -140,7 +143,7 @@ public class Bone : MonoBehaviour
         }
 
         public void newTrial(double isi){ //adds a new trial using the isi
-            this.trials.Add(new Trial(this.trials.Count, isi));
+            this.trials.Add(new Trial(this.trials.Count+1, isi));
         }
 
         public Trial currentTrial(){ //returns current trial to add to the current data obj
