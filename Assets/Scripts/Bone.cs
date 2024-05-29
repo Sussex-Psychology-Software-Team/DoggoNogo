@@ -67,10 +67,11 @@ public class Bone : MonoBehaviour
         
         public Metadata(){//string id, string name, string UserA, string start){
             id = randomId(24);
-            //name = pName; //PlayerPrefs.GetString("Name", "No Name"); //this can't be run here
             userAgent = getUserAgent(); // Assign userAgent
             start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
-            retry = PlayerPrefs.GetInt("Retry", 0); //get retry number
+            //GetInt is not allowed to be called from a MonoBehaviour constructor (or instance field initializer), call it in Awake or Start instead:
+                //name = PlayerPrefs.GetString("Name", "No Name");
+                //retry = PlayerPrefs.GetInt("Retry", 0); //get retry number
         }
 
         //random ID generator
@@ -306,9 +307,10 @@ public class Bone : MonoBehaviour
         float s = gameObject.transform.localScale.x;
         show = new Vector3(s,s,0);
 
-        //store metadata name as GetString is an issue inside the class constructor
+        //PlayerPrefs is an issue inside the class constructor so call here
         data.metadata.name = PlayerPrefs.GetString("Name", "No Name"); // must be done here?
-
+        data.metadata.retry = PlayerPrefs.GetInt("Retry", 0); //get retry number
+        
         //Create ISI array
         makeISIArray();
 
