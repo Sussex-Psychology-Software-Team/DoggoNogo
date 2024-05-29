@@ -13,8 +13,6 @@ using TMPro; //for TextMeshProUGUI
 public class Bone : MonoBehaviour
 {
 
-
-
     // ******************* CONFIG *******************
     // declare ISI array parameters/vars
     public double isi_low = 0.2; //note ISIs are doubles in line with Stopwatch.Elapsed.TotalSeconds - but consider ints e.g. 1400 ms to avoid point representation errors
@@ -22,6 +20,8 @@ public class Bone : MonoBehaviour
     public double isi_step = 0.1;
     public int isi_rep = 3; //how many times to repeat each isi
     public int trial_limit = 2; //run only 3 trials - set to like -1 and shouldn't ever be actiavted.
+
+
 
 
     // ******************* GLOBAL VARS *******************
@@ -37,7 +37,7 @@ public class Bone : MonoBehaviour
     public Stopwatch rt_timer = new Stopwatch(); // https://stackoverflow.com/questions/394020/how-accurate-is-system-diagnostics-stopwatch
 
     // Display
-    private float s; // or 0.4145592f original image is too big - can probably just prefab this in future
+    private Vector3 show; // or 0.4145592f original image is too big - can probably just prefab this in future
 
     // Score
     public int score = 0; //holds score
@@ -274,9 +274,14 @@ public class Bone : MonoBehaviour
     // ******************* UNITY *******************
     void Start()
     {
-        s = gameObject.transform.localScale.x;
+        //global vector for showing bone
+        float s = gameObject.transform.localScale.x;
+        show = new Vector3(s,s,0);
+
+        //store metadata name as GetString is an issue inside the class constructor
         data.metadata.name = PlayerPrefs.GetString("Name", "No Name"); // must be done here?
-        // Create isi array
+
+        // Create isi array - move to class?
         int isi_array_length = (int)Math.Ceiling((isi_high-isi_low)/isi_step +1); //round up for floating point errors
         isi_array = new double[isi_array_length*isi_rep]; //length of each set * number of repeats
         for (int j=0; j<isi_rep; j++) { //loop repeats of each number
@@ -305,7 +310,7 @@ public class Bone : MonoBehaviour
             //when timer runs out
             if(isi_timer.Elapsed.TotalSeconds >= isi){ // or just access by current trial.isi? timer.ElapsedMilliseconds less precise int, Elapsed.TotalSeconds = double, timer.ElapsedTicks most precise
                 feedbackText.text = ""; //hide feedback
-                gameObject.transform.localScale = new Vector3(s,s,s); //show bone - make z 0?
+                gameObject.transform.localScale = show; //show bone - make z 0?
                 //timers
                 isi_timer.Stop();
                 rt_timer.Start();
