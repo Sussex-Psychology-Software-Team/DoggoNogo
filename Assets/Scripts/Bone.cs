@@ -18,8 +18,8 @@ public class Bone : MonoBehaviour
     // declare ISI array parameters/vars
     public double isi_low = 0.2; //note ISIs are doubles in line with Stopwatch.Elapsed.TotalSeconds - but consider ints e.g. 1400 ms to avoid point representation errors
     public double isi_high = 3.5;
-    public int isi_rep = 3; //how many times to repeat each isi
     public int n_trials = 2; //run only 3 trials - set to like -1 and shouldn't ever be actiavted.
+    public int isi_rep = 3; //how many times to repeat each isi
 
 
 
@@ -184,20 +184,20 @@ public class Bone : MonoBehaviour
 
     //call this in the unity Start() function to make the array of ISIs
     void makeISIArray(){
-        double isi_step = (isi_high-isi_low)/n_trials;
-        int isi_array_length = (int)Math.Ceiling(isi_step); //round up for floating point errors
-        isi_array = new double[isi_array_length*isi_rep]; //length of each set * number of repeats
+        isi_array = new double[n_trials*isi_rep]; //length of each set * number of repeats
+        double isi_step = (isi_high-isi_low)/(n_trials-1); //minus 1 as inclusive of high and low value
 
         for (int j=0; j<isi_rep; j++) { //loop repeats of each number
-            int set = isi_array_length*j; //add length of one set of numbers to current index
-            for (int i=0; i<isi_array_length; i++) { //loop through each increment to isi - note don't loop through floats directly due to rounding errors
-                isi_array[set+i] = roundTime(isi_low + (i*isi_step), 1);
+            int set_start = n_trials*j; //add length of one set of numbers to current index
+            for (int i=0; i<n_trials; i++) { //loop through each increment to isi - note don't loop through floats directly due to rounding errors
+                isi_array[set_start+i] = roundTime(isi_low + (i*isi_step), 2);
             }
         } // LOG: 
-        foreach (float value in isi_array){Debug.Log(value);}  
+        foreach (double value in isi_array){Debug.Log(value);}  
         Shuffle(isi_array); //shuffle array
     }
 
+    // RT Helpers ------------------------------------------------------------
     // slow but simple median function - quicker algorithms here: https://stackoverflow.com/questions/4140719/calculate-median-in-c-sharp
     public static double median(ArrayList array) { 
         //can maybe remove some of the doubles here?
