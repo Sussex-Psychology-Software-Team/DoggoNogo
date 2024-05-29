@@ -49,11 +49,13 @@ public class Bone : MonoBehaviour
 
 
     // ******************* DATA *******************
+    //Create json-convertable structures to hold data, each trial stored individually https://forum.unity.com/threads/serialize-nested-objects-with-jsonutility.737624
+
     // Grab userAgent https://docs.unity3d.com/Manual/web-interacting-code-example.html
     [DllImport("__Internal")] // imports userAgent() from Assets/WebGL/Plugins/userAgent.jslib
     static extern string userAgent();
 
-    //Create json-convertable struct to hold data, each trial stored individually https://forum.unity.com/threads/serialize-nested-objects-with-jsonutility.737624
+    // Metadata structure
     [System.Serializable]
     public class Metadata {
         public string id;
@@ -62,10 +64,9 @@ public class Bone : MonoBehaviour
         public string start;
         public string end;
         
-        // NOTE below not working - need to figure out constructors and static methods
         public Metadata(){//string id, string name, string UserA, string start){
             id = randomId(24);
-            //name = pName; //PlayerPrefs.GetString("Name", "No Name");
+            //name = pName; //PlayerPrefs.GetString("Name", "No Name"); //this can't be run here
             userAgent = getUserAgent(); // Assign userAgent
             start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
         }
@@ -92,6 +93,7 @@ public class Bone : MonoBehaviour
         }
     }
 
+    // Trials model
     [System.Serializable]
     public class Trial {
         public int trial_n;
@@ -108,6 +110,7 @@ public class Bone : MonoBehaviour
         }
     }
 
+    // Early presses model (stored within trials)
     [System.Serializable]
     public class EarlyPress {
         //private static int early_counter = 0; //need this to reset when Trial is created?
@@ -122,6 +125,7 @@ public class Bone : MonoBehaviour
         }
     }
 
+    // Overall data structure which holds the above
     [System.Serializable]
     public class Data {
         public Metadata metadata;
@@ -148,15 +152,16 @@ public class Bone : MonoBehaviour
         }
     }
     
-    Data data = new Data(); //create instance
+    //create global instance of data for use throughout
+    Data data = new Data();
 
 
 
 
     // ******************* FUNCTIONS *******************
     // ISI Helpers ------------------------------------------------------------
-    //shuffle function for ISIs (Fisher-Yates shuffle should be fine)  https://stackoverflow.com/questions/1150646/card-shuffling-in-c-sharp
-    void Shuffle(double[] array) {
+    //shuffle function for ISIs (Fisher-Yates shuffle should be fine) 
+    void Shuffle(double[] array) { //from https://stackoverflow.com/questions/1150646/card-shuffling-in-c-sharp
         System.Random r = new System.Random();
         for (int n=array.Length-1; n>0; --n) {
             int k = r.Next(n+1); //next random on system iterator
@@ -164,8 +169,8 @@ public class Bone : MonoBehaviour
         }
     }
 
-    void makeISIArray(){
-        // Create isi array - move to class?
+    //call this in the unity Start() function to make the array of ISIs
+    void makeISIArray(){ 
         int isi_array_length = (int)Math.Ceiling((isi_high-isi_low)/isi_step +1); //round up for floating point errors
         isi_array = new double[isi_array_length*isi_rep]; //length of each set * number of repeats
         for (int j=0; j<isi_rep; j++) { //loop repeats of each number
@@ -177,7 +182,8 @@ public class Bone : MonoBehaviour
         Shuffle(isi_array); //shuffle array
     }
 
-    public static double median(ArrayList array) { // slow but simple median function - quicker algorithms here: https://stackoverflow.com/questions/4140719/calculate-median-in-c-sharp
+    // slow but simple median function - quicker algorithms here: https://stackoverflow.com/questions/4140719/calculate-median-in-c-sharp
+    public static double median(ArrayList array) { 
         //can maybe remove some of the doubles here?
         int size = array.Count;
         array.Sort(); //note mutates original list
@@ -188,9 +194,11 @@ public class Bone : MonoBehaviour
         return median;
     }
 
-    public double roundTime(double time, int dp){ //Store ISI
+    //Round ISI to d.p. avoiding precision errors
+    public double roundTime(double time, int dp){
         return Math.Round(time *  Math.Pow(10, dp)) /  Math.Pow(10, dp); //remove trailing 0s - avoids double precision errors. or try .ToString("0.00") or .ToString("F2")
     }
+
 
     // TRIAL MANAGEMENT ------------------------------------------------------------
     void newTrial() { //function to reset variables and set-up for a new trials
@@ -207,17 +215,21 @@ public class Bone : MonoBehaviour
 
     void endExp(){
         Debug.Log(JsonUtility.ToJson(data));
+
         // Save data
-        PlayerPrefs.SetInt("Score", score); //save score to local copy
+        PlayerPrefs.SetInt("Score", score); //save score to local copy for use in end screen
         PlayerPrefs.Save();
-        data.metadata.end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
+        data.metadata.end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Save end date of experiment
+
         // Send datapipe Data
         DataPipeBody body = new DataPipeBody(data); //create instance
         string json = JsonUtility.ToJson(body); //Note double encoding is necessary here as looks like datapipe parses this as an object on their end too
         StartCoroutine(sendData(json));
-        // Next scene
+
+        // Load next scene
         SceneManager.LoadScene("End");
     }
+
 
     // SENDING DATA -------------------------------------
     [System.Serializable] //class to format the data as expected by datapipe
@@ -244,6 +256,7 @@ public class Bone : MonoBehaviour
             }
         }
     }
+
 
     // SCORE -------------------------------------
     void changeScore(int change, string feedback){
@@ -294,10 +307,13 @@ public class Bone : MonoBehaviour
         //store metadata name as GetString is an issue inside the class constructor
         data.metadata.name = PlayerPrefs.GetString("Name", "No Name"); // must be done here?
 
+        //Create ISI array
         makeISIArray();
+
         //setup first trial
         newTrial();
     }
+
 
     // Update is called once per frame - maybe use FixedUpdate for inputs?
     void Update()
