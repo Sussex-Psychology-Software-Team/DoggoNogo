@@ -20,6 +20,7 @@ public class Restart : MonoBehaviour
     }
 
     void restartExp(){
+        PlayerPrefs.SetInt("Retry", PlayerPrefs.GetInt("Retry", 0)+1); //increment retry number
         SceneManager.LoadScene("Simple RT");
     }
 }
