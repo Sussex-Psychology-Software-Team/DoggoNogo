@@ -75,7 +75,7 @@ public class Bone : MonoBehaviour
         }
 
         //random ID generator
-        public string randomId(int size) { //https://stackoverflow.com/a/9995960/7705626
+        string randomId(int size) { //https://stackoverflow.com/a/9995960/7705626
             System.Random rand = new System.Random(); 
             string characters = "abcdefghijklmnopqrstuvwyxzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             string rand_id = "";
