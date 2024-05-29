@@ -43,11 +43,6 @@ public class Bone : MonoBehaviour
     public TextMeshProUGUI feedbackText; //feedback
     public HealthBar healthBar;
 
-    // trial-level data (globals)
-    private int trial_number = 0; //tracks trial number
-
-
-
     // ******************* DATA *******************
     // Grab userAgent https://docs.unity3d.com/Manual/web-interacting-code-example.html
     [DllImport("__Internal")] // imports userAgent() from Assets/WebGL/Plugins/userAgent.jslib
@@ -270,7 +265,7 @@ public class Bone : MonoBehaviour
                 feedbackText.text = "TOO QUICK!\nWait until the bone has appeared.";
 
                 //save early presses
-                data.earlyPress(isi_timer.Elapsed.TotalSeconds)
+                data.earlyPress(isi_timer.Elapsed.TotalSeconds);
             }
 
             //when timer runs out
