@@ -63,12 +63,14 @@ public class Bone : MonoBehaviour
         public string userAgent;
         public string start;
         public string end;
+        public int retry;
         
         public Metadata(){//string id, string name, string UserA, string start){
             id = randomId(24);
             //name = pName; //PlayerPrefs.GetString("Name", "No Name"); //this can't be run here
             userAgent = getUserAgent(); // Assign userAgent
             start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
+            retry = PlayerPrefs.GetInt("Retry", 0); //get retry number
         }
 
         //random ID generator
