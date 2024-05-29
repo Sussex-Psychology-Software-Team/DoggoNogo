@@ -192,8 +192,7 @@ public class Bone : MonoBehaviour
             for (int i=0; i<n_trials; i++) { //loop through each increment to isi - note don't loop through floats directly due to rounding errors
                 isi_array[set_start+i] = roundTime(isi_low + (i*isi_step), 2);
             }
-        } // LOG: 
-        foreach (double value in isi_array){Debug.Log(value);}  
+        } // LOG: foreach (double value in isi_array){Debug.Log(value);}  
         Shuffle(isi_array); //shuffle array
     }
 
@@ -345,7 +344,7 @@ public class Bone : MonoBehaviour
 
         //PlayerPrefs is an issue inside the class constructor so call here
         data.metadata.name = PlayerPrefs.GetString("Name", "No Name"); // must be done here?
-        data.metadata.retry = PlayerPrefs.GetInt("Retry", 0); //get retry number
+        data.metadata.retry = PlayerPrefs.GetInt("Retry", 0); //get retry number - note probably don't want this persisting on single computer between sessions in future....
 
         //Create ISI array
         makeISIArray();
