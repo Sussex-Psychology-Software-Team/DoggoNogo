@@ -12,43 +12,46 @@ using TMPro; //for TextMeshProUGUI
 
 public class Bone : MonoBehaviour
 {
-
-    // ******************* VARIABLES *******************
-
-    // Inter-stimulus Intervals ------------------------------------------------------------
+    // ******************* CONFIG *******************
     // declare ISI array parameters/vars
     public double isi_low = 0.2; //note ISIs are doubles in line with Stopwatch.Elapsed.TotalSeconds - but consider ints e.g. 1400 ms to avoid point representation errors
     public double isi_high = 3.5;
     public double isi_step = 0.1;
     public int isi_rep = 3; //how many times to repeat each isi
-    private double[] isi_array; // this stores all isis in single array - these are copied to data individually at start of each trial
     public int trial_limit = 2; //run only 3 trials - set to like -1 and shouldn't ever be actiavted.
-    private double median_rt; //store median rt
 
+
+    // ******************* GLOBAL VARS *******************
+    // isi
+    private double[] isi_array; // this stores all isis in single array - these are copied to data individually at start of each trial
+    private double isi; //stores each trial's isi for speed of access
+    private double median_rt; //store median rt
+    ArrayList rts_array = new(); // Store rts in ArrayList to allow for easier median computation and store as sorted list (i.e. rts_array.Sort() method)
+        //consider multidimensional or jagged array? https://stackoverflow.com/questions/597720/differences-between-a-multidimensional-array-and-an-array-of-arrays
+    
     //timers
     public Stopwatch isi_timer = new Stopwatch(); // High precision timer: https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.stopwatch?view=net-8.0&redirectedfrom=MSDN#remarks
     public Stopwatch rt_timer = new Stopwatch(); // https://stackoverflow.com/questions/394020/how-accurate-is-system-diagnostics-stopwatch
 
-    // Visuals ------------------------------------------------------------
-    // setup stim display vars
+    // Display
     private float s; // or 0.4145592f original image is too big - can probably just prefab this in future
     Color forest = new Color(0.06770712f, 0.5817609f, 0f, 1f); //colour of positive feedback text
 
-    // Scorecard
+    // Score
     public int score = 0; //holds score
     public TextMeshProUGUI scoreText; // displays score
     public TextMeshProUGUI feedbackText; //feedback
     public HealthBar healthBar;
 
-    // Data ------------------------------------------------------------
     // trial-level data (globals)
     private int trial_number = 0; //tracks trial number
-    private double isi; //stores each trial's isi
 
-    //consider multidimensional or jagged array? https://stackoverflow.com/questions/597720/differences-between-a-multidimensional-array-and-an-array-of-arrays
-    ArrayList rts_array = new(); // Store rts in ArrayList to allow for easier median computation and store as sorted list (i.e. rts_array.Sort() method)
-    
-    // DATA CLASSES ------------------------------------------------------------
+
+
+    // ******************* DATA *******************
+    // Grab userAgent https://docs.unity3d.com/Manual/web-interacting-code-example.html
+    [DllImport("__Internal")] // imports userAgent() from Assets/WebGL/Plugins/userAgent.jslib
+    static extern string userAgent();
     //Create json-convertable struct to hold data, each trial stored individually https://forum.unity.com/threads/serialize-nested-objects-with-jsonutility.737624
     [System.Serializable]
     public class Metadata {
@@ -132,8 +135,9 @@ public class Bone : MonoBehaviour
     Data data = new Data(); //create instance
     Trial current_trial; //this stores the current trial
 
+
     // ******************* FUNCTIONS *******************
-    // TIMING Helpers ------------------------------------------------------------
+    // ISI Helpers ------------------------------------------------------------
     //shuffle function for ISIs (Fisher-Yates shuffle should be fine)  https://stackoverflow.com/questions/1150646/card-shuffling-in-c-sharp
     void Shuffle(double[] array) {
         System.Random r = new System.Random();
@@ -154,20 +158,9 @@ public class Bone : MonoBehaviour
         return median;
     }
 
-    public double roundTime(double time, int dp){
+    public double roundTime(double time, int dp){ //Store ISI
         return Math.Round(time *  Math.Pow(10, dp)) /  Math.Pow(10, dp); //remove trailing 0s - avoids double precision errors. or try .ToString("0.00") or .ToString("F2")
     }
-
-    // METADATA --------------------------------
-    // Grab userAgent - Not working https://stackoverflow.com/questions/72083612/detect-mobile-client-in-webgl
-    [DllImport("__Internal")] // imports userAgent() from Assets/WebGL/Plugins/userAgent.jslib
-    static extern string userAgent();
-
-    // void initMetadata(){
-    //     // Create metadata (init saves start time) - void as attached to global var
-    //     data.metadata.name = PlayerPrefs.GetString("Name", "No Name");
-    //     data.metadata.userAgent = getUserAgent(); // Assign userAgent
-    // }
 
     // TRIAL MANAGEMENT ------------------------------------------------------------
     void newTrial() { //function to reset variables and set-up for a new trials
@@ -229,7 +222,7 @@ public class Bone : MonoBehaviour
     void Start()
     {
         s = gameObject.transform.localScale.x;
-        data.metadata.name = PlayerPrefs.GetString("Name", "No Name"); //initMetadata(); //adds most of the global metadata vars
+        data.metadata.name = PlayerPrefs.GetString("Name", "No Name"); // must be done here?
         // Create isi array
         int isi_array_length = (int)Math.Ceiling((isi_high-isi_low)/isi_step +1); //round up for floating point errors
         isi_array = new double[isi_array_length*isi_rep]; //length of each set * number of repeats
