@@ -164,6 +164,19 @@ public class Bone : MonoBehaviour
         }
     }
 
+    void makeISIArray(){
+        // Create isi array - move to class?
+        int isi_array_length = (int)Math.Ceiling((isi_high-isi_low)/isi_step +1); //round up for floating point errors
+        isi_array = new double[isi_array_length*isi_rep]; //length of each set * number of repeats
+        for (int j=0; j<isi_rep; j++) { //loop repeats of each number
+            int set = isi_array_length*j; //add length of one set of numbers to current index
+            for (int i=0; i<isi_array_length; i++) { //loop through each increment to isi
+                isi_array[set+i] = roundTime(isi_low + i * isi_step,1);
+            }
+        } // LOG: foreach (float value in isi_array){Debug.Log(value);}  
+        Shuffle(isi_array); //shuffle array
+    }
+
     public static double median(ArrayList array) { // slow but simple median function - quicker algorithms here: https://stackoverflow.com/questions/4140719/calculate-median-in-c-sharp
         //can maybe remove some of the doubles here?
         int size = array.Count;
@@ -281,17 +294,7 @@ public class Bone : MonoBehaviour
         //store metadata name as GetString is an issue inside the class constructor
         data.metadata.name = PlayerPrefs.GetString("Name", "No Name"); // must be done here?
 
-        // Create isi array - move to class?
-        int isi_array_length = (int)Math.Ceiling((isi_high-isi_low)/isi_step +1); //round up for floating point errors
-        isi_array = new double[isi_array_length*isi_rep]; //length of each set * number of repeats
-        for (int j=0; j<isi_rep; j++) { //loop repeats of each number
-            int set = isi_array_length*j; //add length of one set of numbers to current index
-            for (int i=0; i<isi_array_length; i++) { //loop through each increment to isi
-                isi_array[set+i] = roundTime(isi_low + i * isi_step,1);
-            }
-        } // LOG: foreach (float value in isi_array){Debug.Log(value);}  
-        Shuffle(isi_array); //shuffle array
-
+        makeISIArray();
         //setup first trial
         newTrial();
     }
