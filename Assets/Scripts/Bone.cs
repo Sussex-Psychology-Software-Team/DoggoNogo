@@ -18,9 +18,8 @@ public class Bone : MonoBehaviour
     // declare ISI array parameters/vars
     public double isi_low = 0.2; //note ISIs are doubles in line with Stopwatch.Elapsed.TotalSeconds - but consider ints e.g. 1400 ms to avoid point representation errors
     public double isi_high = 3.5;
-    public double isi_step = 0.1;
     public int isi_rep = 3; //how many times to repeat each isi
-    public int trial_limit = 2; //run only 3 trials - set to like -1 and shouldn't ever be actiavted.
+    public int n_trials = 2; //run only 3 trials - set to like -1 and shouldn't ever be actiavted.
 
 
 
@@ -64,16 +63,8 @@ public class Bone : MonoBehaviour
         public string start;
         public string end;
         public int retry;
-        
-        public Metadata(){//string id, string name, string UserA, string start){
-            id = randomId(24);
-            userAgent = getUserAgent(); // Assign userAgent
-            start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
-            //GetInt is not allowed to be called from a MonoBehaviour constructor (or instance field initializer), call it in Awake or Start instead:
-                //name = PlayerPrefs.GetString("Name", "No Name");
-                //retry = PlayerPrefs.GetInt("Retry", 0); //get retry number
-        }
 
+        // Functions for initialising metadata
         //random ID generator
         string randomId(int size) { //https://stackoverflow.com/a/9995960/7705626
             System.Random rand = new System.Random(); 
@@ -93,6 +84,16 @@ public class Bone : MonoBehaviour
             #else
                     return "NO_UA";
             #endif
+        }
+
+        // Class constructor
+        public Metadata(){//string id, string name, string UserA, string start){
+            id = randomId(24);
+            userAgent = getUserAgent(); // Assign userAgent
+            start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
+            //GetInt is not allowed to be called from a MonoBehaviour constructor (or instance field initializer), call it in Awake or Start instead:
+                //name = PlayerPrefs.GetString("Name", "No Name");
+                //retry = PlayerPrefs.GetInt("Retry", 0); //get retry number
         }
     }
 
@@ -142,6 +143,7 @@ public class Bone : MonoBehaviour
             trials = new List<Trial>();
         }
 
+        // Methods
         public void newTrial(double isi){ //adds a new trial using the isi
             this.trials.Add(new Trial(this.trials.Count+1, isi));
         }
@@ -181,15 +183,18 @@ public class Bone : MonoBehaviour
     }
 
     //call this in the unity Start() function to make the array of ISIs
-    void makeISIArray(){ 
-        int isi_array_length = (int)Math.Ceiling((isi_high-isi_low)/isi_step +1); //round up for floating point errors
+    void makeISIArray(){
+        double isi_step = (isi_high-isi_low)/n_trials;
+        int isi_array_length = (int)Math.Ceiling(isi_step); //round up for floating point errors
         isi_array = new double[isi_array_length*isi_rep]; //length of each set * number of repeats
+
         for (int j=0; j<isi_rep; j++) { //loop repeats of each number
             int set = isi_array_length*j; //add length of one set of numbers to current index
-            for (int i=0; i<isi_array_length; i++) { //loop through each increment to isi
-                isi_array[set+i] = roundTime(isi_low + i * isi_step,1);
+            for (int i=0; i<isi_array_length; i++) { //loop through each increment to isi - note don't loop through floats directly due to rounding errors
+                isi_array[set+i] = roundTime(isi_low + (i*isi_step), 1);
             }
-        } // LOG: foreach (float value in isi_array){Debug.Log(value);}  
+        } // LOG: 
+        foreach (float value in isi_array){Debug.Log(value);}  
         Shuffle(isi_array); //shuffle array
     }
 
@@ -309,7 +314,7 @@ public class Bone : MonoBehaviour
     }
 
     // PUT NEW SCORE CALCULATIONS IN HERE
-    void calcScore(double rt){
+    void calcScore(double rt){ //compares score to median
         //calculate median
         rts_array.Add(rt);
         median_rt = median(rts_array);
@@ -397,7 +402,7 @@ public class Bone : MonoBehaviour
                 //******************************
 
                 // next trial
-                if(data.trials.Count == isi_array.Length-1 || data.trials.Count == trial_limit ){
+                if(data.trials.Count == isi_array.Length-1 || data.trials.Count == n_trials ){
                     endExp();
                 } else {
                     newTrial();
