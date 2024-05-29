@@ -297,6 +297,27 @@ public class Bone : MonoBehaviour
         
     }
 
+    // PUT NEW SCORE CALCULATIONS IN HERE
+    void calcScore(double rt){
+        // Get Median
+        rts_array.Add(rt); //ArrayList version for easier median, could deep-copy in function.
+        median_rt = median(rts_array);
+
+        // calculate new score
+        if(rt<(median_rt+.1)){ //if within 100ms of median
+            changeScore(3, "YUMMY!\nDoggo caught the bone!");    
+        } else {
+            changeScore(1, "Good!\nDoggo fetched the bone.");
+        }
+
+        //PREVIOUS ATTEMPT
+        //float m = (float)(median_rt-rt==0 ? rt : median_rt-rt); // if no difference then return rt
+        //float log_m = m<0 ? Mathf.Log(1+Mathf.Abs(m))*-1 : Mathf.Log(1+m); //cannot take negative log
+        //double before_rounding = 1/rt * log_m;
+        //int logscore = (int)Math.Round(before_rounding); //final score for this method
+        //int mscore = (int)Math.Round(1/rt + (median_rt-rt)*1.5); //simple method
+    }
+
 
 
 
@@ -310,7 +331,7 @@ public class Bone : MonoBehaviour
         //PlayerPrefs is an issue inside the class constructor so call here
         data.metadata.name = PlayerPrefs.GetString("Name", "No Name"); // must be done here?
         data.metadata.retry = PlayerPrefs.GetInt("Retry", 0); //get retry number
-        
+
         //Create ISI array
         makeISIArray();
 
@@ -353,23 +374,7 @@ public class Bone : MonoBehaviour
                 data.currentTrial().rt = roundTime(rt,7); // round off to avoid precision errors - 7 is length of ElapsedTicks anyway.
                 
                 // CALCULATE SCORE ******************************
-                // Get Median
-                rts_array.Add(rt); //ArrayList version for easier median, could deep-copy in function.
-                median_rt = median(rts_array);
-
-                //float m = (float)(median_rt-rt==0 ? rt : median_rt-rt); // if no difference then return rt
-                //float log_m = m<0 ? Mathf.Log(1+Mathf.Abs(m))*-1 : Mathf.Log(1+m); //cannot take negative log
-                //double before_rounding = 1/rt * log_m;
-                //int logscore = (int)Math.Round(before_rounding); //final score for this method
-                //int mscore = (int)Math.Round(1/rt + (median_rt-rt)*1.5); //simple method
-
-                //******************************
-
-                if(rt<(median_rt+.1)){ //if within 100ms of median
-                    changeScore(3, "YUMMY!\nDoggo caught the bone!");    
-                } else {
-                    changeScore(1, "Good!\nDoggo fetched the bone.");
-                }
+                calcScore(rt);
                 //******************************
 
                 // next trial
