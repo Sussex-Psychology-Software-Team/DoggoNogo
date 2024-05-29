@@ -12,6 +12,9 @@ using TMPro; //for TextMeshProUGUI
 
 public class Bone : MonoBehaviour
 {
+
+
+
     // ******************* CONFIG *******************
     // declare ISI array parameters/vars
     public double isi_low = 0.2; //note ISIs are doubles in line with Stopwatch.Elapsed.TotalSeconds - but consider ints e.g. 1400 ms to avoid point representation errors
@@ -35,13 +38,15 @@ public class Bone : MonoBehaviour
 
     // Display
     private float s; // or 0.4145592f original image is too big - can probably just prefab this in future
-    Color forest = new Color(0.06770712f, 0.5817609f, 0f, 1f); //colour of positive feedback text
 
     // Score
     public int score = 0; //holds score
     public TextMeshProUGUI scoreText; // displays score
     public TextMeshProUGUI feedbackText; //feedback
     public HealthBar healthBar;
+
+
+
 
     // ******************* DATA *******************
     // Grab userAgent https://docs.unity3d.com/Manual/web-interacting-code-example.html
@@ -145,6 +150,9 @@ public class Bone : MonoBehaviour
     
     Data data = new Data(); //create instance
 
+
+
+
     // ******************* FUNCTIONS *******************
     // ISI Helpers ------------------------------------------------------------
     //shuffle function for ISIs (Fisher-Yates shuffle should be fine)  https://stackoverflow.com/questions/1150646/card-shuffling-in-c-sharp
@@ -224,9 +232,46 @@ public class Bone : MonoBehaviour
         }
     }
 
+    // SCORE -------------------------------------
+    void changeScore(int change, string feedback){
+        Color forest = new Color(0.06770712f, 0.5817609f, 0f, 1f); //colour of positive feedback text
+        feedbackText.text = feedback;
+
+        //set colours
+        Color barColour;
+        if(change<0){ //if score is being reduced
+            barColour = Color.red;
+            feedbackText.color = barColour;
+        } else if(change == 1){
+            barColour = forest;
+            feedbackText.color = Color.blue;
+        } else {
+            barColour = forest;
+            feedbackText.color = barColour;
+        }
+
+        //handle change in score
+        int newScore = score + change;
+        int maxHealth = (int)healthBar.GetMaxHealth();
+        if(newScore<0){ 
+            newScore = 0; //lowerbound on score of 0
+        } else if(score>=maxHealth/3 && newScore<=maxHealth/3){ //if score currently >1/3 healthbar and new score would put it below this
+            newScore = maxHealth/3;
+        } else if(score>=(maxHealth/3)*2 && newScore<=(maxHealth/3)*2){ //if score currently >2/3 healthbar and new score would put it below this
+            newScore = (maxHealth/3)*2;
+        }
+        
+        scoreText.text = "Score: " + newScore;
+        healthBar.SetHealth(newScore, barColour);
+        data.currentTrial().score = newScore; //take score out of global var soon
+        score = newScore;
+        
+    }
 
 
-    // Start --------------------------------
+
+
+    // ******************* UNITY *******************
     void Start()
     {
         s = gameObject.transform.localScale.x;
@@ -246,24 +291,13 @@ public class Bone : MonoBehaviour
         newTrial();
     }
 
-
-
-    // ******************* TRIAL RUNNER *******************
-
     // Update is called once per frame - maybe use FixedUpdate for inputs?
     void Update()
     {
        if(isi_timer.IsRunning){ //if in isi/ not waiting for reaction
             //handle early presses
             if(Input.GetKeyDown("space")){
-                score -= 2; // minus 2 points for an early press
-                if(score<0){ 
-                    score = 0; //lowerbound on score of 0
-                }
-                scoreText.text = "Score: " + score;
-                feedbackText.color = Color.red;
-                feedbackText.text = "TOO QUICK!\nWait until the bone has appeared.";
-
+                changeScore(-2, "TOO QUICK!\nWait until the bone has appeared."); // minus 2 points for an early press
                 //save early presses
                 data.earlyPress(isi_timer.Elapsed.TotalSeconds);
             }
@@ -304,21 +338,13 @@ public class Bone : MonoBehaviour
                 //******************************
 
                 if(rt<(median_rt+.1)){ //if within 100ms of median
-                    score += 3;
-                    feedbackText.color = forest;
-                    feedbackText.text = "YUMMY!\nDoggo caught the bone!";       
+                    changeScore(3, "YUMMY!\nDoggo caught the bone!");    
                 } else {
-                    score += 1;
-                    feedbackText.color = Color.blue;
-                    feedbackText.text = "Good!\nDoggo fetched the bone.";
+                    changeScore(1, "Good!\nDoggo fetched the bone.");
                 }
-                scoreText.text = "Score: " + score;
-                healthBar.SetHealth(score);
                 //******************************
 
-                // END OF TRIAL
-                data.currentTrial().score = score;
-                //data.trials.Add(current_trial); // Add trial object to the list of trials
+                // next trial
                 if(data.trials.Count == isi_array.Length-1 || data.trials.Count == trial_limit ){
                     endExp();
                 } else {
