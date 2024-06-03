@@ -814,11 +814,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aed553ca795034641a17c1d9cd010a68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  max_response_time: 1.5
   isi_low: 0.5
   isi_high: 2
-  isi_step: 0.5
+  n_trials: 7
   isi_rep: 3
-  trial_limit: 8
   score: 0
   scoreText: {fileID: 1786151914}
   feedbackText: {fileID: 1479691777}
