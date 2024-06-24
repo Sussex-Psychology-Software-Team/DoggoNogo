@@ -18,7 +18,7 @@ public class Bone : MonoBehaviour
     // declare ISI array parameters/vars
     public double isi_low = 0.2; //note ISIs are doubles in line with Stopwatch.Elapsed.TotalSeconds - but consider ints e.g. 1400 ms to avoid point representation errors
     public double isi_high = 3.5;
-    public int n_trials = 2; //run only 3 trials - set to like -1 and shouldn't ever be actiavted.
+    public int n_trials = 60; //run only 3 trials - set to like -1 and shouldn't ever be actiavted.
     public int isi_rep = 3; //how many times to repeat each isi
 
 
