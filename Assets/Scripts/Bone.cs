@@ -43,8 +43,9 @@ public class Bone : MonoBehaviour
     public TextMeshProUGUI scoreText; // displays score
     public TextMeshProUGUI feedbackText; //feedback
     public HealthBar healthBar;
-
-
+    public int stage = 1;
+    public int target_score = 1000;
+    public int n_trials_stage1 = 0;
 
 
     // ******************* DATA *******************
@@ -221,6 +222,10 @@ public class Bone : MonoBehaviour
         isi = isi_array[data.trials.Count]; // new isi
         data.newTrial(isi);   // Create an instance of a Trial
         gameObject.transform.localScale = Vector3.zero; // reset stim
+
+        if(score>=target_score){
+            target_score = stageTarget();
+        }
         resetTimers();
     }
 
@@ -337,6 +342,18 @@ public class Bone : MonoBehaviour
 
         //finally handle changing the score
         changeScore((int)final_score, text);
+    }
+
+    // Calculate score where participant will enter into new stage of game
+    public int stageTarget(){
+        //n_trials and n_trials_stage1 are defined up top
+        int n_trials_stage2 = 0;
+        if(stage==1){ n_trials_stage1 = data.trials.Count;
+        } else if(stage==2){ n_trials_stage2 = data.trials.Count; }
+        stage++;
+        int target = ((n_trials - n_trials_stage1 + n_trials_stage2) / (8-(2*stage)) )*100;
+        if(target<500){ target=500; }
+        return target;
     }
 
 
