@@ -224,7 +224,7 @@ public class Bone : MonoBehaviour
         gameObject.transform.localScale = Vector3.zero; // reset stim
 
         if(score>=target_score){
-            target_score = stageTarget();
+            target_score += stageTarget(); //note += to increase target amount
         }
         resetTimers();
     }
