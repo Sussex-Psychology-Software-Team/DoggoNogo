@@ -313,23 +313,30 @@ public class Bone : MonoBehaviour
     }
 
     // PUT NEW SCORE CALCULATIONS IN HERE
-    void calcScore(double rt){ //compares score to median
-        //calculate median
-        rts_array.Add(rt);
-        median_rt = median(rts_array);
-        // calculate new score
-        if(rt<(median_rt+.1)){ //if within 100ms of median
-            changeScore(3, "YUMMY!\nDoggo caught the bone!");    
-        } else {
-            changeScore(2, "Good!\nDoggo fetched the bone.");
+    void calcScore(double rt, double min_rt=.2, double max_rt=.6, double min_score=.1, double max_score = .2) {
+        // Calculate score
+        double final_score;
+        string text;
+        if(rt<max_rt){ // if not way too slow
+            // calculate realtive score
+            double clamped = Math.Clamp(rt, min_rt, max_rt); //clamp rt between ranges
+            double relative = (clamped - min_rt) / (max_rt - min_rt); //normalise as proportion of range
+            double reversed = (1 - relative); //reverse
+            // score bonus
+            double max_score_bonus = max_score - min_score;
+            double score_bonus = reversed * max_score_bonus;
+            double min_add = min_score + score_bonus;
+            if (min_add > max_score) { min_add = max_score; } //clamp
+            final_score = min_add*1000;
+            text = "GREAT!\nDoggo caught the bone!";
+        } else { //if too slow
+            final_score = 0;
+            text = "Oh no!\nDoggo didn't get a bone.";
         }
+        Debug.Log(final_score);
 
-        //PREVIOUS ATTEMPT
-        //float m = (float)(median_rt-rt==0 ? rt : median_rt-rt); // if no difference then return rt
-        //float log_m = m<0 ? Mathf.Log(1+Mathf.Abs(m))*-1 : Mathf.Log(1+m); //cannot take negative log
-        //double before_rounding = 1/rt * log_m;
-        //int logscore = (int)Math.Round(before_rounding); //final score for this method
-        //int mscore = (int)Math.Round(1/rt + (median_rt-rt)*1.5); //simple method
+        //finally handle changing the score
+        changeScore((int)final_score, text);
     }
 
 
