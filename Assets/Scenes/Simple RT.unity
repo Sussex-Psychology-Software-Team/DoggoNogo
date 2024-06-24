@@ -815,14 +815,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   max_response_time: 1.5
-  isi_low: 0.5
-  isi_high: 2
-  n_trials: 7
+  isi_low: 0.2
+  isi_high: 3.5
+  n_trials: 60
   isi_rep: 3
   score: 0
   scoreText: {fileID: 1786151914}
   feedbackText: {fileID: 1479691777}
   healthBar: {fileID: 126796138}
+  stage: 1
+  target_score: 1000
+  n_trials_stage1: 0
 --- !u!114 &1390488370
 MonoBehaviour:
   m_ObjectHideFlags: 0
