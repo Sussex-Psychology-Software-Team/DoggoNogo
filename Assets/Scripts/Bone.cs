@@ -42,10 +42,10 @@ public class Bone : MonoBehaviour
     public int score = 0; //holds score
     public TextMeshProUGUI scoreText; // displays score
     public TextMeshProUGUI feedbackText; //feedback
-    public HealthBar healthBar;
-    public int stage = 1;
-    public int target_score = 1000;
-    public int n_trials_stage1 = 0;
+    public HealthBar healthBar; //holds reference to coloured health bar
+    public int stage = 1; //stages 1-3
+    public int[] score_ratchet = {0,1000,0,0}; //tracks the max score for each stage
+    public int n_trials_stage1 = 0; //number of trials to reach end of stage 1
 
 
     // ******************* DATA *******************
@@ -223,8 +223,9 @@ public class Bone : MonoBehaviour
         data.newTrial(isi);   // Create an instance of a Trial
         gameObject.transform.localScale = Vector3.zero; // reset stim
 
-        if(score>=target_score){
-            target_score += scoreTarget(); //note += to increase target amount
+        if(score>=score_ratchet[stage]){
+            scoreTarget(); //note += to increase target amount
+            changeScore(0, "Level " + stage + "!");
         }
         resetTimers();
     }
@@ -297,24 +298,28 @@ public class Bone : MonoBehaviour
             feedbackText.color = barColour;
         }
 
-        // Set bounds on change in score to 3rds of health bar
-        int newScore = score + change;
+        // Update healthbar but comparing score to ratchet
         int maxHealth = (int)healthBar.GetMaxHealth();
-        if(newScore<0){ 
-            newScore = 0; //lowerbound on score of 0
-        } else if(score>=maxHealth/3 && newScore<=maxHealth/3){ //if score currently >1/3 healthbar and new score would put it below this
-            newScore = maxHealth/3;
-        } else if(score>=(maxHealth/3)*2 && newScore<=(maxHealth/3)*2){ //if score currently >2/3 healthbar and new score would put it below this
-            newScore = (maxHealth/3)*2;
-        }
+        int healthBarScore = score + change;
         
+        //ratchet healthbar separately
+        if(healthBarScore < maxHealth*((stage-1)/3)){ 
+            healthBarScore = maxHealth*((stage-1)/3); 
+        }
+        healthBar.SetHealth(healthBarScore, barColour);
+
+        //compare new score to ratchet
+        int newScore = score + change;
+        if(newScore < score_ratchet[stage-1]){
+            newScore = score_ratchet[stage-1];
+        }
+        // Update data
+        data.currentTrial().score = newScore; //take score out of global var soon
+        score = newScore;
+
         // Update UI 
         scoreText.text = "Score: " + newScore;
         feedbackText.text = feedback;
-        // Update data
-        healthBar.SetHealth(newScore, barColour);
-        data.currentTrial().score = newScore; //take score out of global var soon
-        score = newScore;
     }
 
     // PUT NEW SCORE CALCULATIONS IN HERE
@@ -345,7 +350,7 @@ public class Bone : MonoBehaviour
     }
 
     // Calculate score where participant will enter into new stage of game
-    public int scoreTarget(){
+    void scoreTarget(){
         //n_trials and n_trials_stage1 are defined up top
         int n_trials_stage2 = 0;
         if(stage==1){ n_trials_stage1 = data.trials.Count;
@@ -353,7 +358,8 @@ public class Bone : MonoBehaviour
         stage++;
         int target = ((n_trials - n_trials_stage1 + n_trials_stage2) / (8-(2*stage)) )*100;
         if(target<500){ target=500; }
-        return target;
+        score_ratchet[stage] = score_ratchet[stage-1]+target;
+        healthBar.SetMaxHealth(score_ratchet[stage]*(1/stage)*3); //set healthbar maximum
     }
 
 
@@ -375,6 +381,7 @@ public class Bone : MonoBehaviour
 
         //setup first trial
         newTrial();
+        healthBar.SetMaxHealth(score_ratchet[stage]*3);
     }
 
 
@@ -388,10 +395,10 @@ public class Bone : MonoBehaviour
                 if(data.trials.Count>1 && data.currentTrial().early_presses.Count == 0 && data.lastTrial().rt == -1.0){ //if not on first trial, first press of current trial when last was missed
                     double rt = max_response_time + isi_timer.Elapsed.TotalSeconds; //the current time since last trial ended + max trial time
                     data.lastTrial().rt = rt; //store in the last reaction time
-                    changeScore(1, "Too slow! Doggo mad!"); //add minimum score and display message
+                    changeScore(0, "Too slow! Doggo mad!"); //add minimum score and display message
                     resetTimers(); //restart the isi
                 } else {
-                    changeScore(-2, "TOO QUICK!\nWait until the bone has appeared."); // minus 2 points for an early press
+                    changeScore(-100, "TOO QUICK!\nWait until the bone has appeared."); // minus 2 points for an early press
                     //save early presses
                     data.earlyPress(isi_timer.Elapsed.TotalSeconds);
                 }
