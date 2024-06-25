@@ -6,7 +6,6 @@ using UnityEngine.UI; //Image.sprite
 public class Dog : MonoBehaviour
 {
     public Sprite[] images;
-    public Bone bone;
     private int i = 0;
 
     // Start is called before the first frame update
@@ -17,16 +16,6 @@ public class Dog : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // if(bone.stage==1 && bone.score<=3){
-        //     gameObject.GetComponent<Image>().sprite = images[0];
-        //     //Debug.Log("IMG 0");
-        // } else if(bone.score>3 && bone.score<=5){
-        //     gameObject.GetComponent<Image>().sprite = images[1];
-        //     //Debug.Log("IMG 1");
-        // } else if(bone.score>5){
-        //     gameObject.GetComponent<Image>().sprite = images[2];
-        //     //Debug.Log("IMG 2");
-        // }
     }
 
     public void ChangeSprite(){
