@@ -292,10 +292,10 @@ public class Bone : MonoBehaviour
             feedbackText.color = barColour;
         } else if(change == 1){
             barColour = forest;
-            feedbackText.color = Color.blue;
+            feedbackText.color = Color.black;
         } else {
             barColour = forest;
-            feedbackText.color = barColour;
+            feedbackText.color = Color.black;
         }
 
         // Update healthbar but comparing score to ratchet
