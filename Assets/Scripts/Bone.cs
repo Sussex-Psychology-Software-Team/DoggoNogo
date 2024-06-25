@@ -224,7 +224,7 @@ public class Bone : MonoBehaviour
         gameObject.transform.localScale = Vector3.zero; // reset stim
 
         if(score>=target_score){
-            target_score += stageTarget(); //note += to increase target amount
+            target_score += scoreTarget(); //note += to increase target amount
         }
         resetTimers();
     }
@@ -345,7 +345,7 @@ public class Bone : MonoBehaviour
     }
 
     // Calculate score where participant will enter into new stage of game
-    public int stageTarget(){
+    public int scoreTarget(){
         //n_trials and n_trials_stage1 are defined up top
         int n_trials_stage2 = 0;
         if(stage==1){ n_trials_stage1 = data.trials.Count;
