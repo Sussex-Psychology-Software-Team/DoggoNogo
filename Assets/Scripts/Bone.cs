@@ -37,6 +37,7 @@ public class Bone : MonoBehaviour
 
     // Display
     private Vector3 show; // or 0.4145592f original image is too big - can probably just prefab this in future
+    public Dog dog;
 
     // Score
     public int score = 0; //holds score
@@ -361,6 +362,7 @@ public class Bone : MonoBehaviour
             endExp();
             return;
         }
+        dog.ChangeSprite();
         int target = ((n_trials - (n_trials_stage1 + n_trials_stage2)) / (8-(2*stage)) )*100;
         if(target<500){ target=500; }
         score_ratchet[stage] = score_ratchet[stage-1]+target;
