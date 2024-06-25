@@ -207,7 +207,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 12
+  m_MaxValue: 1000
   m_WholeNumbers: 0
   m_Value: 0
   m_OnValueChanged:
@@ -824,7 +824,7 @@ MonoBehaviour:
   feedbackText: {fileID: 1479691777}
   healthBar: {fileID: 126796138}
   stage: 1
-  target_score: 1000
+  score_ratchet: 00000000e80300000000000000000000
   n_trials_stage1: 0
 --- !u!114 &1390488370
 MonoBehaviour:
