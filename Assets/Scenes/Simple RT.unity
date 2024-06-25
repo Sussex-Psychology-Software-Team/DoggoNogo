@@ -819,6 +819,7 @@ MonoBehaviour:
   isi_high: 3.5
   n_trials: 60
   isi_rep: 3
+  dog: {fileID: 1504777854}
   score: 0
   scoreText: {fileID: 1786151914}
   feedbackText: {fileID: 1479691777}
@@ -1090,7 +1091,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: d68d9d6950e034a088f2885e413d0cd3, type: 3}
   - {fileID: 21300000, guid: 2f5bdc64d4ce2433cbb0ceaf42bae29e, type: 3}
   - {fileID: 21300000, guid: f71eec15a1d5a47efa381560d4ceb610, type: 3}
-  bone: {fileID: 1390488369}
 --- !u!1 &1786151912
 GameObject:
   m_ObjectHideFlags: 0
