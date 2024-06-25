@@ -299,14 +299,15 @@ public class Bone : MonoBehaviour
         }
 
         // Update healthbar but comparing score to ratchet
-        int maxHealth = (int)healthBar.GetMaxHealth();
-        int healthBarScore = score + change;
+        float maxHealth = healthBar.GetMaxHealth();
+        float healthBarScore = (float)(score + change);
         
         //ratchet healthbar separately
-        if(healthBarScore < maxHealth*((stage-1)/3)){ 
-            healthBarScore = maxHealth*((stage-1)/3); 
+        float health_bar_ratchet = maxHealth*(((float)stage-1f)/3f);
+        if(healthBarScore < health_bar_ratchet){ 
+            healthBarScore = health_bar_ratchet;
         }
-        healthBar.SetHealth(healthBarScore, barColour);
+        healthBar.SetHealth((int)healthBarScore, barColour);
 
         //compare new score to ratchet
         int newScore = score + change;
@@ -356,10 +357,18 @@ public class Bone : MonoBehaviour
         if(stage==1){ n_trials_stage1 = data.trials.Count;
         } else if(stage==2){ n_trials_stage2 = data.trials.Count; }
         stage++;
-        int target = ((n_trials - n_trials_stage1 + n_trials_stage2) / (8-(2*stage)) )*100;
+        if(stage==4){
+            endExp();
+            return;
+        }
+        int target = ((n_trials - (n_trials_stage1 + n_trials_stage2)) / (8-(2*stage)) )*100;
         if(target<500){ target=500; }
         score_ratchet[stage] = score_ratchet[stage-1]+target;
-        healthBar.SetMaxHealth(score_ratchet[stage]*(1/stage)*3); //set healthbar maximum
+        float new_health = (float)score_ratchet[stage] * (1f/ (float)stage )*3f;
+        healthBar.SetMaxHealth((int)new_health); //set healthbar maximum
+        Debug.Log("New Max health: ");
+        Debug.Log((1/stage)*3);
+        Debug.Log(score_ratchet[stage]*(1/stage)*3);
     }
 
 
