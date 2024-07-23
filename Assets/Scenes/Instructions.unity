@@ -1027,12 +1027,21 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "<b>Welcome to Doggo-Nogo!</b>\n\nTry to keep your dog, Doggo, well fed.
-    Press the spacebar to feed Doggo when the bone appears. \n\nThe quicker you press
-    the button, the fresher the food will be, and the more points you will earn.
-    However, If you press too early, doggo will not be able to catch the bone and
-    it will get lost and you will loose points.\n\nType your name below, and press
-    the 'Enter' key to begin"
+  m_text: '<b>Welcome to Doggo-Nogo!</b>
+
+
+    This game was designed by psychologists
+    to accurately assess your cognitive reflexes. After each level, you will be told
+    how well you did compared to others.
+
+    
+
+    By playing, you agree that
+    your data will be anonymously stored for scientific research. Read the full consent
+    form [here]
+
+
+    Type your name below, and press the ''Enter'' key to begin'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

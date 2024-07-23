@@ -45,7 +45,7 @@ public class Begin : MonoBehaviour
                 scene_triggered = true;
                 //gameObject.transform.localScale = Vector3.zero; // hide instructions
                 PlayerPrefs.SetString("Name", name);
-                SceneManager.LoadScene("Simple RT");
+                SceneManager.LoadScene("Introduction");
             }
         }
     }
