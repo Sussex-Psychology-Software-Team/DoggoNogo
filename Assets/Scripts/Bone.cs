@@ -290,13 +290,13 @@ public class Bone : MonoBehaviour
         Color barColour;
         if(change<0){ //if score is being reduced
             barColour = Color.red;
-            feedbackText.color = barColour;
+            feedbackText.color = Color.red;
         } else if(change == 1){
             barColour = forest;
-            feedbackText.color = Color.black;
+            feedbackText.color = Color.white;
         } else {
             barColour = forest;
-            feedbackText.color = Color.black;
+            feedbackText.color = Color.white;
         }
 
         // Update healthbar but comparing score to ratchet
