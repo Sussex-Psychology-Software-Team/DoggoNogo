@@ -72,31 +72,21 @@ public class introSlideshow : MonoBehaviour
 
         } else if(chapter == 7){ // Instructions
             textBox.fontSize = 50; // Smaller more readable text
-            textBackground.transform.localScale = Vector3.one; // Insert a background image of transparent white
+            textBackground.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.5f); // Set alpha to .5
             textBox.text = storyText[4]; // "Doggo is in need of urgent care and feeding.<br>Help him get as many bones as possible by pressing the down arrow (↓) as fast as possible."
 
         } else if(chapter == 8){ // Do nothing
 
         } else if(chapter == 9){
-            textBackground.transform.localScale = Vector3.zero; // Insert a background image of transparent white
+            textBackground.transform.localScale = Vector3.zero; // Hide text background
             textBox.text = storyText[5]; // "<p style="font-size: 90">Ready?</p><br>Press ↓ to start"
 
         }
 
+        //textBackground.rectTransform.sizeDelta = new Vector2(textBox.rectTransform.sizeDelta.x, textBox.rectTransform.sizeDelta.y);
         // Reset timer
         timer = timeBetweenImages;
     }
-
-
-    // Graphics Faders
-    // public IEnumerator fadeIn(float seconds, Graphic graphic, bool isImage=true) {
-    //     Graphic ToFade = isImage ? graphic.GetComponent<Image>() : graphic.GetComponent<Text>(); // Flexible to text and image
-    //     ToFade.color.a = 0; // set Alpha to 0
-    //     while (ToFade.color.a < 1.0f) { // While alpha not full
-    //         ToFade.color.a += (Time.deltaTime / seconds); // Add to alpha
-    //         yield return null;
-    //     }
-    // }
 
     public IEnumerator fadeIn(float seconds, Graphic graphic){
         // Graphic.color returns copy not reference so can't be set directly
