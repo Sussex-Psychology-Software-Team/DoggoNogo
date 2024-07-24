@@ -401,7 +401,7 @@ public class Bone : MonoBehaviour
     {
        if(isi_timer.IsRunning){ //if in isi/ not waiting for reaction
             //handle early presses
-            if(Input.GetKeyDown("space")){
+            if(Input.GetKeyDown(KeyCode.DownArrow)){
                 // Store piece
                 if(data.trials.Count>1 && data.currentTrial().early_presses.Count == 0 && data.lastTrial().rt == -1.0){ //if not on first trial, first press of current trial when last was missed
                     double rt = max_response_time + isi_timer.Elapsed.TotalSeconds; //the current time since last trial ended + max trial time
@@ -431,7 +431,7 @@ public class Bone : MonoBehaviour
             
             if(rt_timer.Elapsed.TotalSeconds > max_response_time){ //if greater than max trial time end trial and move on.
                 newTrial();
-            } else if(Input.GetKeyDown("space")){ //if not, on reaction
+            } else if(Input.GetKeyDown(KeyCode.DownArrow)){ //if not, on reaction
                 // Store rt
                 rt_timer.Stop();
                 data.currentTrial().datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
