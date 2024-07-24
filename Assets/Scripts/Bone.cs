@@ -340,10 +340,10 @@ public class Bone : MonoBehaviour
             double min_add = min_score + score_bonus;
             if (min_add > max_score) { min_add = max_score; } //clamp
             final_score = min_add*1000;
-            text = "GREAT!\nDoggo caught the bone!";
+            text = "GREAT!\nDoggo caught the sausage!";
         } else { //if too slow
             final_score = 0;
-            text = "Oh no!\nDoggo didn't get a bone.";
+            text = "Oh no!\nDoggo didn't get a sausage.";
         }
         Debug.Log(final_score);
 
@@ -409,7 +409,7 @@ public class Bone : MonoBehaviour
                     changeScore(0, "Too slow! Doggo mad!"); //add minimum score and display message
                     resetTimers(); //restart the isi
                 } else {
-                    changeScore(-100, "TOO QUICK!\nWait until the bone has appeared."); // minus 2 points for an early press
+                    changeScore(-100, "TOO QUICK!\nWait until the sausage has appeared."); // minus 2 points for an early press
                     //save early presses
                     data.earlyPress(isi_timer.Elapsed.TotalSeconds);
                 }
