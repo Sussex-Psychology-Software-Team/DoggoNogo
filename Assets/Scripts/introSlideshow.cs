@@ -30,10 +30,12 @@ public class introSlideshow : MonoBehaviour
 
     private int chapter = 0;
 
+    private bool videoFinished = false;
+
     void checkChapterNumber(){
         chapter++;
-        if(chapter == 10){
-            endIntro();
+        if(chapter == 11){ //Skip two chapters to allow participants to read instructions
+            videoFinished = true;
         } else {
             showNextChapter();
         }
@@ -75,15 +77,12 @@ public class introSlideshow : MonoBehaviour
             textBackground.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.5f); // Set alpha to .5
             textBox.text = storyText[4]; // "Doggo is in need of urgent care and feeding.<br>Help him get as many bones as possible by pressing the down arrow (↓) as fast as possible."
 
-        } else if(chapter == 8){ // Do nothing
-
-        } else if(chapter == 9){
-            textBackground.transform.localScale = Vector3.zero; // Hide text background
+        } else if(chapter == 10){ // Skip 2 chapters to allow participants to read instructions
+            textBackground.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0f); // Set alpha to 0
             textBox.text = storyText[5]; // "<p style="font-size: 90">Ready?</p><br>Press ↓ to start"
 
         }
 
-        //textBackground.rectTransform.sizeDelta = new Vector2(textBox.rectTransform.sizeDelta.x, textBox.rectTransform.sizeDelta.y);
         // Reset timer
         timer = timeBetweenImages;
     }
@@ -102,10 +101,6 @@ public class introSlideshow : MonoBehaviour
             yield return null;
         }
     }
-
-    void endIntro(){
-        SceneManager.LoadScene("Simple RT");
-    }
     
     // Start is called before the first frame update
     void Start()
@@ -122,8 +117,12 @@ public class introSlideshow : MonoBehaviour
     {
         timer -= Time.deltaTime;
         
-        if (timer <= 0.0f){
+        if (timer <= 0.0f && !videoFinished){
             checkChapterNumber();
+        }
+
+        if (videoFinished && Input.GetKeyDown(KeyCode.DownArrow)){
+            SceneManager.LoadScene("Simple RT");
         }
     }
 }
