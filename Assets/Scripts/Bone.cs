@@ -2,7 +2,6 @@ using UnityEngine;
 using Debug = UnityEngine.Debug;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.SceneManagement;
-using UnityEngine.Networking; //Unity Web Request
 using System;
 using System.Diagnostics;
 using System.Collections;
@@ -113,48 +112,9 @@ public class Bone : MonoBehaviour
         rt_timer.Reset();
     }
 
-    void endExp(){
-        Debug.Log(JsonUtility.ToJson(DataManager.Instance.data));
-
-        // Save data
-        PlayerPrefs.SetInt("Score", score); //save score to local copy for use in end screen
-        PlayerPrefs.Save();
-        DataManager.Instance.data.metadata.end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Save end date of experiment
-
-        // Send datapipe Data
-        DataPipeBody body = new DataPipeBody(); //create instance
-        string json = JsonUtility.ToJson(body); //Note double encoding is necessary here as looks like datapipe parses this as an object on their end too
-        StartCoroutine(sendData(json));
-
+    void endTask(){
         // Load next scene
         SceneManager.LoadScene("End");
-    }
-
-
-    // SENDING DATA -------------------------------------
-    [System.Serializable] //class to format the data as expected by datapipe
-    public class DataPipeBody{
-        public string experimentID;
-        public string filename;
-        public string data; //json string of data object
-        
-        public DataPipeBody(){
-            experimentID = "VSyXogVR8oTS";
-            filename = DataManager.Instance.data.metadata.name + "_" + DataManager.Instance.data.metadata.id + ".json";
-            data = JsonUtility.ToJson(DataManager.Instance.data);
-        }
-    }
-
-    IEnumerator sendData(string json){ //sends data - IEnumerator can run over sever frames and wait for 'OK' response from OSF server
-        using (UnityWebRequest www = UnityWebRequest.Post("https://pipe.jspsych.org/api/data/", json, "application/json")) {
-            yield return www.SendWebRequest();
-            if (www.result != UnityWebRequest.Result.Success) {
-                Debug.LogError(www.error);
-            }
-            else {
-                Debug.Log("Form upload complete!");
-            }
-        }
     }
 
 
@@ -234,7 +194,7 @@ public class Bone : MonoBehaviour
         } else if(stage==2){ n_trials_stage2 = DataManager.Instance.data.trials.Count; }
         stage++;
         if(stage==4){
-            endExp();
+            endTask();
             return;
         }
         dog.ChangeSprite();
@@ -315,7 +275,7 @@ public class Bone : MonoBehaviour
 
                 // next trial
                 if(DataManager.Instance.data.trials.Count == isi_array.Length-1 || DataManager.Instance.data.trials.Count == n_trials ){
-                    endExp();
+                    endTask();
                 } else {
                     newTrial();
                 }

@@ -15,7 +15,7 @@ public class EndScreen : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        int score = PlayerPrefs.GetInt("Score", 0); //get local copy of player score
+        DataManager.Instance.sendData();
         double percent = Phi(score);
         string z = percent.ToString("F2");
         percentileText.text = "You scored better than " + z + "% of participants!";
