@@ -44,7 +44,7 @@ public class Begin : MonoBehaviour
                 //move to first scene
                 scene_triggered = true;
                 //gameObject.transform.localScale = Vector3.zero; // hide instructions
-                PlayerPrefs.SetString("Name", name);
+                DataManager.Instance.data.metadata.name = name;
                 SceneManager.LoadScene("Introduction");
             }
         }

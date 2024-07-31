@@ -256,7 +256,6 @@ public class Bone : MonoBehaviour
         show = new Vector3(s,s,0);
 
         //PlayerPrefs is an issue inside the class constructor so call here
-        DataManager.Instance.data.metadata.name = PlayerPrefs.GetString("Name", "No Name"); // must be done here?
         DataManager.Instance.data.metadata.retry = PlayerPrefs.GetInt("Retry", 0); //get retry number - note probably don't want this persisting on single computer between sessions in future....
 
         //Create ISI array

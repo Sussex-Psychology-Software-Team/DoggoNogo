@@ -1,15 +1,18 @@
 using System; // DateTime
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Runtime.InteropServices; // DllImport
+using UnityEngine;
 
 public class DataManager : MonoBehaviour
 {
-    //Create json-convertable structures to hold data, each trial stored individually https://forum.unity.com/threads/serialize-nested-objects-with-jsonutility.737624
+    // Creates json-convertable structures to hold data, each trial stored individually https://forum.unity.com/threads/serialize-nested-objects-with-jsonutility.737624
+    
     // Singleton pattern - ensures only 1 instance of DataManager exists
-
     public static DataManager Instance; // Static means values stored in class member shared by all the instances of class. 
+
+    // Create global instance of data for use throughout
+    public Data data = new Data();
 
     private void Awake()
     {
@@ -22,10 +25,6 @@ public class DataManager : MonoBehaviour
         Instance = this; // Store the current instance so other calls link to same.
         DontDestroyOnLoad(gameObject); // Don't destroy when scene changes
     }
-
-
-    //create global instance of data for use throughout
-    public Data data = new Data();
 
     // Grab userAgent https://docs.unity3d.com/Manual/web-interacting-code-example.html
     [DllImport("__Internal")] // imports userAgent() from Assets/WebGL/Plugins/userAgent.jslib
@@ -41,40 +40,41 @@ public class DataManager : MonoBehaviour
         public string end;
         public int retry;
 
-        // Functions for initialising metadata
-        //random ID generator
-        string randomId(int size) { //https://stackoverflow.com/a/9995960/7705626
-            System.Random rand = new System.Random(); 
-            string characters = "abcdefghijklmnopqrstuvwyxzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            string rand_id = "";
-            for (int i=0; i < size; i++) {
-                rand_id += characters[rand.Next(characters.Length)];
-            }
-            return rand_id;
+        // Constructor
+        public Metadata()
+        {
+            id = GenerateRandomId(24);
+            userAgent = GetUserAgent();
+            start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         }
 
-        public string getUserAgent(){
+        // Generates a random ID
+        private static string GenerateRandomId(int size)
+        {
+            var rand = new System.Random();
+            const string characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var randId = new char[size];
+            for (var i = 0; i < size; i++)
+            {
+                randId[i] = characters[rand.Next(characters.Length)];
+            }
+            return new string(randId);
+        }
+
+        // Retrieves the user agent
+        private static string GetUserAgent()
+        {
             #if UNITY_EDITOR
-                    return "EDITOR"; // value to return in Play Mode (in the editor)
+                return "EDITOR"; // Value to return in Play Mode (in the editor)
             #elif UNITY_WEBGL
-                    return userAgent(); // value based on the current browser
+                return userAgent(); // Value based on the current browser
             #else
-                    return "NO_UA";
+                return "NO_UA";
             #endif
         }
-
-        // Class constructor
-        public Metadata(){//string id, string name, string UserA, string start){
-            id = randomId(24);
-            userAgent = getUserAgent(); // Assign userAgent
-            start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
-            //GetInt is not allowed to be called from a MonoBehaviour constructor (or instance field initializer), call it in Awake or Start instead:
-                //name = PlayerPrefs.GetString("Name", "No Name");
-                //retry = PlayerPrefs.GetInt("Retry", 0); //get retry number
-        }
     }
+    
 
-    // Trials model
     [System.Serializable]
     public class Trial {
         public int trial_n;
@@ -84,12 +84,14 @@ public class DataManager : MonoBehaviour
         public int score;
         public List<EarlyPress> early_presses;
 
-        public Trial(int trial_number, double isi_var){
-            trial_n = trial_number;
-            isi = isi_var;
-            rt = -1.0; //this indicates no response
+        // Constructor
+        public Trial(int trialNumber, double isiVar)
+        {
+            trial_n = trialNumber;
+            isi = isiVar;
+            rt = -1.0; // Indicates no response
             datetime = "";
-            score = score;
+            score = 0; // Initialize score
             early_presses = new List<EarlyPress>();
         }
     }
@@ -97,7 +99,6 @@ public class DataManager : MonoBehaviour
     // Early presses model (stored within trials)
     [System.Serializable]
     public class EarlyPress {
-        //private static int early_counter = 0; //need this to reset when Trial is created?
         public int count;
         public double stopwatch;
         public string datetime;
