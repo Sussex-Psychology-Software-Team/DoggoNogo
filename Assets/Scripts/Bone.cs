@@ -7,7 +7,6 @@ using System;
 using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic; //for List
-using System.Runtime.InteropServices; //for DllImport
 using TMPro; //for TextMeshProUGUI
 
 public class Bone : MonoBehaviour
@@ -47,130 +46,6 @@ public class Bone : MonoBehaviour
     public int stage = 1; //stages 1-3
     public int[] score_ratchet = {0,1000,0,0}; //tracks the max score for each stage
     public int n_trials_stage1 = 0; //number of trials to reach end of stage 1
-
-
-    // ******************* DATA *******************
-    //Create json-convertable structures to hold data, each trial stored individually https://forum.unity.com/threads/serialize-nested-objects-with-jsonutility.737624
-
-    // Grab userAgent https://docs.unity3d.com/Manual/web-interacting-code-example.html
-    [DllImport("__Internal")] // imports userAgent() from Assets/WebGL/Plugins/userAgent.jslib
-    static extern string userAgent();
-
-    // Metadata structure
-    [System.Serializable]
-    public class Metadata {
-        public string id;
-        public string name;
-        public string userAgent;
-        public string start;
-        public string end;
-        public int retry;
-
-        // Functions for initialising metadata
-        //random ID generator
-        string randomId(int size) { //https://stackoverflow.com/a/9995960/7705626
-            System.Random rand = new System.Random(); 
-            string characters = "abcdefghijklmnopqrstuvwyxzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            string rand_id = "";
-            for (int i=0; i < size; i++) {
-                rand_id += characters[rand.Next(characters.Length)];
-            }
-            return rand_id;
-        }
-
-        public string getUserAgent(){
-            #if UNITY_EDITOR
-                    return "EDITOR"; // value to return in Play Mode (in the editor)
-            #elif UNITY_WEBGL
-                    return userAgent(); // value based on the current browser
-            #else
-                    return "NO_UA";
-            #endif
-        }
-
-        // Class constructor
-        public Metadata(){//string id, string name, string UserA, string start){
-            id = randomId(24);
-            userAgent = getUserAgent(); // Assign userAgent
-            start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Assign date
-            //GetInt is not allowed to be called from a MonoBehaviour constructor (or instance field initializer), call it in Awake or Start instead:
-                //name = PlayerPrefs.GetString("Name", "No Name");
-                //retry = PlayerPrefs.GetInt("Retry", 0); //get retry number
-        }
-    }
-
-    // Trials model
-    [System.Serializable]
-    public class Trial {
-        public int trial_n;
-        public double isi;
-        public double rt;
-        public string datetime;
-        public int score;
-        public List<EarlyPress> early_presses;
-
-        public Trial(int trial_number, double isi_var){
-            trial_n = trial_number;
-            isi = isi_var;
-            rt = -1.0; //this indicates no response
-            datetime = "";
-            score = score;
-            early_presses = new List<EarlyPress>();
-        }
-    }
-
-    // Early presses model (stored within trials)
-    [System.Serializable]
-    public class EarlyPress {
-        //private static int early_counter = 0; //need this to reset when Trial is created?
-        public int count;
-        public double stopwatch;
-        public string datetime;
-
-        public EarlyPress(int press_count, double time){
-            count = press_count;
-            stopwatch = time;
-            datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        }
-    }
-
-    // Overall data structure which holds the above
-    [System.Serializable]
-    public class Data {
-        public Metadata metadata;
-        public List<Trial> trials; //make array of isi_length
-
-        public Data() {
-            metadata = new Metadata();
-            trials = new List<Trial>();
-        }
-
-        // Methods
-        public void newTrial(double isi){ //adds a new trial using the isi
-            this.trials.Add(new Trial(this.trials.Count+1, isi));
-        }
-
-        public Trial currentTrial(){ //returns current trial to add to the current data obj
-            int count = this.trials.Count;
-            return this.trials[count-1];
-        }
-
-        public Trial lastTrial(){ //returns trial before current trial
-            int count = this.trials.Count;
-            return this.trials[count-2];
-        }
-
-        public void earlyPress(double rt){ //add early press based on rt
-            int count = this.currentTrial().early_presses.Count+1;
-            EarlyPress early_press = new EarlyPress(count, rt);
-            this.currentTrial().early_presses.Add(early_press);
-        }
-    }
-    
-    //create global instance of data for use throughout
-    Data data = new Data();
-
-
 
 
     // ******************* FUNCTIONS *******************
@@ -220,8 +95,8 @@ public class Bone : MonoBehaviour
     // TRIAL MANAGEMENT ------------------------------------------------------------
     void newTrial() { //function to reset variables and set-up for a new trials
         //reset vars
-        isi = isi_array[data.trials.Count]; // new isi
-        data.newTrial(isi);   // Create an instance of a Trial
+        isi = isi_array[DataManager.Instance.data.trials.Count]; // new isi
+        DataManager.Instance.data.newTrial(isi);   // Create an instance of a Trial
         gameObject.transform.localScale = Vector3.zero; // reset stim
 
         if(score>=score_ratchet[stage]){
@@ -239,15 +114,15 @@ public class Bone : MonoBehaviour
     }
 
     void endExp(){
-        Debug.Log(JsonUtility.ToJson(data));
+        Debug.Log(JsonUtility.ToJson(DataManager.Instance.data));
 
         // Save data
         PlayerPrefs.SetInt("Score", score); //save score to local copy for use in end screen
         PlayerPrefs.Save();
-        data.metadata.end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Save end date of experiment
+        DataManager.Instance.data.metadata.end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Save end date of experiment
 
         // Send datapipe Data
-        DataPipeBody body = new DataPipeBody(data); //create instance
+        DataPipeBody body = new DataPipeBody(); //create instance
         string json = JsonUtility.ToJson(body); //Note double encoding is necessary here as looks like datapipe parses this as an object on their end too
         StartCoroutine(sendData(json));
 
@@ -263,10 +138,10 @@ public class Bone : MonoBehaviour
         public string filename;
         public string data; //json string of data object
         
-        public DataPipeBody(Data data_obj){
+        public DataPipeBody(){
             experimentID = "VSyXogVR8oTS";
-            filename = data_obj.metadata.name + "_" + data_obj.metadata.id + ".json";
-            data = JsonUtility.ToJson(data_obj);
+            filename = DataManager.Instance.data.metadata.name + "_" + DataManager.Instance.data.metadata.id + ".json";
+            data = JsonUtility.ToJson(DataManager.Instance.data);
         }
     }
 
@@ -316,7 +191,7 @@ public class Bone : MonoBehaviour
             newScore = score_ratchet[stage-1];
         }
         // Update data
-        data.currentTrial().score = newScore; //take score out of global var soon
+        DataManager.Instance.data.currentTrial().score = newScore; //take score out of global var soon
         score = newScore;
 
         // Update UI 
@@ -355,8 +230,8 @@ public class Bone : MonoBehaviour
     void scoreTarget(){
         //n_trials and n_trials_stage1 are defined up top
         int n_trials_stage2 = 0;
-        if(stage==1){ n_trials_stage1 = data.trials.Count;
-        } else if(stage==2){ n_trials_stage2 = data.trials.Count; }
+        if(stage==1){ n_trials_stage1 = DataManager.Instance.data.trials.Count;
+        } else if(stage==2){ n_trials_stage2 = DataManager.Instance.data.trials.Count; }
         stage++;
         if(stage==4){
             endExp();
@@ -373,9 +248,6 @@ public class Bone : MonoBehaviour
         Debug.Log(score_ratchet[stage]*(1/stage)*3);
     }
 
-
-
-
     // ******************* UNITY *******************
     void Start()
     {
@@ -384,8 +256,8 @@ public class Bone : MonoBehaviour
         show = new Vector3(s,s,0);
 
         //PlayerPrefs is an issue inside the class constructor so call here
-        data.metadata.name = PlayerPrefs.GetString("Name", "No Name"); // must be done here?
-        data.metadata.retry = PlayerPrefs.GetInt("Retry", 0); //get retry number - note probably don't want this persisting on single computer between sessions in future....
+        DataManager.Instance.data.metadata.name = PlayerPrefs.GetString("Name", "No Name"); // must be done here?
+        DataManager.Instance.data.metadata.retry = PlayerPrefs.GetInt("Retry", 0); //get retry number - note probably don't want this persisting on single computer between sessions in future....
 
         //Create ISI array
         makeISIArray();
@@ -403,15 +275,15 @@ public class Bone : MonoBehaviour
             //handle early presses
             if(Input.GetKeyDown(KeyCode.DownArrow)){
                 // Store piece
-                if(data.trials.Count>1 && data.currentTrial().early_presses.Count == 0 && data.lastTrial().rt == -1.0){ //if not on first trial, first press of current trial when last was missed
+                if(DataManager.Instance.data.trials.Count>1 && DataManager.Instance.data.currentTrial().early_presses.Count == 0 && DataManager.Instance.data.lastTrial().rt == -1.0){ //if not on first trial, first press of current trial when last was missed
                     double rt = max_response_time + isi_timer.Elapsed.TotalSeconds; //the current time since last trial ended + max trial time
-                    data.lastTrial().rt = rt; //store in the last reaction time
+                    DataManager.Instance.data.lastTrial().rt = rt; //store in the last reaction time
                     changeScore(0, "Too slow! Doggo mad!"); //add minimum score and display message
                     resetTimers(); //restart the isi
                 } else {
                     changeScore(-100, "TOO QUICK!\nWait until the sausage has appeared."); // minus 2 points for an early press
                     //save early presses
-                    data.earlyPress(isi_timer.Elapsed.TotalSeconds);
+                    DataManager.Instance.data.earlyPress(isi_timer.Elapsed.TotalSeconds);
                 }
             }
 
@@ -434,16 +306,16 @@ public class Bone : MonoBehaviour
             } else if(Input.GetKeyDown(KeyCode.DownArrow)){ //if not, on reaction
                 // Store rt
                 rt_timer.Stop();
-                data.currentTrial().datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                DataManager.Instance.data.currentTrial().datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 double rt = rt_timer.Elapsed.TotalSeconds; //consider changing data types ElapsedMilliseconds
-                data.currentTrial().rt = roundTime(rt,7); // round off to avoid precision errors - 7 is length of ElapsedTicks anyway.
+                DataManager.Instance.data.currentTrial().rt = roundTime(rt,7); // round off to avoid precision errors - 7 is length of ElapsedTicks anyway.
                 
                 // CALCULATE SCORE ******************************
                 calcScore(rt);
                 //******************************
 
                 // next trial
-                if(data.trials.Count == isi_array.Length-1 || data.trials.Count == n_trials ){
+                if(DataManager.Instance.data.trials.Count == isi_array.Length-1 || DataManager.Instance.data.trials.Count == n_trials ){
                     endExp();
                 } else {
                     newTrial();
