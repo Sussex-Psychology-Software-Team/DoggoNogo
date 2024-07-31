@@ -16,6 +16,7 @@ public class EndScreen : MonoBehaviour
     void Start()
     {
         DataManager.Instance.sendData();
+        int score = DataManager.Instance.data.lastTrial().score; //get local copy of player score
         double percent = Phi(score);
         string z = percent.ToString("F2");
         percentileText.text = "You scored better than " + z + "% of participants!";

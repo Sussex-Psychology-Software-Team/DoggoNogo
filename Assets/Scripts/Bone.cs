@@ -215,8 +215,7 @@ public class Bone : MonoBehaviour
         float s = gameObject.transform.localScale.x;
         show = new Vector3(s,s,0);
 
-        //PlayerPrefs is an issue inside the class constructor so call here
-        DataManager.Instance.data.metadata.retry = PlayerPrefs.GetInt("Retry", 0); //get retry number - note probably don't want this persisting on single computer between sessions in future....
+        DataManager.Instance.data.metadata.retry = DataManager.Instance.data.metadata.retry++; //get retry number - note probably don't want this persisting on single computer between sessions in future....
 
         //Create ISI array
         makeISIArray();
