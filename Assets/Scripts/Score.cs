@@ -1,102 +1,128 @@
+using System; // Math
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro; // TextMeshProUGUI
 
 public class Score : MonoBehaviour
 {
-    public HealthBar healthBar; //holds reference to coloured health bar
-    public score = 0;
+    // Element references
+    public TextMeshProUGUI scoreText; // displays score
+    public TextMeshProUGUI feedbackText; //feedback
+    public List<HealthBar> healthBars; // List of all 3 healthbars
+    HealthBar healthBar; // Holds reference health bar for current level
+    public Dog dog;
 
-   // SCORE -------------------------------------
-    public void Change(int change, string feedback){
-        // set colours
-        Color forest = new Color(0.06770712f, 0.5817609f, 0f, 1f); //colour of positive feedback text
-        Color barColour;
-        if(change<0){ //if score is being reduced
-            barColour = Color.red;
-            feedbackText.color = Color.red;
-        } else if(change == 1){
-            barColour = forest;
-            feedbackText.color = Color.white;
-        } else {
-            barColour = forest;
-            feedbackText.color = Color.white;
-        }
-        // Update UI 
-        scoreText.text = "Score: " + newScore;
-        feedbackText.text = feedback;
-    }
+    // Settings ----------------
+    // Levels
+    public int nLevels = 3; // Number of levels to run
+    public int totalTrials = 60; // Rough number of trials per participant
+    // Scores
+    public int slowScore = -100; // Score for early trial = -100 (flat rate)
+    public int earlyScore = 0; // Score for slow (> threshold) trial
+    public int minScore = 100; // Minimum score for fast trial
+    public int maxScore = 200; // Max score for super fast trial 
+    // RTs - boundaries on min/max RT of interest to avoid overshooting
+    public double minRT = .2; // Minimum RT bound
+    public double maxRT = .6; // Maximum RT bound
 
-    void ratchetScore(int change, Colour){
-        // Update healthbar but comparing score to ratchet
-        float maxHealth = healthBar.GetMaxHealth();
-        float healthBarScore = (float)(score + change);
-        
-        //ratchet healthbar separately
-        float health_bar_ratchet = maxHealth*(((float)stage-1f)/3f);
-        if(healthBarScore < health_bar_ratchet){ 
-            healthBarScore = health_bar_ratchet;
-        }
-        healthBar.SetHealth((int)healthBarScore, barColour);
+    // Track progress
+    int level = 1; // Stages 1-3
+    int score = 0;
 
-        //compare new score to ratchet
-        int newScore = this.score + change;
-        if(newScore < score_ratchet[stage-1]){
-            newScore = score_ratchet[stage-1];
-        }
-        // Update data
-        DataManager.Instance.data.currentTrial().score = newScore; //take score out of global var soon
-        score = newScore;
+    // ******************* METHODS/FUNCTIONS *******************
 
+    public void set(int trialScore){
+        ///int trialScore = calculateScore(rt);
+        // Display
+        giveFeedback(trialScore);
+        score = score+trialScore;
+        healthBar.SetHealth(score);
+        // Switch healthbars if above maximum
+        if(score >= healthBar.GetMaxHealth()) changeLevel(); // if health bars are 0-x then score needs to be reset or added to max
+        // Display
+        scoreText.text = "Score: " + score;
+        // Save
+        DataManager.Instance.data.currentTrial().score = score;
     }
 
     // PUT NEW SCORE CALCULATIONS IN HERE
-    public void Get(double rt, double min_rt=.2, double max_rt=.6, double min_score=.1, double max_score = .2) {
-        // Calculate score
-        double final_score;
-        string text;
-        if(rt<max_rt){ // if not way too slow
-            // calculate realtive score
-            double clamped = Math.Clamp(rt, min_rt, max_rt); //clamp rt between ranges
-            double relative = (clamped - min_rt) / (max_rt - min_rt); //normalise as proportion of range
-            double reversed = (1 - relative); //reverse
-            // score bonus
-            double max_score_bonus = max_score - min_score;
-            double score_bonus = reversed * max_score_bonus;
-            double min_add = min_score + score_bonus;
-            if (min_add > max_score) { min_add = max_score; } //clamp
-            final_score = min_add*1000;
-            text = "GREAT!\nDoggo caught the sausage!";
-        } else { //if too slow
-            final_score = 0;
-            text = "Oh no!\nDoggo didn't get a sausage.";
-        }
-        Debug.Log(final_score);
+    public int calculateScore(double rt) {
+        Debug.Log("rt");
+        Debug.Log(rt);
 
-        //finally handle changing the score
-        changeScore((int)final_score, text);
+        // Calculate score
+        double clampedRT = Math.Clamp(rt, minRT, maxRT); // Clamp Reaction Time, ensures 0-1 when normalised
+        double normalisedRT = (clampedRT - minRT) / (maxRT - minRT); // Normalise as proportion of range
+        double complementRT = (1 - normalisedRT); // Complement of proportion
+
+        // Score
+        double scoreRange = maxScore - minScore;
+        double adjustedRT = complementRT * scoreRange; // Multiply promportion by range
+        double finalScore = minScore + adjustedRT; // Bump up by minimum score
+        double clampedScore = Math.Min(finalScore, maxScore); // Techically does nothing if min=100 max=200
+
+        Debug.Log("clampedScore");
+        Debug.Log((int)clampedScore);
+        
+        return (int)clampedScore;
     }
 
-    // Calculate score where participant will enter into new stage of game
-    public void Target(){
-        //n_trials and n_trials_stage1 are defined up top
-        int n_trials_stage2 = 0;
-        if(stage==1){ n_trials_stage1 = DataManager.Instance.data.trials.Count;
-        } else if(stage==2){ n_trials_stage2 = DataManager.Instance.data.trials.Count; }
-        stage++;
-        if(stage==4){
-            endTask();
-            return;
+    public void giveFeedback(int score){
+        // Set default colours
+        Color barColour = new Color(0.06770712f, 0.5817609f, 0f, 1f); // 'forest' - colour of positive feedback
+        feedbackText.color = Color.white;
+        string feedback;
+
+        if(score == slowScore || score < 0){ //if too slow
+            barColour = Color.red;
+            feedbackText.color = Color.red;
+            feedback = "TOO QUICK!\nWait until the sausage has appeared.";
+
+        } else if(score == earlyScore || score == 0){ // If early press
+            barColour = Color.blue;
+            feedback = "Too slow!\nThe sausage went bad...";
+
+        } else if(score <= (((maxScore-minScore)/2)+minScore)) { // If less than half way to max score
+            feedback = "Yum!\nDoggo fetched the sausage!";
+
+        } else { //if middling score
+            feedback = "GREAT!\nDoggo caught the sausage!";
         }
-        dog.ChangeSprite();
-        int target = ((n_trials - (n_trials_stage1 + n_trials_stage2)) / (8-(2*stage)) )*100;
-        if(target<500){ target=500; }
-        score_ratchet[stage] = score_ratchet[stage-1]+target;
-        float new_health = (float)score_ratchet[stage] * (1f/ (float)stage )*3f;
-        healthBar.SetMaxHealth((int)new_health); //set healthbar maximum
-        Debug.Log("New Max health: ");
-        Debug.Log((1/stage)*3);
-        Debug.Log(score_ratchet[stage]*(1/stage)*3);
+
+        feedbackText.text = feedback;
+        healthBar.setColour(barColour);
+    }
+    
+    public void changeLevel(){
+        level++;
+        if(level>nLevels) return;
+        feedbackText.text = "Level " +level+"!";
+        nextHealthBar();
+    }
+
+    public void nextHealthBar(){
+        float previousTarget = healthBar.GetMaxHealth(); // Minimum set to last healthbar's maximum
+        healthBar = healthBars[level-1];
+        healthBar.SetMinHealth((int)previousTarget); // Healthbar minimum to last healthbar's maximum
+        healthBar.SetMaxHealth(getNewTargetScore()); // Set healthbar maximum
+    }
+
+    public int getNewTargetScore(){
+        // Calculate number of trials in current level.
+        int nTrialsRemaining = totalTrials - DataManager.Instance.data.trials.Count; // Number of trials remaining in task.
+        int nTrialsPerLevelsRemaining = nTrialsRemaining / ((nLevels+1) - level); // Number of trials in each remaining level.
+
+        // Calulate target score
+        int nFastTrials = nTrialsPerLevelsRemaining/2;
+        int targetScore = minScore * nFastTrials;
+
+        return targetScore;
+    }
+
+    // Start is called before the first frame update
+    void Start() {
+        healthBar = healthBars[0];
     }
 
 }

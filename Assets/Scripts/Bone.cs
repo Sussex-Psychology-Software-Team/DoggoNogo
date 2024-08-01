@@ -33,16 +33,9 @@ public class Bone : MonoBehaviour
     // Display
     private Vector3 show; // or 0.4145592f original image is too big - can probably just prefab this in future
     public Dog dog;
-
-    // Score
-    public int score = 0; //holds score
+    public Score score;
     public TextMeshProUGUI scoreText; // displays score
     public TextMeshProUGUI feedbackText; //feedback
-    public HealthBar healthBar; //holds reference to coloured health bar
-    public int stage = 1; //stages 1-3
-    public int[] score_ratchet = {0,1000,0,0}; //tracks the max score for each stage
-    public int n_trials_stage1 = 0; //number of trials to reach end of stage 1
-
 
     // ******************* FUNCTIONS *******************
     // ISI Helpers ------------------------------------------------------------
@@ -94,11 +87,6 @@ public class Bone : MonoBehaviour
         isi = isi_array[DataManager.Instance.data.trials.Count]; // new isi
         DataManager.Instance.data.newTrial(isi);   // Create an instance of a Trial
         gameObject.transform.localScale = Vector3.zero; // reset stim
-
-        if(score>=score_ratchet[stage]){
-            scoreTarget(); //note += to increase target amount
-            changeScore(0, "Level " + stage + "!");
-        }
         resetTimers();
     }
 
@@ -128,7 +116,6 @@ public class Bone : MonoBehaviour
 
         //setup first trial
         newTrial();
-        healthBar.SetMaxHealth(score_ratchet[stage]*3);
     }
 
 
@@ -142,10 +129,10 @@ public class Bone : MonoBehaviour
                 if(DataManager.Instance.data.trials.Count>1 && DataManager.Instance.data.currentTrial().early_presses.Count == 0 && DataManager.Instance.data.lastTrial().rt == -1.0){ //if not on first trial, first press of current trial when last was missed
                     double rt = max_response_time + isi_timer.Elapsed.TotalSeconds; //the current time since last trial ended + max trial time
                     DataManager.Instance.data.lastTrial().rt = rt; //store in the last reaction time
-                    changeScore(0, "Too slow! Doggo mad!"); //add minimum score and display message
+                    score.set(0); //add minimum score and display message
                     resetTimers(); //restart the isi
                 } else {
-                    changeScore(-100, "TOO QUICK!\nWait until the sausage has appeared."); // minus 2 points for an early press
+                    score.set(-100); // minus 2 points for an early press
                     //save early presses
                     DataManager.Instance.data.earlyPress(isi_timer.Elapsed.TotalSeconds);
                 }
@@ -170,16 +157,11 @@ public class Bone : MonoBehaviour
             } else if(Input.GetKeyDown(KeyCode.DownArrow)){ //if not, on reaction
                 // Store rt
                 rt_timer.Stop();
-                DataManager.Instance.data.currentTrial().datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                double rt = rt_timer.Elapsed.TotalSeconds; //consider changing data types ElapsedMilliseconds
-                DataManager.Instance.data.currentTrial().rt = roundTime(rt,7); // round off to avoid precision errors - 7 is length of ElapsedTicks anyway.
-                
-                // CALCULATE SCORE ******************************
-                calcScore(rt);
-                //******************************
-
+                double rt = rt_timer.Elapsed.TotalSeconds;
+                DataManager.Instance.data.currentTrial().saveRT(rt); //consider changing data types ElapsedMilliseconds
+                score.set(score.calculateScore(rt));
                 // next trial
-                if(DataManager.Instance.data.trials.Count == isi_array.Length-1 || DataManager.Instance.data.trials.Count == n_trials ){
+                if(DataManager.Instance.data.trials.Count == isi_array.Length-1 || DataManager.Instance.data.trials.Count == n_trials){
                     endTask();
                 } else {
                     newTrial();

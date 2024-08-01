@@ -27,7 +27,8 @@ public class DataManager : MonoBehaviour
     // Create global instance of data for use throughout
     public Data data = new Data();
 
-    // Overall data structure which holds the above
+
+    // Superclass data object which holds the classes below
     [System.Serializable]
     public class Data {
         public Metadata metadata;
@@ -38,7 +39,7 @@ public class DataManager : MonoBehaviour
             trials = new List<Trial>();
         }
 
-        // Methods
+        // Methods - creating/finding trials, adding early presses
         public void newTrial(double isi){ //adds a new trial using the isi
             this.trials.Add(new Trial(this.trials.Count+1, isi));
         }
@@ -109,7 +110,7 @@ public class DataManager : MonoBehaviour
         }
     }
     
-
+    // Each trial
     [System.Serializable]
     public class Trial {
         public int trial_n;
@@ -128,6 +129,15 @@ public class DataManager : MonoBehaviour
             datetime = "";
             score = 0; // Initialize score
             early_presses = new List<EarlyPress>();
+        }
+
+        private double roundTime(double time, int dp){
+            return Math.Round(time *  Math.Pow(10, dp)) /  Math.Pow(10, dp); //remove trailing 0s - avoids double precision errors. or try .ToString("0.00") or .ToString("F2")
+        }
+
+        public void saveRT(double rt){
+            this.rt = roundTime(rt,7); // round off to avoid precision errors - 7 is length of ElapsedTicks anyway.
+            this.datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         }
     }
 
