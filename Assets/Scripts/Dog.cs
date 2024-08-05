@@ -8,17 +8,7 @@ public class Dog : MonoBehaviour
     public Sprite[] images;
     private int i = 0;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
-    public void ChangeSprite(){
+    public void NextSprite(){
         // Loops through sprites automatically
         gameObject.GetComponent<Image>().sprite = images[++i];
     }

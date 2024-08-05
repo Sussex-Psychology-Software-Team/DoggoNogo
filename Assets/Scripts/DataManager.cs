@@ -59,6 +59,10 @@ public class DataManager : MonoBehaviour
             EarlyPress early_press = new EarlyPress(count, rt);
             this.currentTrial().early_presses.Add(early_press);
         }
+
+        public void ClearTrials() { // Clear trials on restart
+            this.trials.Clear();
+        }
     }
 
     // Grab userAgent https://docs.unity3d.com/Manual/web-interacting-code-example.html
@@ -117,7 +121,8 @@ public class DataManager : MonoBehaviour
         public double isi;
         public double rt;
         public string datetime;
-        public int score;
+        public int trialScore;
+        public int totalScore;
         public List<EarlyPress> early_presses;
 
         // Constructor
@@ -127,7 +132,8 @@ public class DataManager : MonoBehaviour
             isi = isiVar;
             rt = -1.0; // Indicates no response
             datetime = "";
-            score = 0; // Initialize score
+            trialScore = 0; // Initialize score
+            totalScore = 0;
             early_presses = new List<EarlyPress>();
         }
 
@@ -155,18 +161,6 @@ public class DataManager : MonoBehaviour
         }
     }
 
-    public void sendData(){
-        // Save data
-        this.data.metadata.end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Save end date of experiment
-        // Log data
-        Debug.Log(JsonUtility.ToJson(this.data));
-
-        // Send data with DataPipe
-        DataPipeBody body = new DataPipeBody(); //create instance
-        string json = JsonUtility.ToJson(body); //Note double encoding is necessary here as looks like datapipe parses this as an object on their end too
-        StartCoroutine(dataPipe(json));
-    }
-
     // SENDING DATA -------------------------------------
     [System.Serializable] //class to format the data as expected by datapipe
     public class DataPipeBody{
@@ -179,6 +173,21 @@ public class DataManager : MonoBehaviour
             filename = DataManager.Instance.data.metadata.name + "_" + DataManager.Instance.data.metadata.id + ".json";
             data = JsonUtility.ToJson(DataManager.Instance.data);
         }
+    }
+
+    public void sendData(){
+        // Save data
+        this.data.metadata.end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Save end date of experiment
+        // Log data
+        Debug.Log(JsonUtility.ToJson(this.data));
+
+        // Send data with DataPipe
+        DataPipeBody body = new DataPipeBody(); //create instance
+        string json = JsonUtility.ToJson(body); //Note double encoding is necessary here as looks like datapipe parses this as an object on their end too
+        StartCoroutine(dataPipe(json));
+
+        // Clear trials after sending data
+        this.data.ClearTrials();
     }
 
     public IEnumerator dataPipe(string json){ //sends data - IEnumerator can run over sever frames and wait for 'OK' response from OSF server
