@@ -49,16 +49,7 @@ public class Dog : MonoBehaviour
     bool ascending = false;
     bool descending = false;
 
-    void Start(){
-        startingY = transform.position.y;
-        yPosition = transform.position.y;
-    }
-
-    void Update(){
-
-        // Initiate jump in down arrow
-        if(Input.GetKeyDown(KeyCode.DownArrow)) ascending = true;
-
+    void jump(){
         if(ascending){
             if(yPosition <= startingY+maxJumpHeight) yPosition += jumpSpeed * Time.deltaTime;
             else{
@@ -69,10 +60,18 @@ public class Dog : MonoBehaviour
             if(yPosition > startingY) yPosition -= jumpSpeed * Time.deltaTime;
             else descending = false;
         }
-        
         // Change position
         transform.position = new Vector3(transform.position.x, yPosition, 0);
-        //transform.Translate(new Vector3(0, velocity, 0) * Time.deltaTime);
-        
+    }
+
+    void Start(){
+        startingY = transform.position.y;
+        yPosition = transform.position.y;
+    }
+
+    void Update(){
+        // Initiate jump on down arrow
+        if(Input.GetKeyDown(KeyCode.DownArrow)) ascending = true;
+        jump();
     }
 }
