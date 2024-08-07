@@ -77,17 +77,17 @@ public class Score : MonoBehaviour
         if(trialScore == earlyScore){ //if too slow
             barColour = Color.red;
             feedbackText.color = Color.red;
-            feedback = "TOO QUICK!\nWait until the sausage has appeared.";
+            feedback = "TOO QUICK!\nWait until the bone has appeared.";
 
         } else if(trialScore == slowScore){ // If early press
             barColour = Color.blue;
-            feedback = "Too slow!\nThe sausage went bad...";
+            feedback = "Too slow!\nThe bone went bad...";
 
         } else if(trialScore <= (((maxScore-minScore)/2)+minScore)) { // If less than half way to max score
-            feedback = "Yum!\nDoggo fetched the sausage!";
+            feedback = "Yum!\nDoggo fetched the bone!";
 
         } else { //if middling score
-            feedback = "GREAT!\nDoggo caught the sausage!";
+            feedback = "GREAT!\nDoggo caught the bone!";
             feedbackText.color = Color.green;
         }
 
