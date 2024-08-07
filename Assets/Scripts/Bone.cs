@@ -160,7 +160,7 @@ public class Bone : MonoBehaviour
             //handle early presses
             if(Input.GetKeyDown(KeyCode.DownArrow)){
 
-                // If not on first trial: first press of current trial when last was missed - another chance to press a button AFTER max trial time has gone and we've moved to another ISI
+                // If not on first trial and first press of current trial when last was missed - another chance to press a button AFTER max trial time has gone and we've moved to another ISI
                 if(DataManager.Instance.data.trials.Count>1 && DataManager.Instance.data.currentTrial().early_presses.Count == 0 && DataManager.Instance.data.lastTrial().rt == -1.0){
                     slowReaction();
                 } else {
