@@ -1193,8 +1193,8 @@ MonoBehaviour:
   dog: {fileID: 1504777854}
   nLevels: 3
   totalTrials: 60
-  earlyScore: 0
-  slowScore: -100
+  earlyScore: -100
+  slowScore: 0
   minScore: 100
   maxScore: 200
   minRT: 0.2
@@ -1520,7 +1520,6 @@ GameObject:
   - component: {fileID: 1504777857}
   - component: {fileID: 1504777856}
   - component: {fileID: 1504777855}
-  - component: {fileID: 1504777859}
   m_Layer: 5
   m_Name: Dog
   m_TagString: Untagged
@@ -1601,6 +1600,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: d68d9d6950e034a088f2885e413d0cd3, type: 3}
   - {fileID: 21300000, guid: 2f5bdc64d4ce2433cbb0ceaf42bae29e, type: 3}
   - {fileID: 21300000, guid: f71eec15a1d5a47efa381560d4ceb610, type: 3}
+  flickerDuration: 1
+  flickerInterval: 0.2
+  shakeAmount: 0.1
   maxJumpHeight: 40
   jumpSpeed: 250
   dogBark: {fileID: 1504777858}
@@ -1991,33 +1993,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!50 &1504777859
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1504777850}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!1 &1786151912
 GameObject:
   m_ObjectHideFlags: 0
