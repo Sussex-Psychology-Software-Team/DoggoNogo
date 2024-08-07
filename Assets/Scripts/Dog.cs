@@ -8,10 +8,22 @@ public class Dog : MonoBehaviour
 {
     // Images
     public Sprite[] images; // Array of images of each evolution, increase on level change
-    private int i = 0; // image number
+    int i = 0; // image number
+    // Damage animation
+    Image image; // save reference to image
+    Color originalColour; // save reference to image colour
+    Vector3 originalPosition;
+    public float flickerDuration = 1.0f;
+    public float flickerInterval = 0.2f;
+    public float shakeAmount = 0.1f;
+    bool takingDamage = false;
     // Jumping
     public int maxJumpHeight = 40;
     public int jumpSpeed = 250;
+    float startingY; // Initial starting point - ground
+    float yPosition;
+    bool ascending = false;
+    bool descending = false;
 
     // Audio feeback
     public AudioSource dogBark; // Barking on early press
@@ -25,7 +37,45 @@ public class Dog : MonoBehaviour
     // Images
     public void NextSprite(){
         // Loops through sprites automatically
-        gameObject.GetComponent<Image>().sprite = images[++i]; // Note first image just loaded automatically
+        image.sprite = images[++i]; // Note first image just loaded automatically
+    }
+
+    public void takeDamage(){
+        if(!takingDamage) StartCoroutine(shakeRed());
+    }
+
+    IEnumerator shakeRed(){
+        takingDamage = true;
+        float endTime = Time.time + flickerDuration;
+        bool flickerToggle = false;
+        // Flickering function
+        while (Time.time < endTime){
+            image.color = flickerToggle ? Color.red : originalColour;
+            // Apply 2D shaking effect
+            transform.position = transform.position + new Vector3(UnityEngine.Random.Range(-shakeAmount, shakeAmount), UnityEngine.Random.Range(-shakeAmount, shakeAmount), 0);
+            flickerToggle = !flickerToggle;
+            yield return new WaitForSeconds(flickerInterval);
+        }
+        // Return to original colour
+        image.color = originalColour; // or just Color.white?
+        transform.position = originalPosition;
+        takingDamage = false;
+    }
+
+    // Jumping
+    void jump(){
+        if(ascending){
+            if(yPosition <= startingY+maxJumpHeight) yPosition += jumpSpeed * Time.deltaTime;
+            else{
+                ascending = false;
+                descending = true;
+            }
+        } else if(descending){
+            if(yPosition > startingY) yPosition -= jumpSpeed * Time.deltaTime;
+            else descending = false;
+        }
+        // Change position
+        transform.position = new Vector3(transform.position.x, yPosition, 0);
     }
 
     // Audio
@@ -43,30 +93,15 @@ public class Dog : MonoBehaviour
         dogBark.Play();
     }
 
-    // Jumping
-    float startingY; // Initial starting point - ground
-    float yPosition;
-    bool ascending = false;
-    bool descending = false;
-
-    void jump(){
-        if(ascending){
-            if(yPosition <= startingY+maxJumpHeight) yPosition += jumpSpeed * Time.deltaTime;
-            else{
-                ascending = false;
-                descending = true;
-            }
-        } else if(descending){
-            if(yPosition > startingY) yPosition -= jumpSpeed * Time.deltaTime;
-            else descending = false;
-        }
-        // Change position
-        transform.position = new Vector3(transform.position.x, yPosition, 0);
-    }
-
+    // UNITY ************************************
     void Start(){
+        // Save starting position
         startingY = transform.position.y;
         yPosition = transform.position.y;
+        // Save sprite colour
+        image = gameObject.GetComponent<Image>();
+        originalColour = image.color;
+        originalPosition = transform.localPosition;
     }
 
     void Update(){
