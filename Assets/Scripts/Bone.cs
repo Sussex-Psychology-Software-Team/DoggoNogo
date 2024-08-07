@@ -26,16 +26,20 @@ public class Bone : MonoBehaviour
     ArrayList sortedRTs = new(); // Store rts in ArrayList to allow for easier median computation and store as sorted list (i.e. sortedRTs.Sort() method)
         //consider multidimensional or jagged array? could deep-copy in function. https://stackoverflow.com/questions/597720/differences-between-a-multidimensional-array-and-an-array-of-arrays
     
-    //timers
+    // Timers
     public Stopwatch stimulusTimer = new Stopwatch(); // High prectrialISIon timer: https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.stopwatch?view=net-8.0&redirectedfrom=MSDN#remarks
     public Stopwatch reactionTimer = new Stopwatch(); // https://stackoverflow.com/questions/394020/how-accurate-is-system-diagnostics-stopwatch
 
-    // Display
+    // Feedback/score
     private Vector3 show; // stores vector to show bone at adjusted vector or 0.4145592f original image is too big - can probably just prefab this in future
     public Score score;
     public TextMeshProUGUI feedbackText; //feedback
+    public Dog dog;
 
     // ******************* FUNCTIONS *******************
+    void hideBone(){
+        gameObject.transform.localScale = Vector3.zero; //hide bone
+    }
     // trialISI Helpers ------------------------------------------------------------
     //shuffle function for trialISIs (Fisher-Yates shuffle should be fine) 
     void Shuffle(double[] array) { //from https://stackoverflow.com/questions/1150646/card-shuffling-in-c-sharp
@@ -44,6 +48,11 @@ public class Bone : MonoBehaviour
             int k = r.Next(n+1); //next random on system iterator
             (array[k], array[n]) = (array[n], array[k]); //use tuple to swap elements
         }
+    }
+
+    //Round trialISI to d.p. avoiding prectrialISIon errors
+    public double roundTime(double time, int dp){
+        return Math.Round(time *  Math.Pow(10, dp)) /  Math.Pow(10, dp); //remove trailing 0s - avoids double prectrialISIon errors. or try .ToString("0.00") or .ToString("F2")
     }
 
     // Call this in the unity Start() function to make the array of trialISIs
@@ -80,20 +89,13 @@ public class Bone : MonoBehaviour
         }
     }
 
-    //Round trialISI to d.p. avoiding prectrialISIon errors
-    public double roundTime(double time, int dp){
-        return Math.Round(time *  Math.Pow(10, dp)) /  Math.Pow(10, dp); //remove trailing 0s - avoids double prectrialISIon errors. or try .ToString("0.00") or .ToString("F2")
-    }
-
-
     // TRIAL MANAGEMENT ------------------------------------------------------------
     void newTrial() { //function to reset variables and set-up for a new trials
         //reset vars
         trialISI = interStimulusIntervals[DataManager.Instance.data.trials.Count]; // New trialISI
         calcMedianRT(); // get new median reaction time if possible
-        Debug.Log(medianRT);
         DataManager.Instance.data.newTrial(trialISI);   // Create an instance of a Trial
-        gameObject.transform.localScale = Vector3.zero; // Hide Bone
+        hideBone();
         resetTimers();
     }
 
@@ -103,6 +105,39 @@ public class Bone : MonoBehaviour
         stimulusTimer.Start();
         reactionTimer.Reset();
     }
+
+    // Trial types
+    void slowReaction(){
+        double rt = maximumRT + stimulusTimer.Elapsed.TotalSeconds; // The current time since last trial ended + max trial time
+        DataManager.Instance.data.lastTrial().rt = rt; // Store in the last reaction time
+        score.change(score.slowScore, false); // Add minimum score and display message
+        dog.whine();
+        resetTimers(); // Restart the trialISI
+    }
+
+    void earlyPress(){
+        score.change(score.earlyScore); // Penalise as early trial
+        dog.bark();
+        DataManager.Instance.data.earlyPress(stimulusTimer.Elapsed.TotalSeconds); // Save early presses
+    }
+
+    void endISI(){
+        feedbackText.text = ""; // Hide last trial's feedback
+        gameObject.transform.localScale = show; // Show bone
+        // Stop timing ISI and start reactionTime
+        stimulusTimer.Stop();
+        reactionTimer.Start();
+    }
+
+    void storeRT(){
+        reactionTimer.Stop();
+        double rt = reactionTimer.Elapsed.TotalSeconds;
+        DataManager.Instance.data.currentTrial().saveRT(rt); //consider changing data types ElapsedMilliseconds
+        score.change(score.calculateScore(rt));
+        dog.chew();
+    }
+
+
 
     // ******************* UNITY *******************
     void Start()
@@ -127,38 +162,27 @@ public class Bone : MonoBehaviour
 
                 // If not on first trial: first press of current trial when last was missed - another chance to press a button AFTER max trial time has gone and we've moved to another ISI
                 if(DataManager.Instance.data.trials.Count>1 && DataManager.Instance.data.currentTrial().early_presses.Count == 0 && DataManager.Instance.data.lastTrial().rt == -1.0){
-                    double rt = maximumRT + stimulusTimer.Elapsed.TotalSeconds; // The current time since last trial ended + max trial time
-                    DataManager.Instance.data.lastTrial().rt = rt; // Store in the last reaction time
-                    score.change(score.slowScore, false); // Add minimum score and display message
-                    resetTimers(); // Restart the trialISI
+                    slowReaction();
                 } else {
-                    score.change(score.earlyScore); // Penalise as early trial
-                    DataManager.Instance.data.earlyPress(stimulusTimer.Elapsed.TotalSeconds); // Save early presses
+                    earlyPress();
                 }
             }
 
             //when timer runs out
             if(stimulusTimer.Elapsed.TotalSeconds >= trialISI){ // or just access by current trial.trialISI? timer.ElapsedMilliseconds less precise int, Elapsed.TotalSeconds = double, timer.ElapsedTicks most precise
-                feedbackText.text = ""; // Hide last trial's feedback
-                gameObject.transform.localScale = show; // Show bone
-                // Stop timing ISI and start reactionTime
-                stimulusTimer.Stop();
-                reactionTimer.Start();
+                endISI();
             }
 
         } else { //when waiting for input
-            if((medianRT>0 && reactionTimer.Elapsed.TotalSeconds>(medianRT+.1))){ //if time is greater than (median + 100 msec) or 1.5sec hide the bone
-                gameObject.transform.localScale = Vector3.zero; //hide bone
+            // H
+            if((medianRT>0 && reactionTimer.Elapsed.TotalSeconds>(medianRT+.1))){ //if time is greater than (median + 100 msec) or 1.5sec
+                hideBone();
             }
             
             if(reactionTimer.Elapsed.TotalSeconds > maximumRT){ //if greater than max trial time end trial and move on.
                 newTrial();
             } else if(Input.GetKeyDown(KeyCode.DownArrow)){ //if not, on reaction
-                // Store rt
-                reactionTimer.Stop();
-                double rt = reactionTimer.Elapsed.TotalSeconds;
-                DataManager.Instance.data.currentTrial().saveRT(rt); //consider changing data types ElapsedMilliseconds
-                score.change(score.calculateScore(rt));
+                storeRT();
                 // next trial
                 newTrial();
             }
