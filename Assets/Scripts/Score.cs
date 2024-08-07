@@ -77,6 +77,7 @@ public class Score : MonoBehaviour
         if(trialScore == earlyScore){ //if too slow
             barColour = Color.red;
             feedbackText.color = Color.red;
+            dog.takeDamage();
             feedback = "TOO QUICK!\nWait until the bone has appeared.";
 
         } else if(trialScore == slowScore){ // If early press
