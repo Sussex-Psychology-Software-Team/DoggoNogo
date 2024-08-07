@@ -51,7 +51,7 @@ public class Score : MonoBehaviour
     // Save current score and display
     public void change(int trialScore, bool currentTrial=true){
         // Calc new total score
-        score = score+trialScore;
+        score = Math.Max(0, score+trialScore);
         // Give visual feedback
         giveFeedback(trialScore);
         // Display total score
