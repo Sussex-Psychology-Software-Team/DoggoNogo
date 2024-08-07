@@ -1278,6 +1278,7 @@ MonoBehaviour:
   nRepeattrialISI: 3
   score: {fileID: 1041837081}
   feedbackText: {fileID: 1479691777}
+  dog: {fileID: 1504777854}
 --- !u!114 &1390488370
 MonoBehaviour:
   m_ObjectHideFlags: 0
