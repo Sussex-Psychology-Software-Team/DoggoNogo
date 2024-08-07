@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "DogoNogo2D.sln"
+    "dotnet.defaultSolution": "Doggo-Nogo.sln"
 }
