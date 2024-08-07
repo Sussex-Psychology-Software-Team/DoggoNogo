@@ -88,6 +88,7 @@ public class Score : MonoBehaviour
 
         } else { //if middling score
             feedback = "GREAT!\nDoggo caught the sausage!";
+            feedbackText.color = Color.green;
         }
 
         feedbackText.text = feedback;
