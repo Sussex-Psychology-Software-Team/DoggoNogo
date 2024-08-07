@@ -74,12 +74,12 @@ public class Score : MonoBehaviour
         feedbackText.color = Color.white;
         string feedback;
 
-        if(trialScore == slowScore || score < 0){ //if too slow
+        if(trialScore == earlyScore || score < 0){ //if too slow
             barColour = Color.red;
             feedbackText.color = Color.red;
             feedback = "TOO QUICK!\nWait until the sausage has appeared.";
 
-        } else if(trialScore == earlyScore || score == 0){ // If early press
+        } else if(trialScore == slowScore || score == 0){ // If early press
             barColour = Color.blue;
             feedback = "Too slow!\nThe sausage went bad...";
 
