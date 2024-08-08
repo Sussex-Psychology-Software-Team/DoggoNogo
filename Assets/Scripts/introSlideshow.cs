@@ -18,7 +18,8 @@ public class introSlideshow : MonoBehaviour
     public AudioSource dogWhine;
 
     public float timeBetweenImages = 3.0f;
-    public float timer;
+
+    // Private globals
     string[] storyText = {
         "You are an investigator tasked with bringing down criminals that mistreat animals.",
         "During your last raid, your hear something.",
@@ -27,10 +28,9 @@ public class introSlideshow : MonoBehaviour
         "Doggo is in need of urgent care and feeding.<br>Help him get as many bones as possible by pressing the down arrow (↓) as fast as possible.",
         "Ready?<br>Press ↓ to start<br><br>  "
     };
-
-    private int chapter = 0;
-
-    private bool videoFinished = false;
+    float timer;
+    int chapter = 0;
+    bool videoFinished = false;
 
     void checkChapterNumber(){
         chapter++;
