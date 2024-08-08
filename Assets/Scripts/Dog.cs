@@ -15,12 +15,13 @@ public class Dog : MonoBehaviour
     Vector3 originalPosition;
     public float flickerDuration = 1.0f;
     public float flickerInterval = 0.2f;
-    public float shakeAmount = 0.1f;
+    public float shakeAmount = 3.0f;
     bool takingDamage = false;
     // Jumping
     public int maxJumpHeight = 40;
     public int jumpSpeed = 250;
     float startingY; // Initial starting point - ground
+    float startingX; // For putting back to original X position after shake
     float yPosition;
     bool ascending = false;
     bool descending = false;
@@ -58,7 +59,7 @@ public class Dog : MonoBehaviour
         }
         // Return to original colour
         image.color = originalColour; // or just Color.white?
-        transform.position = originalPosition;
+        transform.position = new Vector3(startingX, yPosition, 0);
         takingDamage = false;
     }
 
@@ -97,6 +98,7 @@ public class Dog : MonoBehaviour
     void Start(){
         // Save starting position
         startingY = transform.position.y;
+        startingX = transform.position.x;
         yPosition = transform.position.y;
         // Save sprite colour
         image = gameObject.GetComponent<Image>();
