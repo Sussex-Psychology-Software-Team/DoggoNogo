@@ -18,6 +18,8 @@ public class Score : MonoBehaviour
     // Levels
     public int nLevels = 3; // Number of levels to run
     public int totalTrials = 60; // Rough number of trials per participant
+    public int level1TargetScore = 1000; // First level target score and minimum
+    public int minLevelTargetScore = 500; // First level target score and minimum
     // Scores
     public int earlyScore = -100; // Score for early trial = -100 (flat rate)
     public int slowScore = 0; // Score for slow (> threshold) trial
@@ -50,19 +52,23 @@ public class Score : MonoBehaviour
 
     // Save current score and display
     public void change(int trialScore, bool currentTrial=true){
-        // Calc new total score
-        score = Math.Max(0, score+trialScore);
         // Give visual feedback
         giveFeedback(trialScore);
-        // Display total score
+
+        // Calc new total score
+        score = score+trialScore;
+        // Change healthbars
+        if(score >= healthBar.GetMaxHealth()) changeLevel(); // Switch healthbars if above maximum
+        else if(score < healthBar.GetMinHealth()) score = (int)healthBar.GetMinHealth(); // Stop score going below healthbar minimum
+        // Display new score
+        healthBar.SetHealth(score); // Note do this prior to changing level to start healthbar on new minimum
         scoreText.text = "Score: " + score;
-        healthBar.SetHealth(score);
-        // Switch healthbars if above maximum
-        if(score >= healthBar.GetMaxHealth()) changeLevel(); // if health bars are 0-x then score needs to be reset or added to max
-        if(currentTrial){
+
+        //Save data
+        if(currentTrial){ // Save to current trial 
             DataManager.Instance.data.currentTrial().trialScore = trialScore;
             DataManager.Instance.data.currentTrial().totalScore = score;
-        } else {
+        } else { // Or save to last trial if slow reaction and new trial has already started
             DataManager.Instance.data.lastTrial().trialScore = trialScore;
             DataManager.Instance.data.lastTrial().totalScore = score;
         }
@@ -72,7 +78,7 @@ public class Score : MonoBehaviour
         // Set default colours
         Color barColour = new Color(0.06770712f, 0.5817609f, 0f, 1f); // 'forest' - colour of positive feedback
         feedbackText.color = Color.white;
-        string feedback;
+        string feedback = "";
 
         if(trialScore == earlyScore){ //if too slow
             barColour = Color.red;
@@ -111,11 +117,13 @@ public class Score : MonoBehaviour
     // Switch healthbars
     public void nextHealthBar(){
         // Get previous healthbar maximum
-        float previousTarget = healthBar.GetMaxHealth(); // Minimum set to last healthbar's maximum
+        int previousMaximum = (int)healthBar.GetMaxHealth(); // Minimum set to last healthbar's maximum
+        // Fill current healthbar
+        healthBar.SetHealth(previousMaximum);
         // Change healthbar from array
         healthBar = healthBars[level-1];
         // Set min and max for new healthbar
-        healthBar.SetMinHealth((int)previousTarget); // Healthbar minimum to last healthbar's maximum
+        healthBar.SetMinHealth(previousMaximum); // Healthbar minimum to last healthbar's maximum
         healthBar.SetMaxHealth(getNewTargetScore()); // Set healthbar maximum
     }
     
@@ -127,9 +135,10 @@ public class Score : MonoBehaviour
         // Calulate target score
         int nFastTrials = nTrialsPerLevelsRemaining/2; 
         int targetScore = minScore * nFastTrials;
-        // Clamp to 500 minimum
-        if(targetScore < 500) targetScore = 500;
-        
+        // Clamp to minimum
+        if(targetScore < minLevelTargetScore) targetScore = minLevelTargetScore;
+        // Add target to current score
+        targetScore += score;
         return targetScore;
     }
 
@@ -142,6 +151,7 @@ public class Score : MonoBehaviour
     // Start is called before the first frame update
     void Start() {
         healthBar = healthBars[0]; // Load up first healthbar
+        healthBar.SetMaxHealth(level1TargetScore);
     }
 
 

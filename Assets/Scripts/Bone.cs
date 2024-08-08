@@ -110,7 +110,7 @@ public class Bone : MonoBehaviour
     void slowReaction(){
         double rt = maximumRT + stimulusTimer.Elapsed.TotalSeconds; // The current time since last trial ended + max trial time
         DataManager.Instance.data.lastTrial().rt = rt; // Store in the last reaction time
-        score.change(score.slowScore, false); // Add minimum score and display message
+        score.change(score.slowScore, false); // Add minimum score and display message - save to last trial
         dog.whine();
         resetTimers(); // Restart the trialISI
     }
