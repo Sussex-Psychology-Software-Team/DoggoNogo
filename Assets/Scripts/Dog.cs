@@ -11,8 +11,6 @@ public class Dog : MonoBehaviour
     int i = 0; // image number
     // Damage animation
     Image image; // save reference to image
-    Color originalColour; // save reference to image colour
-    Vector3 originalPosition;
     public float flickerDuration = 1.0f;
     public float flickerInterval = 0.2f;
     public float shakeAmount = 3.0f;
@@ -41,46 +39,47 @@ public class Dog : MonoBehaviour
         image.sprite = images[++i]; // Note first image just loaded automatically
     }
 
-    public void takeDamage(){
-        if(!takingDamage) StartCoroutine(shakeRed());
+    public void takeDamage(){ // Flicker and shake coroutine wrapper.
+        if(!takingDamage) StartCoroutine(shakeRed()); // If not current running flicker and shake, do
     }
 
     IEnumerator shakeRed(){
-        takingDamage = true;
-        float endTime = Time.time + flickerDuration;
-        bool flickerToggle = false;
+        takingDamage = true; // Stop running script multiple times at once
+        float endTime = Time.time + flickerDuration; // How long to run loops of function
+        bool flickerToggle = false; // Turns colour flicker (consider shake too?) on and off repeatedly
         // Flickering function
         while (Time.time < endTime){
-            image.color = flickerToggle ? Color.red : originalColour;
+            image.color = flickerToggle ? Color.red : Color.white;
             // Apply 2D shaking effect
             transform.position = transform.position + new Vector3(UnityEngine.Random.Range(-shakeAmount, shakeAmount), UnityEngine.Random.Range(-shakeAmount, shakeAmount), 0);
-            flickerToggle = !flickerToggle;
+            flickerToggle = !flickerToggle; // Flip state of colour flicker
             yield return new WaitForSeconds(flickerInterval);
         }
-        // Return to original colour
-        image.color = originalColour; // or just Color.white?
-        transform.position = new Vector3(startingX, yPosition, 0);
-        takingDamage = false;
+        // Return to original state
+        image.color = Color.white; // White is equal to original colour if left unaltered
+        transform.position = new Vector3(startingX, yPosition, 0); // Y position also relevant to jump
+        takingDamage = false; // Allow function to run again
     }
 
     // Jumping
-    void jump(){
+    void jump(){ // Simple jump to avoid unity physics engine
         if(ascending){
-            if(yPosition <= startingY+maxJumpHeight) yPosition += jumpSpeed * Time.deltaTime;
-            else{
+            // // If not at max height increase
+            if(yPosition <= startingY+maxJumpHeight) yPosition += jumpSpeed * Time.deltaTime; //Time.deltaTime ensures this is not FPS dependent as Update called very regularly
+            else{ // Else start descent
                 ascending = false;
                 descending = true;
             }
         } else if(descending){
-            if(yPosition > startingY) yPosition -= jumpSpeed * Time.deltaTime;
-            else descending = false;
+            if(yPosition > startingY) yPosition -= jumpSpeed * Time.deltaTime; // If not grounded
+            else descending = false; // If grounded stop descent
         }
         // Change position
         transform.position = new Vector3(transform.position.x, yPosition, 0);
     }
 
     // Audio
-    public void whine(){
+    public void whine(){ // Random dog whine
         System.Random rand = new System.Random(); // Random var
         if(rand.Next(2) == 1) dogWhine1.Play(); // .Next() gets new random number, (2) non-inclusive maximum int = 0 or 1
         else dogWhine2.Play();
@@ -97,13 +96,11 @@ public class Dog : MonoBehaviour
     // UNITY ************************************
     void Start(){
         // Save starting position
-        startingY = transform.position.y;
-        startingX = transform.position.x;
-        yPosition = transform.position.y;
-        // Save sprite colour
+        startingY = transform.position.y; // For jump
+        startingX = transform.position.x; // For shake
+        yPosition = transform.position.y; // Shake and jump
+        // Image reference for sprite swap and colour
         image = gameObject.GetComponent<Image>();
-        originalColour = image.color;
-        originalPosition = transform.localPosition;
     }
 
     void Update(){
