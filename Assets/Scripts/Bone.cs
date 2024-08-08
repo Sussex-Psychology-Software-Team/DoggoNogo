@@ -3,7 +3,7 @@ using Debug = UnityEngine.Debug;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.SceneManagement;
 using System;
-using System.Diagnostics;
+using System.Diagnostics; // Stopwatch included here
 using System.Collections;
 using System.Collections.Generic; //for List
 using TMPro; //for TextMeshProUGUI
@@ -27,11 +27,11 @@ public class Bone : MonoBehaviour
         //consider multidimensional or jagged array? could deep-copy in function. https://stackoverflow.com/questions/597720/differences-between-a-multidimensional-array-and-an-array-of-arrays
     
     // Timers
-    public Stopwatch stimulusTimer = new Stopwatch(); // High prectrialISIon timer: https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.stopwatch?view=net-8.0&redirectedfrom=MSDN#remarks
+    public Stopwatch stimulusTimer = new Stopwatch(); // High precision timer: https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.stopwatch?view=net-8.0&redirectedfrom=MSDN#remarks
     public Stopwatch reactionTimer = new Stopwatch(); // https://stackoverflow.com/questions/394020/how-accurate-is-system-diagnostics-stopwatch
 
     // Feedback/score
-    private Vector3 show; // stores vector to show bone at adjusted vector or 0.4145592f original image is too big - can probably just prefab this in future
+    private Vector3 show; // stores vector to show bone at adjusted vector as original image is too big - can probably just prefab this in future
     public Score score;
     public TextMeshProUGUI feedbackText; //feedback
     public Dog dog;
