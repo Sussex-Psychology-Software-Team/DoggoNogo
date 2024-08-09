@@ -38,8 +38,14 @@ public class Bone : MonoBehaviour
 
     // ******************* FUNCTIONS *******************
     void hideBone(){
-        gameObject.transform.localScale = Vector3.zero; //hide bone
+        gameObject.transform.localScale = Vector3.zero; // Hide bone
     }
+
+    bool boneHidden(){
+        gameObject.transform.localScale === Vector3.zero; // Is bone hidden
+    }
+
+
     // trialISI Helpers ------------------------------------------------------------
     //shuffle function for trialISIs (Fisher-Yates shuffle should be fine) 
     void Shuffle(double[] array) { //from https://stackoverflow.com/questions/1150646/card-shuffling-in-c-sharp
@@ -158,9 +164,9 @@ public class Bone : MonoBehaviour
 
 
     // Update is called once per frame - maybe use FixedUpdate for inputs?
-    void Update()
-    {
-       if(stimulusTimer.IsRunning){ //if in trialISI/ not waiting for reaction
+    void Update(){
+        //if in trialISI/ not waiting for reaction
+        if(stimulusTimer.IsRunning){ 
             //handle early presses
             if(Input.GetKeyDown(KeyCode.DownArrow)){
 
@@ -177,18 +183,18 @@ public class Bone : MonoBehaviour
                 endISI();
             }
 
-        } else { //when waiting for input
-            // H
-            if((medianRT>0 && reactionTimer.Elapsed.TotalSeconds>(medianRT+.1))){ //if time is greater than (median + 100 msec) or 1.5sec
+        // When waiting for input
+        } else { 
+            if((medianRT>0 && reactionTimer.Elapsed.TotalSeconds > medianRT )){ //if time is greater than (median + 100 msec) or 1.5sec
                 hideBone();
             }
             
             if(reactionTimer.Elapsed.TotalSeconds > maximumRT){ //if greater than max trial time end trial and move on.
                 newTrial();
             } else if(Input.GetKeyDown(KeyCode.DownArrow)){ //if not, on reaction
-                storeRT();
-                // next trial
-                newTrial();
+                if(boneHidden()) 
+                storeRT(); // Save data
+                newTrial(); // Move to next trial
             }
         }
     }
