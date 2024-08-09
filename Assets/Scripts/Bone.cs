@@ -140,14 +140,18 @@ public class Bone : MonoBehaviour
 
 
     // ******************* UNITY *******************
-    void Start()
-    {
+    IEnumerator Start(){ //IEnumerator is a hack to enable a delay before running first trial.
         //global vector for showing bone
         show = new Vector3(gameObject.transform.localScale.x, gameObject.transform.localScale.x, 0); 
         // Stores which retry we are on
         DataManager.Instance.data.metadata.retry = DataManager.Instance.data.metadata.retry++;
-        //Create trialISI array - when to show or hide bone
+        // Create trialISI array - when to show or hide bone
         makeISIArray();
+        // Delay Update 
+        hideBone();
+        enabled = false; // https://docs.unity3d.com/ScriptReference/Behaviour-enabled.html
+        yield return new WaitForSeconds(2f); // Wait for 2 seconds
+        enabled = true; // Allow update to run - stops error on early press during initial delay
         //setup first trial
         newTrial();
     }
