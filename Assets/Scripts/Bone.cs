@@ -113,15 +113,6 @@ public class Bone : MonoBehaviour
         reactionTimer.Reset();
     }
 
-    // Trial types
-    void slowReaction(){
-        double rt = maximumRT + stimulusTimer.Elapsed.TotalSeconds; // The current time since last trial ended + max trial time
-        DataManager.Instance.data.lastTrial().rt = rt; // Store in the last reaction time
-        score.change(score.slowScore, false); // Add minimum score and display message - save to last trial
-        dog.whine();
-        resetTimers(); // Restart the trialISI
-    }
-
     void earlyPress(){
         score.change(score.earlyScore); // Penalise as early trial
         dog.bark();
@@ -170,13 +161,7 @@ public class Bone : MonoBehaviour
         if(stimulusTimer.IsRunning){ 
             //handle early presses
             if(Input.GetKeyDown(KeyCode.DownArrow)){
-
-                // If not on first trial and first press of current trial when last was missed - another chance to press a button AFTER max trial time has gone and we've moved to another ISI
-                if(DataManager.Instance.data.trials.Count>1 && DataManager.Instance.data.currentTrial().early_presses.Count == 0 && DataManager.Instance.data.lastTrial().rt == -1.0){
-                    slowReaction();
-                } else {
-                    earlyPress();
-                }
+                earlyPress();
             }
 
             //when timer runs out
