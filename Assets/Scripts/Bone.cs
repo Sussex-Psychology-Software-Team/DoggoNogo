@@ -92,6 +92,7 @@ public class Bone : MonoBehaviour
         if(DataManager.Instance.data.trials.Count>1){
             sortedRTs.Add(DataManager.Instance.data.lastTrial().rt);
             medianRT = median(sortedRTs);
+            score.maxRT = medianRT*2;
         }
     }
 
