@@ -171,11 +171,7 @@ public class Bone : MonoBehaviour
 
         // When waiting for input
         } else { 
-            if(medianRT>0 && reactionTimer.Elapsed.TotalSeconds > medianRT){ //if time is greater than (median + 100 msec) or 1.5sec
-                hideBone();
-            }
-            
-            if(reactionTimer.Elapsed.TotalSeconds > maximumRT){ //if greater than max trial time end trial and move on.
+            if(reactionTimer.Elapsed.TotalSeconds > score.maxRT){ //if greater than max trial time end trial and move on.
                 newTrial();
             } else if(Input.GetKeyDown(KeyCode.DownArrow)){ //if not, on reaction
                 storeRT(); // Save data
