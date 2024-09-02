@@ -26,8 +26,8 @@ public class Score : MonoBehaviour
     public int minScore = 100; // Minimum score for fast trial
     public int maxScore = 200; // Max score for super fast trial 
     // RTs - boundaries on min/max RT of interest to avoid overshooting
-    public double minRT = .2; // Minimum RT bound
-    public double maxRT = .6; // Maximum RT bound
+    public double minRT = .15; // Minimum RT bound
+    public double maxRT = .6; // Init Maximum RT bound to 600ms, to be changed later
 
     // Track progress
     int level = 1; // Stages 1-3
