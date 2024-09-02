@@ -24,7 +24,6 @@ public class Bone : MonoBehaviour
     private double trialISI; //stores each trial's trialISI for speed of access
     private double medianRT = 0; //store median rt
     ArrayList sortedRTs = new(); // Store rts in ArrayList to allow for easier median computation and store as sorted list (i.e. sortedRTs.Sort() method)
-        //consider multidimensional or jagged array? could deep-copy in function. https://stackoverflow.com/questions/597720/differences-between-a-multidimensional-array-and-an-array-of-arrays
     
     // Timers
     public Stopwatch stimulusTimer = new Stopwatch(); // High precision timer: https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.stopwatch?view=net-8.0&redirectedfrom=MSDN#remarks
@@ -131,8 +130,17 @@ public class Bone : MonoBehaviour
         reactionTimer.Stop();
         double rt = reactionTimer.Elapsed.TotalSeconds;
         DataManager.Instance.data.currentTrial().saveRT(rt); //consider changing data types ElapsedMilliseconds
-        score.change(score.calculateScore(rt));
-        dog.chew();
+        // Get score and play relevant audio
+        int trialScore;
+        if(rt > medianRT){ // Slow trial
+            trialScore = score.slowScore;
+            dog.whine();
+        } else { // Fast trial
+            trialScore = score.calculateScore(rt);
+            dog.chew();
+        }
+        // Save and update UI
+        score.change(trialScore);
     }
 
 
