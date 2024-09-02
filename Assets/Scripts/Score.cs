@@ -51,7 +51,7 @@ public class Score : MonoBehaviour
     }
 
     // Save current score and display
-    public void change(int trialScore, bool currentTrial=true){
+    public void change(int trialScore){
         // Give visual feedback
         giveFeedback(trialScore);
 
@@ -65,13 +65,8 @@ public class Score : MonoBehaviour
         scoreText.text = "Score: " + score;
 
         //Save data
-        if(currentTrial){ // Save to current trial 
-            DataManager.Instance.data.currentTrial().trialScore = trialScore;
-            DataManager.Instance.data.currentTrial().totalScore = score;
-        } else { // Or save to last trial if slow reaction and new trial has already started
-            DataManager.Instance.data.lastTrial().trialScore = trialScore;
-            DataManager.Instance.data.lastTrial().totalScore = score;
-        }
+        DataManager.Instance.data.currentTrial().trialScore = trialScore;
+        DataManager.Instance.data.currentTrial().totalScore = score;
     }
 
     public void giveFeedback(int trialScore){
