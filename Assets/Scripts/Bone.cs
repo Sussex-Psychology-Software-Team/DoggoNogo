@@ -10,6 +10,8 @@ using TMPro; //for TextMeshProUGUI
 
 public class Bone : MonoBehaviour
 {
+    // Note timers and reaction times are bone-relevant so handled here.
+
     // ******************* CONFIG *******************
     // declare trialISI array parameters/vars
     public float[] ISIRange = { 1, 4 };
@@ -17,7 +19,6 @@ public class Bone : MonoBehaviour
     // ******************* GLOBAL VARS *******************
     // trialISI
     private double trialISI; // Stores each trial's trialISI for speed of access
-    private double medianRT = 0; // Store median rt
     ArrayList sortedRTs = new(); // Store rts in ArrayList to allow for easier median computation and store as sorted list (i.e. sortedRTs.Sort() method)
     
     // Timers
@@ -41,36 +42,41 @@ public class Bone : MonoBehaviour
 
     // RT Helpers ------------------------------------------------------------
     // slow but simple median function - quicker algorithms here: https://stackoverflow.com/questions/4140719/calculate-median-in-c-sharp
-    public static double median(ArrayList array) {
-        //can maybe remove some of the doubles here?
-        int size = array.Count;
-        array.Sort(); //note mutates original list
+    public double calcMedianRT() {
+        // Add to array and sort
+        sortedRTs.Add(DataManager.Instance.data.currentTrial().rt);
+        sortedRTs.Sort(); //note mutates original list
         //get the median
+        int size = sortedRTs.Count;
         int mid = size / 2;
-        double middleValue = (double)array[mid];
-        double median = (size % 2 != 0) ? middleValue : (middleValue + (double)array[mid - 1]) / 2;
+        double middleValue = (double)sortedRTs[mid];
+        double median = (size % 2 != 0) ? middleValue : (middleValue + (double)sortedRTs[mid - 1]) / 2;
+        Debug.Log("median RT: " + median);
         return median;
-    }
-
-    public void calcMedianRT(){
-        if(DataManager.Instance.data.trials.Count>1){
-            sortedRTs.Add(DataManager.Instance.data.lastTrial().rt);
-            medianRT = median(sortedRTs);
-            score.maxRT = Math.Min(score.minRT, medianRT*2); // Lowerbound on maxRT of minRT
-        } else {
-            medianRT = score.maxRT;
-        }
     }
 
     // TRIAL MANAGEMENT ------------------------------------------------------------
     void newTrial() { //function to reset variables and set-up for a new trials
         //reset vars
         trialISI = UnityEngine.Random.Range(ISIRange[0], ISIRange[1]); // New trialISI
-        calcMedianRT(); // get new median reaction time if possible
         DataManager.Instance.data.newTrial(trialISI);   // Create an instance of a Trial
-        hideBone();
+        presentText("Getting a new bone for Doggo...");
+        // Hide bone
         resetTimers();
     }
+
+    void presentText(string text){
+        feedbackText.color = Color.black;
+        feedbackText.text = text; // Hide last trial's feedback
+    }
+
+    // Coroutine to delay the start of a new trial and show feedback
+    IEnumerator DelayBeforeNextTrial() {
+        hideBone();
+        yield return new WaitForSeconds(1f); // Wait for 1 second
+        newTrial(); // Start new trial after delay
+    }
+
 
     void resetTimers(){
         // reset timers
@@ -80,37 +86,47 @@ public class Bone : MonoBehaviour
     }
 
     void earlyPress(){
-        score.change(-score.minScore); // Penalise as early trial
-        dog.bark();
         DataManager.Instance.data.earlyPress(stimulusTimer.Elapsed.TotalSeconds); // Save early presses
+        score.updateScore(-score.minScore); // Penalise as early trial
+        dog.bark();
+    }
+
+    void missedTrial(){
+        presentText("Too slow!\nAnother dog stole the bone!");
+    }
+
+    void saveRT(){
+        reactionTimer.Stop();
+        double rt = reactionTimer.Elapsed.TotalSeconds;
+        DataManager.Instance.data.currentTrial().saveRT(rt); //consider changing data types ElapsedMilliseconds
+        updateScore(rt);
+    }
+
+    void updateScore(double rt){
+        // Update median and maxRT
+        double medianRT = calcMedianRT(); // get new median reaction time if possible;
+        score.maxRT = Math.Min(score.minRT*2, medianRT*2); // Lowerbound on maxRT of minRT
+        //Debug.Log("RT: " + rt + "\nMedian: " + medianRT);
+        // Get trial score nd feedback audio
+        int trialScore;
+        Debug.Log("RT: "+rt+" medianRT: "+medianRT);
+        if(rt > medianRT){ // Slow trial
+            trialScore = 0; // = 0
+        } else { // Fast trial
+            trialScore = score.calculateScore(rt);
+            Debug.Log("RT<Median trialScore: " + trialScore);
+        }
+        // Save and update UI
+        score.updateScore(trialScore);
     }
 
     void endISI(){
-        feedbackText.text = ""; // Hide last trial's feedback
+        presentText(""); // Hide last trial's feedback
         gameObject.transform.localScale = show; // Show bone
         // Stop timing ISI and start reactionTime
         stimulusTimer.Stop();
         reactionTimer.Start();
     }
-
-    void storeRT(){
-        reactionTimer.Stop();
-        double rt = reactionTimer.Elapsed.TotalSeconds;
-        DataManager.Instance.data.currentTrial().saveRT(rt); //consider changing data types ElapsedMilliseconds
-        // Get score and play relevant audio
-        int trialScore;
-        if(rt > medianRT){ // Slow trial
-            trialScore = 0; // = 0
-            dog.whine();
-        } else { // Fast trial
-            trialScore = score.calculateScore(rt);
-            dog.chew();
-        }
-        // Save and update UI
-        score.change(trialScore);
-    }
-
-
 
     // ******************* UNITY *******************
     IEnumerator Start(){ //IEnumerator is a hack to enable a delay before running first trial.
@@ -136,19 +152,20 @@ public class Bone : MonoBehaviour
             if(Input.GetKeyDown(KeyCode.DownArrow)){
                 earlyPress();
             }
-
             //when timer runs out
             if(stimulusTimer.Elapsed.TotalSeconds >= trialISI){ // or just access by current trial.trialISI? timer.ElapsedMilliseconds less precise int, Elapsed.TotalSeconds = double, timer.ElapsedTicks most precise
                 endISI();
             }
-
         // When waiting for input
-        } else { 
-            if(reactionTimer.Elapsed.TotalSeconds > score.maxRT){ // If greater than max trial time end trial and move on.
-                newTrial();
-            } else if(Input.GetKeyDown(KeyCode.DownArrow)){ //if not, on reaction
-                storeRT(); // Save data
-                newTrial(); // Move to next trial
+        } else if(reactionTimer.IsRunning){
+            // On response
+            if(Input.GetKeyDown(KeyCode.DownArrow)){
+                saveRT(); // Save data
+                StartCoroutine(DelayBeforeNextTrial());
+            // end trial if greater than max trial time
+            } else if(reactionTimer.Elapsed.TotalSeconds > score.maxRT){
+                missedTrial();
+                StartCoroutine(DelayBeforeNextTrial());
             }
         }
     }
