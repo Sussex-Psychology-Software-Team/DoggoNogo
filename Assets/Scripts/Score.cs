@@ -21,8 +21,6 @@ public class Score : MonoBehaviour
     public int level1TargetScore = 1000; // First level target score and minimum
     public int minLevelTargetScore = 500; // First level target score and minimum
     // Scores
-    public int earlyScore = -100; // Score for early trial = -100 (flat rate)
-    public int slowScore = 0; // Score for slow (> threshold) trial
     public int minScore = 100; // Minimum score for fast trial
     public int maxScore = 200; // Max score for super fast trial 
     // RTs - boundaries on min/max RT of interest to avoid overshooting
@@ -75,13 +73,13 @@ public class Score : MonoBehaviour
         feedbackText.color = Color.white;
         string feedback = "";
 
-        if(trialScore == earlyScore){ //if too slow
+        if(trialScore == -minScore){ //if too slow
             barColour = Color.red;
             feedbackText.color = Color.red;
             dog.takeDamage();
             feedback = "TOO QUICK!\nWait until the bone has appeared.";
 
-        } else if(trialScore == slowScore){ // If early press
+        } else if(trialScore == 0){ // If early press
             barColour = Color.blue;
             feedback = "Too slow!\nThe bone went bad...";
 
