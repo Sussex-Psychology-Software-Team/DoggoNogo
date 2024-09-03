@@ -17,9 +17,7 @@ public class Score : MonoBehaviour
     // Settings ----------------
     // Levels
     public int nLevels = 3; // Number of levels to run
-    public int totalTrials = 60; // Rough number of trials per participant
-    public int level1TargetScore = 1000; // First level target score and minimum
-    public int minLevelTargetScore = 500; // First level target score and minimum
+    public int nTrials = 60; // Rough number of trials per participant
     // Scores
     public int minScore = 100; // Minimum score for fast trial
     public int maxScore = 200; // Max score for super fast trial 
@@ -123,15 +121,17 @@ public class Score : MonoBehaviour
     // get
     public int getNewTargetScore(){
         // Calculate number of trials in current level.
-        int nTrialsRemaining = totalTrials - DataManager.Instance.data.trials.Count; // Number of trials remaining in task.
+        int nTrialsRemaining = nTrials - DataManager.Instance.data.trials.Count; // Number of trials remaining in task.
         int nTrialsPerLevelsRemaining = nTrialsRemaining / ((nLevels+1) - level); // Number of trials in each remaining level.
         // Calulate target score
         int nFastTrials = nTrialsPerLevelsRemaining/2; 
         int targetScore = minScore * nFastTrials;
         // Clamp to minimum
-        if(targetScore < minLevelTargetScore) targetScore = minLevelTargetScore;
+        int minTargetScore = minTrials/2 * minScore; // e.g. 10 min trials = 10/2 = 5*100 = 500
+        if(targetScore < minTargetScore) targetScore = minTargetScore;
         // Add target to current score
         targetScore += score;
+        Debug.log("New Target Score: " + targetScore);
         return targetScore;
     }
 
@@ -144,7 +144,7 @@ public class Score : MonoBehaviour
     // Start is called before the first frame update
     void Start() {
         healthBar = healthBars[0]; // Load up first healthbar
-        healthBar.SetMaxHealth(level1TargetScore);
+        healthBar.SetMaxHealth(getNewTargetScore());
     }
 
 
