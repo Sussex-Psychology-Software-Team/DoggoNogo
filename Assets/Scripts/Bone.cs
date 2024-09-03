@@ -87,6 +87,7 @@ public class Bone : MonoBehaviour
 
     void earlyPress(){
         DataManager.Instance.data.earlyPress(stimulusTimer.Elapsed.TotalSeconds); // Save early presses
+        stimulusTimer.Reset();
         score.updateScore(-score.minScore); // Penalise as early trial
         dog.bark();
     }
