@@ -41,9 +41,9 @@ public class Score : MonoBehaviour
 
         // Score
         double scoreRange = maxScore - minScore;
-        double adjustedRT = complementRT * scoreRange; // Multiply promportion by range
-        double finalScore = minScore + adjustedRT; // Bump up by minimum score
-        double clampedScore = Math.Min(finalScore, maxScore); // Techically does nothing if min=100 max=200
+        double adjustedRT = complementRT * scoreRange; // Multiply proportion by range
+        double bumpedScore = minScore + adjustedRT; // Bump up by minimum score
+        double clampedScore = Math.Min(bumpedScore, maxScore); // Techically does nothing if min=100 max=200
 
         return (int)clampedScore;
     }
