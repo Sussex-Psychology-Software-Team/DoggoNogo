@@ -11,7 +11,6 @@ using TMPro; //for TextMeshProUGUI
 public class Bone : MonoBehaviour
 {
     // ******************* CONFIG *******************
-    public double maximumRT = 1.5;
     // declare trialISI array parameters/vars
     public double lowtrialISI = 0.2; //note trialISIs are doubles in line with Stopwatch.Elapsed.TotalSeconds - but consider ints e.g. 1400 ms to avoid point representation errors
     public double hightrialISI = 3.5;
@@ -133,7 +132,7 @@ public class Bone : MonoBehaviour
         // Get score and play relevant audio
         int trialScore;
         if(rt > medianRT){ // Slow trial
-            trialScore = score.slowScore;
+            trialScore = 0; // = 0
             dog.whine();
         } else { // Fast trial
             trialScore = score.calculateScore(rt);
@@ -179,7 +178,7 @@ public class Bone : MonoBehaviour
 
         // When waiting for input
         } else { 
-            if(reactionTimer.Elapsed.TotalSeconds > score.maxRT){ //if greater than max trial time end trial and move on.
+            if(reactionTimer.Elapsed.TotalSeconds > score.maxRT){ // If greater than max trial time end trial and move on.
                 newTrial();
             } else if(Input.GetKeyDown(KeyCode.DownArrow)){ //if not, on reaction
                 storeRT(); // Save data
