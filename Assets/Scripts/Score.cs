@@ -17,17 +17,17 @@ public class Score : MonoBehaviour
     // Settings ----------------
     // Levels
     public int nLevels = 3; // Number of levels to run
+    int level = 1; // Track progress
+    // Trials
     public int nTrials = 60; // Rough number of trials per participant
+    public int minTrials = 10;
     // Scores
     public int minScore = 100; // Minimum score for fast trial
-    public int maxScore = 200; // Max score for super fast trial 
-    // RTs - boundaries on min/max RT of interest to avoid overshooting
+    public int maxScore = 200; // Max score for super fast trial
+    int totalScore = 0;
+    // RTs
     public double minRT = .15; // Minimum RT bound
     public double maxRT = .6; // Init Maximum RT bound to 600ms, to be changed later
-
-    // Track progress
-    int level = 1; // Stages 1-3
-    int score = 0;
 
     // ******************* METHODS/FUNCTIONS *******************
     // Calculate score from rt
@@ -35,7 +35,9 @@ public class Score : MonoBehaviour
         // Calculate score
         double clampedRT = Math.Clamp(rt, minRT, maxRT); // Clamp Reaction Time, ensures 0-1 when normalised
         double normalisedRT = (clampedRT - minRT) / (maxRT - minRT); // Normalise as proportion of range
+        Debug.Log("calcScore normalisedRT: " + normalisedRT);
         double complementRT = (1 - normalisedRT); // Complement of proportion
+
 
         // Score
         double scoreRange = maxScore - minScore;
@@ -47,46 +49,60 @@ public class Score : MonoBehaviour
     }
 
     // Save current score and display
-    public void change(int trialScore){
+    public void updateScore(int trialScore){
         // Give visual feedback
-        giveFeedback(trialScore);
+        string trialType = getTrialType(trialScore);
+        giveFeedback(trialType);
 
         // Calc new total score
-        score = score+trialScore;
-        // Change healthbars
-        if(score >= healthBar.GetMaxHealth()) changeLevel(); // Switch healthbars if above maximum
-        else if(score < healthBar.GetMinHealth()) score = (int)healthBar.GetMinHealth(); // Stop score going below healthbar minimum
+        totalScore += trialScore;
+        // Compare to min/max healthbar
+        if(totalScore >= healthBar.GetMaxHealth()) changeLevel(); // Switch healthbars if above maximum
+        else if(totalScore < healthBar.GetMinHealth()) totalScore = (int)healthBar.GetMinHealth(); // Stop score going below healthbar minimum
         // Display new score
-        healthBar.SetHealth(score); // Note do this prior to changing level to start healthbar on new minimum
-        scoreText.text = "Score: " + score;
-
+        healthBar.SetHealth(totalScore); // Note do this prior to changing level to start healthbar on new minimum
+        scoreText.text = "Score: " + totalScore;
         //Save data
         DataManager.Instance.data.currentTrial().trialScore = trialScore;
-        DataManager.Instance.data.currentTrial().totalScore = score;
+        DataManager.Instance.data.currentTrial().totalScore = totalScore;
     }
 
-    public void giveFeedback(int trialScore){
-        // Set default colours
-        Color barColour = new Color(0.06770712f, 0.5817609f, 0f, 1f); // 'forest' - colour of positive feedback
-        feedbackText.color = Color.white;
+    public string getTrialType(int trialScore){
+        if(trialScore == -minScore){ // Early Press
+            return "early";
+        } else if(trialScore == 0){ // Slow trial
+            return "slow";
+        } else { // Good trial
+            return "fast";
+        }
+    }
+
+    public void giveFeedback(string trialType){
+        // feedback 
+        Color barColour = Color.green;
         string feedback = "";
 
-        if(trialScore == -minScore){ //if too slow
+        if(trialType == "early"){
             barColour = Color.red;
             feedbackText.color = Color.red;
-            dog.takeDamage();
             feedback = "TOO QUICK!\nWait until the bone has appeared.";
+            dog.takeDamage();
 
-        } else if(trialScore == 0){ // If early press
+        } else if(trialType == "slow"){
             barColour = Color.blue;
-            feedback = "Too slow!\nThe bone went bad...";
+            feedbackText.color = Color.white;
+            feedback = "TOO SLOW!\nDoggo couldn't catch the bone.";
+            dog.whine();
 
-        } else if(trialScore <= (((maxScore-minScore)/2)+minScore)) { // If less than half way to max score
-            feedback = "Yum!\nDoggo fetched the bone!";
-
-        } else { //if middling score
-            feedback = "GREAT!\nDoggo caught the bone!";
+        } else if(trialType == "fast"){
+            barColour = new Color(0.06770712f, 0.5817609f, 0f, 1f); // "forest"
             feedbackText.color = Color.green;
+            feedback = "GREAT!\nDoggo caught the bone!";
+            dog.chew();
+        } else if(trialType == "missed"){
+            barColour = Color.blue;
+            feedbackText.color = Color.red;
+            feedback = "TOO SLOW!\nDoggo is upset";
         }
 
         feedbackText.text = feedback;
@@ -127,11 +143,11 @@ public class Score : MonoBehaviour
         int nFastTrials = nTrialsPerLevelsRemaining/2; 
         int targetScore = minScore * nFastTrials;
         // Clamp to minimum
-        int minTargetScore = minTrials/2 * minScore; // e.g. 10 min trials = 10/2 = 5*100 = 500
+        int minTargetScore = minTrials/2 * minScore; // e.g. 10 min trials = 10/2=5*100=500
         if(targetScore < minTargetScore) targetScore = minTargetScore;
         // Add target to current score
-        targetScore += score;
-        Debug.log("New Target Score: " + targetScore);
+        if(nTrialsRemaining < nTrials) targetScore += totalScore;
+        Debug.Log("New Target Score: " + targetScore);
         return targetScore;
     }
 
