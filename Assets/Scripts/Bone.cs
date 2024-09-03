@@ -12,16 +12,12 @@ public class Bone : MonoBehaviour
 {
     // ******************* CONFIG *******************
     // declare trialISI array parameters/vars
-    public double lowtrialISI = 0.2; //note trialISIs are doubles in line with Stopwatch.Elapsed.TotalSeconds - but consider ints e.g. 1400 ms to avoid point representation errors
-    public double hightrialISI = 3.5;
-    public int nTrials = 60; //run only 3 trials - set to like -1 and shouldn't ever be actiavted.
-    public int nRepeattrialISI = 3; //how many times to repeat each trialISI
+    public float[] ISIRange = { 1, 4 };
 
     // ******************* GLOBAL VARS *******************
     // trialISI
-    private double[] interStimulusIntervals; // this stores all trialISIs in single array - these are copied to data individually at start of each trial
-    private double trialISI; //stores each trial's trialISI for speed of access
-    private double medianRT = 0; //store median rt
+    private double trialISI; // Stores each trial's trialISI for speed of access
+    private double medianRT = 0; // Store median rt
     ArrayList sortedRTs = new(); // Store rts in ArrayList to allow for easier median computation and store as sorted list (i.e. sortedRTs.Sort() method)
     
     // Timers
@@ -41,36 +37,6 @@ public class Bone : MonoBehaviour
 
     bool boneHidden(){
         return gameObject.transform.localScale == Vector3.zero; // Is bone hidden
-    }
-
-
-    // trialISI Helpers ------------------------------------------------------------
-    //shuffle function for trialISIs (Fisher-Yates shuffle should be fine) 
-    void Shuffle(double[] array) { //from https://stackoverflow.com/questions/1150646/card-shuffling-in-c-sharp
-        System.Random r = new System.Random();
-        for (int n=array.Length-1; n>0; --n) {
-            int k = r.Next(n+1); //next random on system iterator
-            (array[k], array[n]) = (array[n], array[k]); //use tuple to swap elements
-        }
-    }
-
-    //Round trialISI to d.p. avoiding prectrialISIon errors
-    public double roundTime(double time, int dp){
-        return Math.Round(time *  Math.Pow(10, dp)) /  Math.Pow(10, dp); //remove trailing 0s - avoids double prectrialISIon errors. or try .ToString("0.00") or .ToString("F2")
-    }
-
-    // Call this in the unity Start() function to make the array of trialISIs
-    void makeISIArray(){
-        interStimulusIntervals = new double[nTrials*nRepeattrialISI]; // Length of each set * number of repeats
-        double ISIIncrement = (hightrialISI-lowtrialISI)/(nTrials-1); // Minus 1 as inclusive of high and low value
-
-        for (int j=0; j<nRepeattrialISI; j++) { // Loop repeats of each number
-            int set_start = nTrials*j; // Add length of one set of numbers to current index
-            for (int i=0; i<nTrials; i++) { // Loop through each increment to trialISI - note don't loop through floats directly due to rounding errors
-                interStimulusIntervals[set_start+i] = roundTime(lowtrialISI + (i*ISIIncrement), 2);
-            }
-        } // LOG: foreach (double value in interStimulusIntervals){Debug.Log(value);}
-        Shuffle(interStimulusIntervals); // Shuffle array
     }
 
     // RT Helpers ------------------------------------------------------------
@@ -99,7 +65,7 @@ public class Bone : MonoBehaviour
     // TRIAL MANAGEMENT ------------------------------------------------------------
     void newTrial() { //function to reset variables and set-up for a new trials
         //reset vars
-        trialISI = interStimulusIntervals[DataManager.Instance.data.trials.Count]; // New trialISI
+        trialISI = UnityEngine.Random.Range(ISIRange[0], ISIRange[1]); // New trialISI
         calcMedianRT(); // get new median reaction time if possible
         DataManager.Instance.data.newTrial(trialISI);   // Create an instance of a Trial
         hideBone();
@@ -152,8 +118,6 @@ public class Bone : MonoBehaviour
         show = new Vector3(gameObject.transform.localScale.x, gameObject.transform.localScale.x, 0); 
         // Stores which retry we are on
         DataManager.Instance.data.metadata.retry = DataManager.Instance.data.metadata.retry++;
-        // Create trialISI array - when to show or hide bone
-        makeISIArray();
         // Delay Update 
         hideBone();
         enabled = false; // https://docs.unity3d.com/ScriptReference/Behaviour-enabled.html
