@@ -1196,9 +1196,8 @@ MonoBehaviour:
   - {fileID: 728505469}
   dog: {fileID: 1504777854}
   nLevels: 3
-  totalTrials: 60
-  earlyScore: -100
-  slowScore: 0
+  nTrials: 60
+  minTrials: 10
   minScore: 100
   maxScore: 200
   minRT: 0.2
@@ -1328,11 +1327,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aed553ca795034641a17c1d9cd010a68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maximumRT: 1.5
-  lowtrialISI: 0.2
-  hightrialISI: 3.5
-  nTrials: 60
-  nRepeattrialISI: 3
+  ISIRange:
+  - 1
+  - 4
   score: {fileID: 1041837081}
   feedbackText: {fileID: 1479691777}
   dog: {fileID: 1504777854}
