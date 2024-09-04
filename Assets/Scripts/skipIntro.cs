@@ -11,17 +11,22 @@ public class skipIntro : MonoBehaviour
     public double timeToSkip = 2.0;
     public Slider slider;
 
+    //float startTime = 0f;
+
     public void loadNextScene(){
         SceneManager.LoadScene("Simple RT");
     }
     
     void Update(){
         if (Input.GetKeyDown(KeyCode.Space)){
+            //startTime = Time.time;
             spacebarHoldTimer.Start();
         } else if(Input.GetKeyUp(KeyCode.Space)){
             spacebarHoldTimer.Reset();
+            //startTime = 0f;
         }
 
+        //slider.value = (Time.time - startTime) / timeToSkip;
         slider.value = (float)(spacebarHoldTimer.Elapsed.TotalSeconds / timeToSkip);
 
         if (Input.GetKey(KeyCode.Escape) || spacebarHoldTimer.Elapsed.TotalSeconds >= timeToSkip){
