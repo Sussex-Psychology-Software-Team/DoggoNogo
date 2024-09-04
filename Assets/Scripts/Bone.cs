@@ -14,11 +14,11 @@ public class Bone : MonoBehaviour
 
     // ******************* CONFIG *******************
     // declare trialISI array parameters/vars
-    public float[] ISIRange = { 1, 4 };
+    public float[] ISIRange = { 1f, 4f }; // Input floats to Random.Range to return a float
 
     // ******************* GLOBAL VARS *******************
     // trialISI
-    private double trialISI; // Stores each trial's trialISI for speed of access
+    double trialISI; // Stores each trial's trialISI for speed of access
     ArrayList sortedRTs = new(); // Store rts in ArrayList to allow for easier median computation and store as sorted list (i.e. sortedRTs.Sort() method)
     
     // Timers
@@ -26,7 +26,7 @@ public class Bone : MonoBehaviour
     public Stopwatch reactionTimer = new Stopwatch(); // https://stackoverflow.com/questions/394020/how-accurate-is-system-diagnostics-stopwatch
 
     // Feedback/score
-    private Vector3 show; // stores vector to show bone at adjusted vector as original image is too big - can probably just prefab this in future
+    Vector3 show; // stores vector to show bone at adjusted vector as original image is too big - can probably just prefab this in future
     public Score score;
     public TextMeshProUGUI feedbackText; //feedback
     public Dog dog;
@@ -45,8 +45,8 @@ public class Bone : MonoBehaviour
     public double calcMedianRT() {
         // Add to array and sort
         sortedRTs.Add(DataManager.Instance.data.currentTrial().rt);
-        sortedRTs.Sort(); //note mutates original list
-        //get the median
+        sortedRTs.Sort(); // Note mutates original list
+        // Get the median
         int size = sortedRTs.Count;
         int mid = size / 2;
         double middleValue = (double)sortedRTs[mid];
@@ -56,20 +56,6 @@ public class Bone : MonoBehaviour
     }
 
     // TRIAL MANAGEMENT ------------------------------------------------------------
-    void newTrial() { //function to reset variables and set-up for a new trials
-        //reset vars
-        trialISI = UnityEngine.Random.Range(ISIRange[0], ISIRange[1]); // New trialISI
-        DataManager.Instance.data.newTrial(trialISI);   // Create an instance of a Trial
-        presentText("Getting a new bone for Doggo...");
-        // Hide bone
-        resetTimers();
-    }
-
-    void presentText(string text){
-        feedbackText.color = Color.black;
-        feedbackText.text = text; // Hide last trial's feedback
-    }
-
     // Coroutine to delay the start of a new trial and show feedback
     IEnumerator DelayBeforeNextTrial() {
         hideBone();
@@ -77,23 +63,32 @@ public class Bone : MonoBehaviour
         newTrial(); // Start new trial after delay
     }
 
+    void newTrial() { //function to reset variables and set-up for a new trials
+        // Reset vars
+        trialISI = UnityEngine.Random.Range(ISIRange[0], ISIRange[1]); // New trialISI
+        Debug.Log("ISI: " + trialISI);
+        DataManager.Instance.data.newTrial(trialISI); // Create an instance of a Trial
+        presentText("Getting a new bone for Doggo..."); // Prompt for new trial starting
+        resetTimers(); // Start timers again
+    }
+
+    void presentText(string text){
+        feedbackText.color = Color.black;
+        feedbackText.text = text; // Hide last trial's feedback
+    }
 
     void resetTimers(){
         // reset timers
+        reactionTimer.Reset();
         stimulusTimer.Reset();
         stimulusTimer.Start();
-        reactionTimer.Reset();
     }
 
     void earlyPress(){
+        stimulusTimer.Stop(); // Stop timer
         DataManager.Instance.data.earlyPress(stimulusTimer.Elapsed.TotalSeconds); // Save early presses
-        stimulusTimer.Reset();
         score.updateScore(-score.minScore); // Penalise as early trial
-        dog.bark();
-    }
-
-    void missedTrial(){
-        presentText("Too slow!\nAnother dog stole the bone!");
+        StartCoroutine(DelayBeforeNextTrial());
     }
 
     void saveRT(){
@@ -101,21 +96,20 @@ public class Bone : MonoBehaviour
         double rt = reactionTimer.Elapsed.TotalSeconds;
         DataManager.Instance.data.currentTrial().saveRT(rt); //consider changing data types ElapsedMilliseconds
         updateScore(rt);
+        Debug.Log(DataManager.Instance.data.currentTrial());
     }
 
     void updateScore(double rt){
         // Update median and maxRT
         double medianRT = calcMedianRT(); // get new median reaction time if possible;
+        // Note atm minRT must be > maxRT, see score.calculateScore
         score.maxRT = Math.Min(score.minRT*2, medianRT*2); // Lowerbound on maxRT of minRT
-        //Debug.Log("RT: " + rt + "\nMedian: " + medianRT);
         // Get trial score nd feedback audio
         int trialScore;
-        Debug.Log("RT: "+rt+" medianRT: "+medianRT);
         if(rt > medianRT){ // Slow trial
             trialScore = 0; // = 0
         } else { // Fast trial
             trialScore = score.calculateScore(rt);
-            Debug.Log("RT<Median trialScore: " + trialScore);
         }
         // Save and update UI
         score.updateScore(trialScore);
@@ -152,10 +146,8 @@ public class Bone : MonoBehaviour
             //handle early presses
             if(Input.GetKeyDown(KeyCode.DownArrow)){
                 earlyPress();
-            }
-            //when timer runs out
-            if(stimulusTimer.Elapsed.TotalSeconds >= trialISI){ // or just access by current trial.trialISI? timer.ElapsedMilliseconds less precise int, Elapsed.TotalSeconds = double, timer.ElapsedTicks most precise
-                endISI();
+            } else if(stimulusTimer.Elapsed.TotalSeconds >= trialISI){ // or just access by current trial.trialISI? timer.ElapsedMilliseconds less precise int, Elapsed.TotalSeconds = double, timer.ElapsedTicks most precise
+                endISI(); //when timer runs out
             }
         // When waiting for input
         } else if(reactionTimer.IsRunning){
@@ -165,7 +157,8 @@ public class Bone : MonoBehaviour
                 StartCoroutine(DelayBeforeNextTrial());
             // end trial if greater than max trial time
             } else if(reactionTimer.Elapsed.TotalSeconds > score.maxRT){
-                missedTrial();
+                presentText("Too slow!\nAnother dog stole the bone!");
+                reactionTimer.Stop();
                 StartCoroutine(DelayBeforeNextTrial());
             }
         }
