@@ -8,7 +8,7 @@ public class Dog : MonoBehaviour
 {
     // Images
     public Sprite[] images; // Array of images of each evolution, increase on level change
-    int i = 0; // image number
+
     // Damage animation
     Image image; // save reference to image
     public float flickerDuration = 1.0f;
@@ -34,9 +34,14 @@ public class Dog : MonoBehaviour
 
     // FUNCTIONS ********************************
     // Images
-    public void NextSprite(){
+    public void SetLevel(int newLevel){
         // Loops through sprites automatically
-        image.sprite = images[++i]; // Note first image just loaded automatically
+    
+        if (newLevel < images.Length) {
+            image.sprite = images[newLevel]; // Note first image just loaded automatically
+        } else {
+            Debug.LogError("Out of range error in NextSprite");
+        }
     }
 
     public void takeDamage(){ // Flicker and shake coroutine wrapper.
@@ -66,7 +71,7 @@ public class Dog : MonoBehaviour
         if(ascending){
             // // If not at max height increase
             if(yPosition <= startingY+maxJumpHeight) yPosition += jumpSpeed * Time.deltaTime; //Time.deltaTime ensures this is not FPS dependent as Update called very regularly
-            else{ // Else start descent
+            else { // Else start descent
                 ascending = false;
                 descending = true;
             }
