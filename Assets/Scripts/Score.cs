@@ -35,9 +35,9 @@ public class Score : MonoBehaviour
         // Calculate score
         double clampedRT = Math.Clamp(rt, minRT, maxRT); // Clamp Reaction Time, ensures 0-1 when normalised
         double normalisedRT = (clampedRT - minRT) / (maxRT - minRT); // Normalise as proportion of range
-        Debug.Log("calcScore normalisedRT: " + normalisedRT);
+        // Note normalisedRT will return NaN if minRT=maxRT
+        // Debug.Log("calcScore normalisedRT: " + normalisedRT);
         double complementRT = (1 - normalisedRT); // Complement of proportion
-
 
         // Score
         double scoreRange = maxScore - minScore;
@@ -53,6 +53,8 @@ public class Score : MonoBehaviour
         // Give visual feedback
         string trialType = getTrialType(trialScore);
         giveFeedback(trialType);
+        // Save trial score
+        DataManager.Instance.data.currentTrial().trialScore = trialScore;
 
         // Calc new total score
         totalScore += trialScore;
@@ -63,7 +65,6 @@ public class Score : MonoBehaviour
         healthBar.SetHealth(totalScore); // Note do this prior to changing level to start healthbar on new minimum
         scoreText.text = "Score: " + totalScore;
         //Save data
-        DataManager.Instance.data.currentTrial().trialScore = trialScore;
         DataManager.Instance.data.currentTrial().totalScore = totalScore;
     }
 
@@ -87,6 +88,7 @@ public class Score : MonoBehaviour
             feedbackText.color = Color.red;
             feedback = "TOO QUICK!\nWait until the bone has appeared.";
             dog.takeDamage();
+            dog.bark();
 
         } else if(trialType == "slow"){
             barColour = Color.blue;
@@ -116,7 +118,7 @@ public class Score : MonoBehaviour
             endTask();
             return;
         }
-        dog.NextSprite();
+        dog.SetLevel(level);
         feedbackText.text = "Level " +level+"!";
         nextHealthBar();
     }
