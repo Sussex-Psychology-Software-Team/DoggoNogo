@@ -24,7 +24,7 @@ public class EndScreen : MonoBehaviour
     // Score display functions
     void displayRelativeScore(){
         // Calculate %
-        int score = DataManager.Instance.data.lastTrial().totalScore; //get copy of player score
+        int score = DataManager.Instance.data.currentTrial().totalScore; //get copy of player score
         Debug.Log(score);
         double zScore = percentileNormCDF(score); // Score under normal as %
         Debug.Log(zScore);
