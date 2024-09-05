@@ -33,11 +33,15 @@ public class Bone : MonoBehaviour
 
     // ******************* FUNCTIONS *******************
     void hideBone(){
-        gameObject.transform.localScale = Vector3.zero; // Hide bone
+        gameObject.enabled = !gameObject.enabled; // Hide bone
+    }
+
+    void ShowBone(){
+        gameObject.enabled = true; // Hide bone
     }
 
     bool boneHidden(){
-        return gameObject.transform.localScale == Vector3.zero; // Is bone hidden
+        return gameObject.enabled; // Is bone hidden
     }
 
     // RT Helpers ------------------------------------------------------------
@@ -117,7 +121,7 @@ public class Bone : MonoBehaviour
 
     void endISI(){
         presentText(""); // Hide last trial's feedback
-        gameObject.transform.localScale = show; // Show bone
+        ShowBone(); // Show bone
         // Stop timing ISI and start reactionTime
         stimulusTimer.Stop();
         reactionTimer.Start();
@@ -126,7 +130,6 @@ public class Bone : MonoBehaviour
     // ******************* UNITY *******************
     IEnumerator Start(){ //IEnumerator is a hack to enable a delay before running first trial.
         //global vector for showing bone
-        show = new Vector3(gameObject.transform.localScale.x, gameObject.transform.localScale.x, 0); 
         // Stores which retry we are on
         DataManager.Instance.data.metadata.retry = DataManager.Instance.data.metadata.retry++;
         // Delay Update 
