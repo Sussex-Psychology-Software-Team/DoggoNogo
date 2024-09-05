@@ -21,8 +21,8 @@ public class TrialManager : MonoBehaviour
     ArrayList sortedRTs = new(); // Store rts in ArrayList to allow for easier median computation and store as sorted list (i.e. sortedRTs.Sort() method)
     
     // Timers
-    public Stopwatch stimulusTimer = new Stopwatch(); // High precision timer: https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.stopwatch?view=net-8.0&redirectedfrom=MSDN#remarks
-    public Stopwatch reactionTimer = new Stopwatch(); // https://stackoverflow.com/questions/394020/how-accurate-is-system-diagnostics-stopwatch
+    // https://stackoverflow.com/questions/394020/how-accurate-is-system-diagnostics-stopwatch
+    public Stopwatch timer = new Stopwatch(); // High precision timer: https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.stopwatch?view=net-8.0&redirectedfrom=MSDN#remarks
 
     // Feedback/score
     public Score score;
@@ -61,14 +61,13 @@ public class TrialManager : MonoBehaviour
         DataManager.Instance.data.newTrial(trialISI); // Create an instance of a Trial
         // Prompt participant that new trial is starting
         presentText("Getting a new bone for Doggo..."); // Prompt for new trial starting
-        // Start stimulus timer
-        resetTimers(); // Start timers again
+        // Start timer
+        resetTimer();
     }
 
     void earlyPress(){
         // Save RT and begin trial again.
-        stimulusTimer.Stop(); // Stop timer
-        DataManager.Instance.data.earlyPress(stimulusTimer.Elapsed.TotalSeconds); // Save early presses
+        timer.Reset();
         score.updateScore(-score.minScore); // Penalise as early trial
         StartCoroutine(DelayBeforeNextTrial());
     }
@@ -76,16 +75,11 @@ public class TrialManager : MonoBehaviour
     void endISI(){
         presentText(""); // Hide last trial's feedback
         bone.Show(); // Show bone
-        // Stop timing ISI and start reactionTime
-        stimulusTimer.Stop();
-        reactionTimer.Start();
     }
 
-    void resetTimers(){
-        // reset timers
-        reactionTimer.Reset();
-        stimulusTimer.Reset();
-        stimulusTimer.Start();
+    void resetTimer(){
+        timer.Reset();
+        timer.Start();
     }
 
     void presentText(string text){ // Note to move this to feedback class
@@ -94,11 +88,7 @@ public class TrialManager : MonoBehaviour
     }
 
     void saveRT(){
-        reactionTimer.Stop();
-        double rt = reactionTimer.Elapsed.TotalSeconds;
-        DataManager.Instance.data.currentTrial().saveRT(rt); //consider changing data types ElapsedMilliseconds
-        updateScore(rt);
-        Debug.Log(DataManager.Instance.data.currentTrial());
+
     }
 
     void updateScore(double rt){
@@ -119,11 +109,7 @@ public class TrialManager : MonoBehaviour
 
     // ******************* UNITY *******************
     IEnumerator Start(){ //IEnumerator is a hack to enable a delay before running first trial.
-        //global vector for showing bone
-        // Stores which retry we are on
-        DataManager.Instance.data.metadata.retry = DataManager.Instance.data.metadata.retry++;
         // Delay Update 
-        bone.Hide();
         enabled = false; // https://docs.unity3d.com/ScriptReference/Behaviour-enabled.html
         yield return new WaitForSeconds(2f); // Wait for 2 seconds
         enabled = true; // Allow update to run - stops error on early press during initial delay
@@ -134,26 +120,28 @@ public class TrialManager : MonoBehaviour
 
     // Update is called once per frame - maybe use FixedUpdate for inputs?
     void Update(){
-        //if in trialISI/ not waiting for reaction
-        if(stimulusTimer.IsRunning){ 
+
+        // During ISI
+        if(timer.Elapsed.TotalSeconds <= trialISI){
             //handle early presses
             if(Input.GetKeyDown(KeyCode.DownArrow)){
                 earlyPress();
-            } else if(stimulusTimer.Elapsed.TotalSeconds >= trialISI){ // or just access by current trial.trialISI? timer.ElapsedMilliseconds less precise int, Elapsed.TotalSeconds = double, timer.ElapsedTicks most precise
-                endISI(); //when timer runs out
             }
-        // When waiting for input
-        } else if(reactionTimer.IsRunning){
-            // On response
-            if(Input.GetKeyDown(KeyCode.DownArrow)){
-                saveRT(); // Save data
-                StartCoroutine(DelayBeforeNextTrial());
-            // end trial if greater than max trial time
-            } else if(reactionTimer.Elapsed.TotalSeconds > score.maxRT){
-                presentText("Too slow!\nAnother dog stole the bone!");
-                reactionTimer.Stop();
-                StartCoroutine(DelayBeforeNextTrial());
-            }
+
+        // After max trial time
+        } else if(timer.Elapsed.TotalSeconds > score.maxRT){
+            bone.Hide();
+            presentText("Too slow!\nAnother dog stole the bone!");
+            StartCoroutine(DelayBeforeNextTrial());
+
+        // Response during stim presentation
+        } else if(Input.GetKeyDown(KeyCode.DownArrow)){
+            timer.Stop();
+            double rt = timer.Elapsed.TotalSeconds;
+            DataManager.Instance.data.currentTrial().saveRT(rt); //consider changing data types ElapsedMilliseconds
+            updateScore(rt);
+            StartCoroutine(DelayBeforeNextTrial());
         }
+
     }
 }
