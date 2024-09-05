@@ -65,6 +65,16 @@ public class TrialManager : MonoBehaviour
         resetTimer();
     }
 
+    void saveTrial(string trialType, string feedback){
+        timer.Stop(); // Immediately stop timer
+        bone.Hide(); // Hide bone - use an animation here
+        double rt = timer.Elapsed.TotalSeconds;
+        DataManager.Instance.data.currentTrial().saveTrial(rt, trialType); //consider changing data types ElapsedMilliseconds
+        updateScore(rt);
+        presentText(feedback); // Prompt for new trial starting
+        StartCoroutine(DelayBeforeNextTrial());
+    }
+
     void earlyPress(){
         // Save RT and begin trial again.
         timer.Reset();
@@ -85,10 +95,6 @@ public class TrialManager : MonoBehaviour
     void presentText(string text){ // Note to move this to feedback class
         feedbackText.color = Color.black;
         feedbackText.text = text; // Hide last trial's feedback
-    }
-
-    void saveRT(){
-
     }
 
     void updateScore(double rt){
@@ -120,27 +126,18 @@ public class TrialManager : MonoBehaviour
 
     // Update is called once per frame - maybe use FixedUpdate for inputs?
     void Update(){
-
         // During ISI
         if(timer.Elapsed.TotalSeconds <= trialISI){
             //handle early presses
             if(Input.GetKeyDown(KeyCode.DownArrow)){
-                earlyPress();
+                saveTrial("early", "Too quick! Wait until the bone has been thrown");
             }
-
         // After max trial time
         } else if(timer.Elapsed.TotalSeconds > score.maxRT){
-            bone.Hide();
-            presentText("Too slow!\nAnother dog stole the bone!");
-            StartCoroutine(DelayBeforeNextTrial());
-
+            saveTrial("missed", "Too slow Doggo!\nAnother dog fetched the bone first!");
         // Response during stim presentation
         } else if(Input.GetKeyDown(KeyCode.DownArrow)){
-            timer.Stop();
-            double rt = timer.Elapsed.TotalSeconds;
-            DataManager.Instance.data.currentTrial().saveRT(rt); //consider changing data types ElapsedMilliseconds
-            updateScore(rt);
-            StartCoroutine(DelayBeforeNextTrial());
+            saveTrial("valid", "");
         }
 
     }
