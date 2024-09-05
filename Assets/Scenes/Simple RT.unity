@@ -1163,6 +1163,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f10d21bc7293649bcab0e391a0dc7241, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ISIRange:
+  - 1
+  - 4
+  score: {fileID: 1041837081}
+  feedbackText: {fileID: 1479691777}
+  dog: {fileID: 1504777854}
+  bone: {fileID: 1390488369}
 --- !u!4 &1108526963
 Transform:
   m_ObjectHideFlags: 0
@@ -1303,12 +1310,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aed553ca795034641a17c1d9cd010a68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ISIRange:
-  - 1
-  - 4
-  score: {fileID: 1041837081}
-  feedbackText: {fileID: 1479691777}
-  dog: {fileID: 1504777854}
+  image: {fileID: 1390488370}
 --- !u!114 &1390488370
 MonoBehaviour:
   m_ObjectHideFlags: 0
