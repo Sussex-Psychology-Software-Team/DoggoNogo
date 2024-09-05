@@ -117,6 +117,7 @@ public class DataManager : MonoBehaviour
         public string datetime;
         public int trialScore;
         public int totalScore;
+        public string trialType;
 
         // Constructor
         public Trial(int trialNumber, double isiVar)
@@ -133,9 +134,10 @@ public class DataManager : MonoBehaviour
             return Math.Round(time *  Math.Pow(10, dp)) /  Math.Pow(10, dp); //remove trailing 0s - avoids double precision errors. or try .ToString("0.00") or .ToString("F2")
         }
 
-        public void saveRT(double rt){
+        public void saveTrial(double rt, string type){
             this.rt = roundTime(rt,7); // round off to avoid precision errors - 7 is length of ElapsedTicks anyway.
             this.datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            this.trialType = type;
         }
     }
     
