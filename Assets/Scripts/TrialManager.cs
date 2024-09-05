@@ -12,10 +12,7 @@ using TMPro; //for TextMeshProUGUI
 
 public class TrialManager : MonoBehaviour
 {
-    // Note timers and reaction times are bone-relevant so handled here.
-
     // ******************* CONFIG *******************
-    // declare trialISI array parameters/vars
     public float[] ISIRange = { 1f, 4f }; // Input floats to Random.Range to return a float
 
     // ******************* GLOBAL VARS *******************
@@ -28,7 +25,6 @@ public class TrialManager : MonoBehaviour
     public Stopwatch reactionTimer = new Stopwatch(); // https://stackoverflow.com/questions/394020/how-accurate-is-system-diagnostics-stopwatch
 
     // Feedback/score
-    Vector3 show; // stores vector to show bone at adjusted vector as original image is too big - can probably just prefab this in future
     public Score score;
     public TextMeshProUGUI feedbackText; //feedback
     public Dog dog;
@@ -53,23 +49,36 @@ public class TrialManager : MonoBehaviour
     // TRIAL MANAGEMENT ------------------------------------------------------------
     // Coroutine to delay the start of a new trial and show feedback
     IEnumerator DelayBeforeNextTrial() {
-        bone.Hide();
         yield return new WaitForSeconds(1f); // Wait for 1 second
         newTrial(); // Start new trial after delay
     }
 
     void newTrial() { //function to reset variables and set-up for a new trials
-        // Reset vars
+        bone.Hide();
+        // Get new ISI
         trialISI = UnityEngine.Random.Range(ISIRange[0], ISIRange[1]); // New trialISI
-        Debug.Log("ISI: " + trialISI);
+        // Create new trial in data structure
         DataManager.Instance.data.newTrial(trialISI); // Create an instance of a Trial
+        // Prompt participant that new trial is starting
         presentText("Getting a new bone for Doggo..."); // Prompt for new trial starting
+        // Start stimulus timer
         resetTimers(); // Start timers again
     }
 
-    void presentText(string text){
-        feedbackText.color = Color.black;
-        feedbackText.text = text; // Hide last trial's feedback
+    void earlyPress(){
+        // Save RT and begin trial again.
+        stimulusTimer.Stop(); // Stop timer
+        DataManager.Instance.data.earlyPress(stimulusTimer.Elapsed.TotalSeconds); // Save early presses
+        score.updateScore(-score.minScore); // Penalise as early trial
+        StartCoroutine(DelayBeforeNextTrial());
+    }
+    
+    void endISI(){
+        presentText(""); // Hide last trial's feedback
+        bone.Show(); // Show bone
+        // Stop timing ISI and start reactionTime
+        stimulusTimer.Stop();
+        reactionTimer.Start();
     }
 
     void resetTimers(){
@@ -79,11 +88,9 @@ public class TrialManager : MonoBehaviour
         stimulusTimer.Start();
     }
 
-    void earlyPress(){
-        stimulusTimer.Stop(); // Stop timer
-        DataManager.Instance.data.earlyPress(stimulusTimer.Elapsed.TotalSeconds); // Save early presses
-        score.updateScore(-score.minScore); // Penalise as early trial
-        StartCoroutine(DelayBeforeNextTrial());
+    void presentText(string text){ // Note to move this to feedback class
+        feedbackText.color = Color.black;
+        feedbackText.text = text; // Hide last trial's feedback
     }
 
     void saveRT(){
@@ -108,14 +115,6 @@ public class TrialManager : MonoBehaviour
         }
         // Save and update UI
         score.updateScore(trialScore);
-    }
-
-    void endISI(){
-        presentText(""); // Hide last trial's feedback
-        bone.Show(); // Show bone
-        // Stop timing ISI and start reactionTime
-        stimulusTimer.Stop();
-        reactionTimer.Start();
     }
 
     // ******************* UNITY *******************
