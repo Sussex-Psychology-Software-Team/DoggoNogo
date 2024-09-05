@@ -39,7 +39,7 @@ public class DataManager : MonoBehaviour
             trials = new List<Trial>();
         }
 
-        // Methods - creating/finding trials, adding early presses
+        // Methods - creating/finding trials
         public void newTrial(double isi){ //adds a new trial using the isi
             this.trials.Add(new Trial(this.trials.Count+1, isi));
         }
@@ -52,12 +52,6 @@ public class DataManager : MonoBehaviour
         public Trial lastTrial(){ //returns trial before current trial
             int count = this.trials.Count;
             return this.trials[count-2];
-        }
-
-        public void earlyPress(double rt){ //add early press based on rt
-            int count = this.currentTrial().early_presses.Count+1;
-            EarlyPress early_press = new EarlyPress(count, rt);
-            this.currentTrial().early_presses.Add(early_press);
         }
 
         public void ClearTrials() { // Clear trials on restart
@@ -123,7 +117,6 @@ public class DataManager : MonoBehaviour
         public string datetime;
         public int trialScore;
         public int totalScore;
-        public List<EarlyPress> early_presses;
 
         // Constructor
         public Trial(int trialNumber, double isiVar)
@@ -134,7 +127,6 @@ public class DataManager : MonoBehaviour
             datetime = "";
             trialScore = 0; // Initialize score
             totalScore = 0;
-            early_presses = new List<EarlyPress>();
         }
 
         private double roundTime(double time, int dp){
@@ -146,21 +138,7 @@ public class DataManager : MonoBehaviour
             this.datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         }
     }
-
-    // Early presses model (stored within trials)
-    [System.Serializable]
-    public class EarlyPress {
-        public int count;
-        public double stopwatch;
-        public string datetime;
-
-        public EarlyPress(int press_count, double time){
-            count = press_count;
-            stopwatch = time;
-            datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        }
-    }
-
+    
     // SENDING DATA -------------------------------------
     [System.Serializable] //class to format the data as expected by datapipe
     public class DataPipeBody{
