@@ -21,27 +21,38 @@ public class Feedback : MonoBehaviour
         string feedback = "";
 
         if(trialType == "early"){
+            // Bar colour
             barColour = Color.red;
+            // Feedback text
             feedbackText.color = Color.red;
             feedback = "TOO QUICK!\nWait until the bone has appeared.";
+            // Dog animation
             dog.takeDamage();
             dog.bark();
 
         } else if(trialType == "slow"){
+            // Bar colour
             barColour = Color.blue;
+            // Feedback text
             feedbackText.color = Color.white;
             feedback = "A bit too slow!\nDoggo couldn't catch the bone.";
+            // Dog animation
             dog.whine();
 
         } else if(trialType == "fast"){
+            // Bar colour
             barColour = new Color(0.06770712f, 0.5817609f, 0f, 1f); // "forest"
+            // Feedback text
             feedbackText.color = Color.green;
             feedback = "GREAT!\nDoggo caught the bone!";
+            // Dog animation
             dog.chew();
 
         } else if(trialType == "missed"){
+            // Bar colour
             barColour = Color.blue;
             feedbackText.color = Color.red;
+            // Feedback text
             feedback = "TOO SLOW!\nAnother dog got the bone first.";
         }
 
