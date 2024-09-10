@@ -115,6 +115,6 @@ public class Dog : MonoBehaviour
     void Update(){
         // Initiate jump on down arrow
         // if(Input.GetKeyDown(KeyCode.DownArrow)) ascending = true;
-        jump();
+        if(ascending || descending) jump();
     }
 }
