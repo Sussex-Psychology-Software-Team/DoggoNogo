@@ -56,10 +56,15 @@ public class Feedback : MonoBehaviour
             feedback = "TOO SLOW!\nAnother dog got the bone first.";
         }
 
+        displayFeedback(feedback, newTotalScore, barColour);
+    }
+
+    void displayFeedback(string feedback, int newTotalScore, Color barColour){
         feedbackText.text = feedback;
         scoreText.text = "Score: " + newTotalScore;
         // Display new score
         healthBarManager.currentHealthBar.setColour(barColour);
+        // Check level
         if(newTotalScore >= healthBarManager.currentHealthBar.GetMaxHealth()) changeLevel(); // Switch healthbars if above maximum - confusingly lost in here maybe??
         healthBarManager.currentHealthBar.SetHealth(newTotalScore); // Note do this prior to changing level to start healthbar on new minimum
     }
