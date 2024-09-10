@@ -19,6 +19,7 @@ public class HealthBarManager : MonoBehaviour
         // Set min and max for new healthbar
         currentHealthBar.SetMinHealth(previousMaximum); // Healthbar minimum to last healthbar's maximum
         currentHealthBar.SetMaxHealth(scoreManager.GetNewTargetScore()); // Set healthbar maximum
+        currentHealthBar.setColour(new Color(0.06770712f, 0.5817609f, 0f, 1f)); // "forest"
     }
 
     // Start is called before the first frame update
