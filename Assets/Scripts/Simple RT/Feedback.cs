@@ -71,7 +71,7 @@ public class Feedback : MonoBehaviour
     }
 
     // Use this for presenting standard black text in between trials
-    public void Prompt(string text){
+    public void Prompt(string text=""){
         feedbackText.color = Color.black;
         feedbackText.text = text;
     }
