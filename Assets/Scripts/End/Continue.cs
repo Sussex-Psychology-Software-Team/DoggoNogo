@@ -18,12 +18,6 @@ public class Continue : MonoBehaviour
         button.onClick.AddListener(continueExp);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     void continueExp(){
         string query;
         #if !UNITY_EDITOR && UNITY_WEBGL

@@ -15,6 +15,6 @@ public class Bone : MonoBehaviour
     }
 
     public bool Hidden(){
-        return image.enabled; // Is bone hidden
+        return image.enabled == false; // Is bone hidden
     }
 }

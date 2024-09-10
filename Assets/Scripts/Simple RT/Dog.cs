@@ -34,11 +34,10 @@ public class Dog : MonoBehaviour
 
     // FUNCTIONS ********************************
     // Images
-    public void SetLevel(int newLevel){
+    public void GetSprite(int level){
         // Loops through sprites automatically
-    
-        if (newLevel < images.Length) {
-            image.sprite = images[newLevel]; // Note first image just loaded automatically
+        if ((level-1) < images.Length) {
+            image.sprite = images[level-1]; // Note first image just loaded automatically
         } else {
             Debug.LogError("Out of range error in NextSprite");
         }

@@ -283,7 +283,7 @@ MonoBehaviour:
   m_Direction: 0
   m_MinValue: 0
   m_MaxValue: 1000
-  m_WholeNumbers: 0
+  m_WholeNumbers: 1
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -657,6 +657,62 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &598913040
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 598913042}
+  - component: {fileID: 598913041}
+  m_Layer: 0
+  m_Name: Score Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &598913041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 598913040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e092d16c38f94c87bfeb0255658b5ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  feedback: {fileID: 1041837081}
+  trialManager: {fileID: 1108526965}
+  healthBarManager: {fileID: 1026645576}
+  nLevels: 3
+  level: 1
+  nTrials: 60
+  minTrials: 10
+  minScore: 100
+  maxScore: 200
+  totalScore: 0
+  minRT: 0.15
+  maxRT: 0.6
+--- !u!4 &598913042
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 598913040}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 414.596, y: 259.4728, z: -2.8122466}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &728505467
 GameObject:
   m_ObjectHideFlags: 0
@@ -786,7 +842,7 @@ MonoBehaviour:
   m_Direction: 0
   m_MinValue: 0
   m_MaxValue: 1000
-  m_WholeNumbers: 0
+  m_WholeNumbers: 1
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1040,6 +1096,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1026645575}
+  - component: {fileID: 1026645576}
   m_Layer: 0
   m_Name: Health Bars
   m_TagString: Untagged
@@ -1069,6 +1126,24 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 246.77438}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1026645576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1026645574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3da4b9037af974acfaadd9aabb828770, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthBarList:
+  - {fileID: 126796138}
+  - {fileID: 1995774761}
+  - {fileID: 728505469}
+  currentHealthBar: {fileID: 126796138}
+  scoreManager: {fileID: 598913041}
 --- !u!1 &1041837079
 GameObject:
   m_ObjectHideFlags: 0
@@ -1122,18 +1197,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scoreText: {fileID: 1786151914}
   feedbackText: {fileID: 1479691777}
-  healthBars:
-  - {fileID: 126796138}
-  - {fileID: 1995774761}
-  - {fileID: 728505469}
+  healthBarManager: {fileID: 1026645576}
   dog: {fileID: 1504777854}
-  nLevels: 3
-  nTrials: 60
-  minTrials: 10
-  minScore: 100
-  maxScore: 200
-  minRT: 0.2
-  maxRT: 0.6
+  scoreManager: {fileID: 598913041}
+  trialManager: {fileID: 1108526965}
 --- !u!1 &1108526961
 GameObject:
   m_ObjectHideFlags: 0
@@ -1143,7 +1210,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1108526963}
-  - component: {fileID: 1108526962}
+  - component: {fileID: 1108526965}
   m_Layer: 0
   m_Name: Trial Manager
   m_TagString: Untagged
@@ -1151,25 +1218,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1108526962
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1108526961}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f10d21bc7293649bcab0e391a0dc7241, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ISIRange:
-  - 1
-  - 4
-  score: {fileID: 1041837081}
-  feedbackText: {fileID: 1479691777}
-  dog: {fileID: 1504777854}
-  bone: {fileID: 1390488369}
 --- !u!4 &1108526963
 Transform:
   m_ObjectHideFlags: 0
@@ -1185,6 +1233,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1108526965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1108526961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f10d21bc7293649bcab0e391a0dc7241, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ISIRange:
+  - 1
+  - 4
+  medianRT: 0
+  scoreManager: {fileID: 598913041}
+  dog: {fileID: 1504777854}
+  bone: {fileID: 1390488369}
+  feedback: {fileID: 1041837081}
 --- !u!1 &1308355384
 GameObject:
   m_ObjectHideFlags: 0
@@ -1318,7 +1386,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1390488367}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -2310,7 +2378,7 @@ MonoBehaviour:
   m_Direction: 0
   m_MinValue: 0
   m_MaxValue: 1000
-  m_WholeNumbers: 0
+  m_WholeNumbers: 1
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2323,3 +2391,4 @@ SceneRoots:
   - {fileID: 281814266}
   - {fileID: 579798063}
   - {fileID: 1108526963}
+  - {fileID: 598913042}
