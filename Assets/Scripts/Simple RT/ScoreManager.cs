@@ -33,7 +33,8 @@ public class ScoreManager : MonoBehaviour
         totalScore = getNewTotalScore(trialScore);
         string trialType = getTrialType(rt);
         saveScore(trialScore, totalScore, trialType);
-        feedback.giveFeedback(trialType, totalScore);
+        feedback.giveFeedback(trialType, totalScore, trialScore);
+
         //return(trialScore);
     }
     

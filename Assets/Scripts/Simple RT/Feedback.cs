@@ -15,8 +15,8 @@ public class Feedback : MonoBehaviour
     public ScoreManager scoreManager;
     public TrialManager trialManager; // Contains endTask function
 
-    public void giveFeedback(string trialType, int newTotalScore){
-        // feedback 
+    public void giveFeedback(string trialType, int newTotalScore, int trialScore=0){
+        // feedback
         Color barColour = Color.green;
         string feedback = "";
 

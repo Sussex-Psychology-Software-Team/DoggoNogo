@@ -69,7 +69,7 @@ public class TrialManager : MonoBehaviour
     void EndTrial(bool missed = false){ // Don't forget missed trials here
         StopStimulus();
         if(missed){
-            feedback.giveFeedback("missed", scoreManager.totalScore);
+            feedback.giveFeedback("missed", scoreManager.totalScore, 0);
         } else {
             // Get score from RT
             double rt = timer.Elapsed.TotalSeconds - trialISI; // subtract ISI from time elapsed during press
