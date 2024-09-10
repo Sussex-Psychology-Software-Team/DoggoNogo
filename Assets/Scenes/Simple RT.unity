@@ -1250,7 +1250,6 @@ MonoBehaviour:
   - 4
   medianRT: 0
   scoreManager: {fileID: 598913041}
-  dog: {fileID: 1504777854}
   bone: {fileID: 1390488369}
   feedback: {fileID: 1041837081}
 --- !u!1 &1308355384
