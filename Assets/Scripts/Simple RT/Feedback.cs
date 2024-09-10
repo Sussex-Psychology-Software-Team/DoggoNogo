@@ -38,6 +38,7 @@ public class Feedback : MonoBehaviour
             feedback = "A bit too slow!\nDoggo couldn't catch the bone.";
             // Dog animation
             dog.whine();
+            dog.startJump(trialScore/4);
 
         } else if(trialType == "fast"){
             // Bar colour
@@ -47,7 +48,7 @@ public class Feedback : MonoBehaviour
             feedback = "GREAT!\nDoggo caught the bone!";
             // Dog animation
             dog.chew();
-
+            dog.startJump(trialScore/4);
         } else if(trialType == "missed"){
             // Bar colour
             barColour = Color.blue;

@@ -82,6 +82,11 @@ public class Dog : MonoBehaviour
         transform.position = new Vector3(transform.position.x, yPosition, 0);
     }
 
+    public void startJump(int jumpHeight){
+        maxJumpHeight = jumpHeight;
+        ascending = true;
+    }
+
     // Audio
     public void whine(){ // Random dog whine
         System.Random rand = new System.Random(); // Random var
@@ -109,7 +114,7 @@ public class Dog : MonoBehaviour
 
     void Update(){
         // Initiate jump on down arrow
-        if(Input.GetKeyDown(KeyCode.DownArrow)) ascending = true;
+        // if(Input.GetKeyDown(KeyCode.DownArrow)) ascending = true;
         jump();
     }
 }
