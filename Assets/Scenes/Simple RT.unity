@@ -1380,7 +1380,6 @@ MonoBehaviour:
   image: {fileID: 1390488370}
   feedbackText: {fileID: 1479691777}
   dogImage: {fileID: 1504777852}
-  background: {fileID: 863856907}
 --- !u!114 &1390488370
 MonoBehaviour:
   m_ObjectHideFlags: 0
