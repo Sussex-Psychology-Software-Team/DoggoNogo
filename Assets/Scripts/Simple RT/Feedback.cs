@@ -12,6 +12,7 @@ public class Feedback : MonoBehaviour
     public TextMeshProUGUI feedbackText; // Feedback
     public HealthBarManager healthBarManager; // Contains reference to current selected health bar
     public Dog dog; // For changing dog sprite
+    public Bone bone;
     public ScoreManager scoreManager;
     public TrialManager trialManager; // Contains endTask function
 
@@ -26,9 +27,9 @@ public class Feedback : MonoBehaviour
             // Feedback text
             feedbackText.color = Color.red;
             feedback = "TOO QUICK!\nWait until the bone has appeared.";
-            // Dog animation
-            dog.takeDamage();
+            // Animations + sounds
             dog.bark();
+            dog.takeDamage();
 
         } else if(trialType == "slow"){
             // Bar colour
@@ -36,9 +37,8 @@ public class Feedback : MonoBehaviour
             // Feedback text
             feedbackText.color = Color.white;
             feedback = "A bit too slow!\nDoggo couldn't catch the bone.";
-            // Dog animation
+            // Animations + sounds
             dog.whine();
-            dog.startJump(trialScore/4);
 
         } else if(trialType == "fast"){
             // Bar colour
@@ -46,15 +46,18 @@ public class Feedback : MonoBehaviour
             // Feedback text
             feedbackText.color = Color.green;
             feedback = "GREAT!\nDoggo caught the bone!";
-            // Dog animation
+            // Animations + sounds
             dog.chew();
             dog.startJump(trialScore/4);
+
         } else if(trialType == "missed"){
             // Bar colour
             barColour = Color.blue;
             feedbackText.color = Color.red;
             // Feedback text
             feedback = "TOO SLOW!\nAnother dog got the bone first.";
+            // Animations + sounds
+            bone.Throw();
         }
 
         displayFeedback(feedback, newTotalScore, barColour);
