@@ -29,9 +29,9 @@ public class ScoreManager : MonoBehaviour
 
     // ******************* METHODS/FUNCTIONS *******************
     public void getScore(double rt){
-        int trialScore = getTrialScore(rt);
-        totalScore = getNewTotalScore(trialScore);
         string trialType = getTrialType(rt);
+        int trialScore = getTrialScore(trialType, rt);
+        totalScore = getNewTotalScore(trialScore);
         saveScore(trialScore, totalScore, trialType);
         feedback.giveFeedback(trialType, totalScore, trialScore);
 
@@ -56,19 +56,6 @@ public class ScoreManager : MonoBehaviour
         return (int)clampedScore;
     }
 
-    public int getTrialScore(double rt){
-        // get new median reaction time
-        int trialScore = 0;
-        if(rt < 0) { // Early trial
-            trialScore = maxScore;//-minScore; // negative min score
-        }  else if(rt > trialManager.medianRT) { // Slow trial
-            trialScore = 0; // no points
-        } else if(rt < trialManager.medianRT) {
-           trialScore = calculateScore(rt); // get new 
-        }
-        return(trialScore);
-    }
-
     public string getTrialType(double rt){
         string trialType = "";
         if(rt < 0) {
@@ -80,6 +67,19 @@ public class ScoreManager : MonoBehaviour
         }
 
         return(trialType);
+    }
+
+    public int getTrialScore(string trialType, double rt){
+        // get new median reaction time
+        int trialScore = 0;
+        if(trialType == "early") { // Early trial
+            trialScore = -minScore; // negative min score
+        }  else if(trialType == "slow") { // Slow trial
+            trialScore = 0; // no points
+        } else if(trialType == "fast") {
+           trialScore = calculateScore(rt); // get new 
+        }
+        return(trialScore);
     }
     
     public int getNewTotalScore(int trialScore){
