@@ -49,6 +49,7 @@ public class TrialManager : MonoBehaviour
     }
 
     void newTrial() { //function to reset variables and set-up for a new trials
+        bone.Hide();
         // Get new maxRT
         scoreManager.maxRT = Math.Max(scoreManager.minRT*2, medianRT*2); // Lowerbound on maxRT of minRT*2
         // Get new ISI
@@ -67,10 +68,11 @@ public class TrialManager : MonoBehaviour
     }
 
     void EndTrial(bool missed = false){ // Don't forget missed trials here
-        StopStimulus();
+        timer.Stop(); // Immediately stop timer
         if(missed){
             feedback.giveFeedback("missed", scoreManager.totalScore, 0);
         } else {
+            bone.Hide(); // Hide bone - use an animation here
             // Get score from RT
             double rt = timer.Elapsed.TotalSeconds - trialISI; // subtract ISI from time elapsed during press
             scoreManager.getScore(rt); // Probs don't need score anywhere
@@ -81,10 +83,6 @@ public class TrialManager : MonoBehaviour
         // presentText(feedback); // Prompt for new trial starting
     }   
 
-    void StopStimulus(){
-        timer.Stop(); // Immediately stop timer
-        bone.Hide(); // Hide bone - use an animation here
-    }
 
     void RestartTimer(){
         timer.Reset();
