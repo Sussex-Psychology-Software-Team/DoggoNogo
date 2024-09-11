@@ -29,6 +29,8 @@ public class Bone : MonoBehaviour
         // Rotation
         boneRectTransform.Rotate(new Vector3( 0, 0, UnityEngine.Random.Range(0, 360) ));
         // Size
+        float randomScale = UnityEngine.Random.Range(0.3f, 0.7f);
+        boneRectTransform.localScale = new Vector3(randomScale,randomScale, 0f);
     }
 
     Vector2 randomPosition(){
