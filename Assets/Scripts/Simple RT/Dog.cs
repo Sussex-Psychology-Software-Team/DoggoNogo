@@ -38,7 +38,7 @@ public class Dog : MonoBehaviour
         // Loops through sprites automatically
         if ((level-1) < images.Length) {
             image.sprite = images[level-1]; // Note first image just loaded automatically
-            // Adjust image size to native size
+            // Set new image to correct aspect ratio
             image.rectTransform.sizeDelta = new Vector2(image.sprite.texture.width, image.sprite.texture.height);
         } else {
             Debug.LogError("Out of range error in NextSprite");

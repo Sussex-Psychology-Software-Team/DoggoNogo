@@ -5,34 +5,37 @@ using TMPro; // TextMeshProUGUI
 
 public class Bone : MonoBehaviour
 {
+    // Refs
     public Image image;
     public TextMeshProUGUI feedbackText; // Defines top bound of bone position
     public Image dogImage;
 
+    // Hide
     public void Hide(){
         image.enabled = false; // Hide bone
-    }
-
-    public void Show(){
-        randomTransform(); // Change position
-        image.enabled = true; // Show bone
     }
 
     public bool Hidden(){
         return image.enabled == false; // Is bone hidden
     }
 
+    // Show
+    public void Show(){
+        randomTransform(); // Change position
+        image.enabled = true; // Show bone
+    }
+
     public void randomTransform(){
         RectTransform boneRectTransform = image.rectTransform;
         // Position
         boneRectTransform.localPosition = randomPosition();
-        // Rotation
+        // Rotation - note just adds a 0-360 to whatever current rotation is, can create negatives
         boneRectTransform.Rotate(new Vector3( 0, 0, UnityEngine.Random.Range(0, 360) ));
         // Size
         float randomScale = UnityEngine.Random.Range(0.3f, 0.7f);
         boneRectTransform.localScale = new Vector3(randomScale,randomScale, 0f);
     }
-
+    
     Vector2 randomPosition(){
         // Bone size
         RectTransform boneRectTransform = image.rectTransform;
@@ -55,7 +58,6 @@ public class Bone : MonoBehaviour
             randomX = UnityEngine.Random.Range(rightStart, rightBound); // Right side
         }
             
-
         // Y value: within the range below the score card
         float topY = feedbackText.rectTransform.localPosition.y;
         float randomY = UnityEngine.Random.Range(-Screen.height+boneOffset, topY-boneOffset);
