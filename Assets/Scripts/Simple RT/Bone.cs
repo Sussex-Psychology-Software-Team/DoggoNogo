@@ -1,4 +1,5 @@
 using System;
+using System.Collections; // For IEnumerator
 using UnityEngine;
 using UnityEngine.UI; // Image namespace
 using TMPro; // TextMeshProUGUI
@@ -9,6 +10,7 @@ public class Bone : MonoBehaviour
     public Image image;
     public TextMeshProUGUI feedbackText; // Defines top bound of bone position
     public Image dogImage;
+    public AudioSource boneThrow; // Barking on early press
 
     // Hide
     public void Hide(){
@@ -66,7 +68,43 @@ public class Bone : MonoBehaviour
         return new Vector2(randomX, randomY);//new Vector2(randomX, randomY);
     }
 
-    // For testing: (comment out TrialManager's Update() code as well)
+    // Throw
+    public void Throw(){
+        boneThrow.Play();
+        StartShrink(1f, new Vector3(0, 0, 0), 360f);
+    }
+
+        // Public method to call for starting the shrink animation
+    void StartShrink(float shrinkDuration, Vector3 finalScale, float spinSpeed) {
+        // Start the shrinking coroutine
+        StartCoroutine(Shrink(shrinkDuration, finalScale, spinSpeed));
+    }
+
+    // Coroutine to handle the shrinking over time
+    IEnumerator Shrink(float duration, Vector3 targetScale, float spinSpeed){
+        Vector3 initialScale = transform.localScale;
+        float timer = 0f;
+        while (timer < duration){
+            // Increment the timer based on time passed
+            timer += Time.deltaTime;
+            // Calculate how much to shrink the scale based on the timer
+            transform.localScale = Vector3.Lerp(initialScale, targetScale, timer / duration);
+            // Rotate the object (spin around the Z-axis by default)
+            transform.Rotate(Vector3.forward, spinSpeed * Time.deltaTime);
+            // Wait for the next frame before continuing the loop
+            yield return null;
+        }
+        // Ensure the object reaches the target scale exactly at the end
+        transform.localScale = targetScale;
+    }
+
+    // For testing: (comment out TrialManager's call to new trial in Start() as well)
+    // Test animations
+    // void Start(){
+    //     Throw();
+    // }
+
+    // Test random locations
     //void Update(){ 
     //     image.rectTransform.localPosition = randomPosition(); 
     // }
