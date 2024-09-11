@@ -23,8 +23,10 @@ public class Bone : MonoBehaviour
     }
 
     public void randomTransform(){
+        // Position
         image.rectTransform.localPosition = randomPosition();
-        
+        // Rotation
+        image.rectTransform.Rotate( new Vector3( 0, 0, UnityEngine.Random.Range(0, 360) ) );
     }
 
     Vector2 randomPosition(){
