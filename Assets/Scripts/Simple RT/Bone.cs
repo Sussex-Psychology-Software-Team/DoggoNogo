@@ -27,7 +27,7 @@ public class Bone : MonoBehaviour
         image.enabled = true; // Show bone
     }
 
-    public void randomTransform(){
+    void randomTransform(){
         RectTransform boneRectTransform = image.rectTransform;
         // Position
         boneRectTransform.localPosition = randomPosition();

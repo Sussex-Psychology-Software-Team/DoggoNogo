@@ -49,7 +49,6 @@ public class TrialManager : MonoBehaviour
     }
 
     void newTrial() { //function to reset variables and set-up for a new trials
-        bone.randomTransform();
         // Get new maxRT
         scoreManager.maxRT = Math.Max(scoreManager.minRT*2, medianRT*2); // Lowerbound on maxRT of minRT*2
         // Get new ISI
