@@ -8,14 +8,14 @@ public class Bone : MonoBehaviour
     public Image image;
     public TextMeshProUGUI feedbackText; // Defines top bound of bone position
     public Image dogImage;
-    public Canvas canvas;
 
     public void Hide(){
         image.enabled = false; // Hide bone
     }
 
     public void Show(){
-        image.enabled = true; // Hide bone
+        randomTransform(); // Change position
+        image.enabled = true; // Show bone
     }
 
     public bool Hidden(){
@@ -23,53 +23,43 @@ public class Bone : MonoBehaviour
     }
 
     public void randomTransform(){
-        // Needs definition of left and right of screen, small box within window bounds.
-        // // Scale between 0.53156 to 
-        // x = Random.Range(-25, 26);
-        // y = 5;
-        // z = Random.Range(-25, 26);
-        // Note 0,0 is bottom left
-
-        // Rect bone = image.rectTransform.rect;
-        // Texture texture = image.sprite.texture;      
-        // X: Left : -780 to  -340 or Right: 270 to 780
-        // Y: -400 to 200
-
-        // Left or right side
-
-        transform.position = randomPosition();
-        //transform.position = new Vector3(100, 100, 0);
-        Debug.Log(transform.position);
+        image.rectTransform.localPosition = randomPosition();
+        
     }
 
     Vector2 randomPosition(){
-        Rect boneRect = image.rectTransform.rect;
-        RectTransform dogRectTransform = dogImage.rectTransform;
-
+        // Bone size
+        RectTransform boneRectTransform = image.rectTransform;
+        float boneOffset = (boneRectTransform.rect.width * boneRectTransform.localScale.x)/2;
+        
         // Get dog width and position in local space
-        float dogWidth = dogRectTransform.rect.width;
-        float dogLocationX = dogRectTransform.localPosition.x;
+        RectTransform dogRectTransform = dogImage.rectTransform;
+        float dogOffset = (dogRectTransform.rect.width * dogRectTransform.localScale.x)/2;
+        float dogLocation = dogRectTransform.localPosition.x;
 
         // X value: decide between left and right, avoiding the dog
         float randomX = 0f;
         if (UnityEngine.Random.value < 0.5f){
-            float leftBound = dogLocationX - (dogWidth / 2) - boneRect.width;
-            randomX = UnityEngine.Random.Range(0f, leftBound); // Left side
+            float leftStart = -Screen.width + boneOffset;
+            float leftBound = dogLocation - dogOffset - boneOffset;
+            randomX = UnityEngine.Random.Range(leftStart, leftBound); // Left side
         } else {
-            float rightStart = dogLocationX + (dogWidth / 2) + boneRect.width;
-            float rightBound = Screen.width - boneRect.width;
+            float rightStart = dogLocation + dogOffset + boneOffset;
+            float rightBound = Screen.width - boneOffset;
             randomX = UnityEngine.Random.Range(rightStart, rightBound); // Right side
         }
             
 
         // Y value: within the range below the score card
         float topY = feedbackText.rectTransform.localPosition.y;
-        float randomY = UnityEngine.Random.Range(boneRect.height, topY);
+        float randomY = UnityEngine.Random.Range(-Screen.height+boneOffset, topY-boneOffset);
 
-        return new Vector2(randomX, randomY);
+        //float boneOffset = ((image.rectTransform.rect.width*image.rectTransform.localScale.x)/2);
+        return new Vector2(randomX, randomY);//new Vector2(randomX, randomY);
     }
 
-    void Start(){
-        
-    }
+    // For testing: (comment out TrialManager's Update() code as well)
+    //void Update(){ 
+    //     image.rectTransform.localPosition = randomPosition(); 
+    // }
 }
