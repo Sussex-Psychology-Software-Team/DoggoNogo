@@ -71,31 +71,26 @@ public class Bone : MonoBehaviour
     // Throw
     public void Throw(){
         boneThrow.Play();
-        StartShrink(1f, new Vector3(0, 0, 0), 360f);
+        StartShrink(1f, 360f);
     }
 
-        // Public method to call for starting the shrink animation
-    void StartShrink(float shrinkDuration, Vector3 finalScale, float spinSpeed) {
+    // Starts shrink animation
+    void StartShrink(float shrinkDuration, float spinSpeed) {
         // Start the shrinking coroutine
-        StartCoroutine(Shrink(shrinkDuration, finalScale, spinSpeed));
+        StartCoroutine(Shrink(shrinkDuration, spinSpeed));
     }
 
-    // Coroutine to handle the shrinking over time
-    IEnumerator Shrink(float duration, Vector3 targetScale, float spinSpeed){
+    // Shrink animation
+    IEnumerator Shrink(float duration, float spinSpeed){
         Vector3 initialScale = transform.localScale;
         float timer = 0f;
         while (timer < duration){
-            // Increment the timer based on time passed
-            timer += Time.deltaTime;
-            // Calculate how much to shrink the scale based on the timer
-            transform.localScale = Vector3.Lerp(initialScale, targetScale, timer / duration);
-            // Rotate the object (spin around the Z-axis by default)
-            transform.Rotate(Vector3.forward, spinSpeed * Time.deltaTime);
-            // Wait for the next frame before continuing the loop
-            yield return null;
+            timer += Time.deltaTime; // Time passed
+            transform.localScale = Vector3.Lerp(initialScale, Vector3.zero, timer / duration); // Shrinking
+            transform.Rotate(Vector3.forward, spinSpeed * Time.deltaTime); // Rotate
+            yield return null; // Wait for next before continue
         }
-        // Ensure the object reaches the target scale exactly at the end
-        transform.localScale = targetScale;
+        transform.localScale = Vector3.zero; // At end reaches target scale
     }
 
     // For testing: (comment out TrialManager's call to new trial in Start() as well)
