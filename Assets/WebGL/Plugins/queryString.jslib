@@ -5,9 +5,13 @@ mergeInto(LibraryManager.library, {
         for(let i=0; i<vars.length; i++) {
                 let pair = vars[i].split("=");
                 if(pair[0] == variable){ 
-                    return pair[1]; 
+                    const queryValue = pair[1];
+                    const bufferSize = lengthBytesUTF8(queryValue) + 1;
+                    const buffer = _malloc(bufferSize);
+                    stringToUTF8(queryValue, buffer, bufferSize);
+                    return buffer;
                 }
         }
-        return(false);
+        return('');
     }
 });
