@@ -32,7 +32,7 @@ public class Feedback : MonoBehaviour
             dog.bark();
             dog.takeDamage();
             dog.startJump(20);
-            
+
         } else if(trialType == "slow"){
             // Bar colour
             barColour = Color.blue;
@@ -50,6 +50,7 @@ public class Feedback : MonoBehaviour
             feedbackText.color = Color.green;
             feedback = "GREAT!\nDoggo caught the bone!";
             // Animations + sounds
+            bone.Eat();
             dog.chew();
             dog.startJump(trialScore/4);
 
