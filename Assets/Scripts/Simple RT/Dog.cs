@@ -30,6 +30,8 @@ public class Dog : MonoBehaviour
     // Whining on miss (after stim dissapears). Choose random one
     public AudioSource dogWhine1; 
     public AudioSource dogWhine2;
+    // Surprised on slow
+    public AudioSource dogSurprised; 
 
 
     // FUNCTIONS ********************************
@@ -102,6 +104,10 @@ public class Dog : MonoBehaviour
 
     public void bark(){
         dogBark.Play();
+    }
+
+    public void surprised(){
+        dogSurprised.Play();
     }
 
     // UNITY ************************************

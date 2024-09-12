@@ -16,6 +16,7 @@ public class Feedback : MonoBehaviour
     public ScoreManager scoreManager;
     public TrialManager trialManager; // Contains endTask function
 
+    // Main function for displaying feedback based on performance
     public void giveFeedback(string trialType, int newTotalScore, int trialScore=0){
         // feedback
         Color barColour = Color.green;
@@ -38,7 +39,7 @@ public class Feedback : MonoBehaviour
             feedbackText.color = Color.white;
             feedback = "A bit too slow!\nDoggo couldn't catch the bone.";
             // Animations + sounds
-            dog.whine();
+            dog.surprised();
 
         } else if(trialType == "fast"){
             // Bar colour
@@ -58,6 +59,7 @@ public class Feedback : MonoBehaviour
             feedback = "TOO SLOW!\nAnother dog got the bone first.";
             // Animations + sounds
             bone.Throw();
+            //dog.whine();
         }
 
         displayFeedback(feedback, newTotalScore, barColour);
