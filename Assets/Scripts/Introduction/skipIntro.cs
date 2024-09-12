@@ -13,7 +13,7 @@ public class skipIntro : MonoBehaviour
 
     //float startTime = 0f;
 
-    public void loadNextScene(){
+    void loadNextScene(){
         SceneManager.LoadScene("Simple RT");
     }
     

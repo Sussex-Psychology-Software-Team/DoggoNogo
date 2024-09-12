@@ -29,7 +29,7 @@ public class TrialManager : MonoBehaviour
     // ******************* FUNCTIONS *******************
     // RT Helpers ------------------------------------------------------------
     // slow but simple median function - quicker algorithms here: https://stackoverflow.com/questions/4140719/calculate-median-in-c-sharp
-    public double calcMedianRT(double rt) {
+    double calcMedianRT(double rt) {
         // Add to array and sort
         sortedRTs.Add(rt); // Add to median score list
         sortedRTs.Sort(); // Note mutates original list

@@ -40,7 +40,7 @@ public class EndScreen : MonoBehaviour
         }
     }
 
-    public static double percentileNormCDF(int percentScore) { // Phi
+    static double percentileNormCDF(int percentScore) { // Phi
         // Percentile function Polynomial approximation in c# - https://stackoverflow.com/questions/1662943/standard-normal-distribution-z-value-function-in-c-sharp
         double x = Convert.ToDouble(percentScore); // Convert score to double
         // constants

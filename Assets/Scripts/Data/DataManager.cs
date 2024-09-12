@@ -29,7 +29,7 @@ public class DataManager : MonoBehaviour {
         data.ClearTrials();
     }
 
-    public IEnumerator dataPipe(string json) {
+    IEnumerator dataPipe(string json) {
         using (UnityWebRequest www = UnityWebRequest.Post("https://pipe.jspsych.org/api/data/", json, "application/json")) {
             yield return www.SendWebRequest();
             if (www.result != UnityWebRequest.Result.Success) {

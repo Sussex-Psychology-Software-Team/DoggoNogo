@@ -87,7 +87,7 @@ public class slideshowManager : MonoBehaviour
         timer = timeBetweenImages;
     }
 
-    public IEnumerator fadeIn(float seconds, Graphic graphic){
+    IEnumerator fadeIn(float seconds, Graphic graphic){
         // Graphic.color returns copy not reference so can't be set directly
         Color originalColor = graphic.color; // Get the current color
         originalColor.a = 0; // Set alpha to 0
