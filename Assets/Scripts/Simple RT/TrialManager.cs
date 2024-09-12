@@ -72,7 +72,6 @@ public class TrialManager : MonoBehaviour
         if(missed){
             feedback.giveFeedback("missed", scoreManager.totalScore, 0);
         } else {
-            bone.Hide(); // Hide bone - use an animation here
             // Get score from RT
             double rt = timer.Elapsed.TotalSeconds - trialISI; // subtract ISI from time elapsed during press
             scoreManager.getScore(rt); // Probs don't need score anywhere
