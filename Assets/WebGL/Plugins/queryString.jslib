@@ -12,6 +12,6 @@ mergeInto(LibraryManager.library, {
                     return buffer;
                 }
         }
-        return('');
+        return("");
     }
 });
