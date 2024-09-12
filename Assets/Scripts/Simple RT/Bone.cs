@@ -80,7 +80,6 @@ public class Bone : MonoBehaviour
         StartCoroutine(Shrink(shrinkDuration, spinSpeed));
     }
 
-    // Shrink animation
     IEnumerator Shrink(float duration, float spinSpeed){
         Vector3 initialScale = transform.localScale;
         float timer = 0f;
@@ -91,6 +90,33 @@ public class Bone : MonoBehaviour
             yield return null; // Wait for next before continue
         }
         transform.localScale = Vector3.zero; // At end reaches target scale
+    }
+
+    // Move to dog animation
+    public void Eat(){
+        // Rough position of dog's mouth
+        RectTransform dogRectTransform = dogImage.rectTransform;
+        float targetHeight = -Screen.height + ((dogRectTransform.rect.height * dogRectTransform.localScale.y) * 2f / 3f); // 2/3rds down
+        // Start animation
+        Vector3 targetScale = new Vector3(0.2f, 0.2f, 0.2f);
+        StartCoroutine(MoveBoneToMouth(new Vector3(0, targetHeight, 0), targetScale, 0.3f));
+    }
+
+    private IEnumerator MoveBoneToMouth(Vector3 targetPosition, Vector3 targetScale, float duration){
+        // Setup
+        Vector3 startPosition = image.rectTransform.localPosition; // Start position
+        Vector3 startScale = image.rectTransform.localScale; // Start scale
+        float elapsedTime = 0f; // Elapsed time since the start of the animation
+        // Run
+        while (elapsedTime < duration){
+            // Interpolate between the start and target positions and scales
+            image.rectTransform.localPosition = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
+            image.rectTransform.localScale = Vector3.Lerp(startScale, targetScale, elapsedTime / duration);
+            // Increment enumerator
+            elapsedTime += Time.deltaTime; // Increment elapsed time
+            yield return null; // Wait until the next frame
+        }
+        Hide();
     }
 
     // For testing: (comment out TrialManager's call to new trial in Start() as well)
