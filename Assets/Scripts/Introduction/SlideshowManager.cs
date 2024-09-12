@@ -5,7 +5,7 @@ using UnityEngine.UI; //Image.sprite
 using TMPro; //for TextMeshProUGUI
 using UnityEngine.SceneManagement; // SceneManager.LoadScene
 
-public class introSlideshow : MonoBehaviour
+public class slideshowManager : MonoBehaviour
 {
     public TextMeshProUGUI textBox; // Reference to text box
     public Image textBackground;
@@ -49,36 +49,36 @@ public class introSlideshow : MonoBehaviour
 
         } else if(chapter == 2){
             textBox.text = ""; // Get rid of text
-            backgroundImage.GetComponent<Image>().color = Color.white; // Make white to show background Dog Pound image
+            backgroundImage.color = Color.white; // Make white to show background Dog Pound image
             StartCoroutine(fadeIn(1f, backgroundImage));
             dogWhine.Play(); // Play dog whine
 
         } else if(chapter == 3){ 
-            dog.transform.localScale = Vector3.one; // Show dog in jail
+            dog.enabled = true; // Show dog in jail
 
         } else if(chapter == 4){ 
             textBox.text = storyText[2]; // "You decide to take him home, and name him…",
 
         } else if(chapter == 5){ // Display Doggo's name
-            dog.transform.localScale = Vector3.zero; // Hide dog
-            backgroundImage.GetComponent<Image>().color = Color.black; // Black Background
+            dog.enabled = false; // Hide dog
+            backgroundImage.color = Color.black; // Black Background
             textBox.fontSize = 100; // BOOM: Title card
             textBox.text = storyText[3]; // "Doggo"
             
         } else if(chapter == 6){ // Doggo in Garden
             textBox.text = ""; // Get rid of text
-            backgroundImage.GetComponent<Image>().color = Color.white; // White to show background image
-            backgroundImage.GetComponent<Image>().sprite = garden; // Change to Garden
-            dog.transform.localScale = Vector3.one; // Show dog in garden
+            backgroundImage.color = Color.white; // White to show background image
+            backgroundImage.sprite = garden; // Change to Garden
+            dog.enabled = true; // Show dog in garden
             StartCoroutine(fadeIn(1f, dog)); // Fade in dog image
 
         } else if(chapter == 7){ // Instructions
             textBox.fontSize = 90; // Smaller more readable text
-            textBackground.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.5f); // Set alpha to .5
+            textBackground.color = new Color(1f, 1f, 1f, 0.5f); // Set alpha to .5
             textBox.text = storyText[4]; // "Doggo is in need of urgent care and feeding.<br>Help him get as many bones as possible by pressing the down arrow (↓) as fast as possible."
 
         } else if(chapter == 10){ // Skip 2 chapters to allow participants to read instructions
-            textBackground.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0f); // Set alpha to 0
+            textBackground.color = new Color(1f, 1f, 1f, 0f); // Set alpha to 0
             textBox.text = storyText[5]; // "<p style="font-size: 90">Ready?</p><br>Press ↓ to start"
 
         }
