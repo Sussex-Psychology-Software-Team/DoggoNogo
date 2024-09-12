@@ -46,6 +46,23 @@ public class ScoreManager : MonoBehaviour
     }
 
     // Calculate score from rt
+    int calculateScore(double rt) {
+        // Calculate score
+        double clampedRT = Math.Clamp(rt, minRT, maxRT); // Clamp Reaction Time, ensures 0-1 when normalised
+        double normalisedRT = (clampedRT - minRT) / (maxRT - minRT); // Normalise as proportion of range
+        // Note normalisedRT will return NaN if minRT=maxRT
+        // Debug.Log("calcScore normalisedRT: " + normalisedRT);
+        double complementRT = (1 - normalisedRT); // Complement of proportion
+
+        // Score
+        int scoreRange = maxScore - minScore;
+        double adjustedRT = complementRT * scoreRange; // Multiply proportion by range
+        double bumpedScore = minScore + adjustedRT; // Bump up by minimum score
+        double clampedScore = Math.Min(bumpedScore, maxScore); // Techically does nothing if min=100 max=200
+
+        return (int)clampedScore;
+    }
+    
     private int CalculateTrialScore(string trialType, double reactionTime){
         switch (trialType){
             case "early":
