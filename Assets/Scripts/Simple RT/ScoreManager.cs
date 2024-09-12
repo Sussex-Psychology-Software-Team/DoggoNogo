@@ -28,66 +28,49 @@ public class ScoreManager : MonoBehaviour
     public double maxRT = .6; // Init Maximum RT bound to 600ms, to be changed later
 
     // ******************* METHODS/FUNCTIONS *******************
-    public void getScore(double rt){
-        string trialType = getTrialType(rt);
-        int trialScore = getTrialScore(trialType, rt);
-        totalScore = getNewTotalScore(trialScore);
-        DataManager.Instance.data.currentTrial().saveTrial(rt, trialType, trialScore, totalScore);
-        feedback.giveFeedback(trialType, totalScore, trialScore);
+    public void ProcessTrialResult(double reactionTime) {
+        string trialType = DetermineTrialType(reactionTime);
+        int trialScore = CalculateTrialScore(trialType, reactionTime);
+        UpdateTotalScore(trialScore);
+        SaveTrialData(reactionTime, trialType, trialScore);
+        ProvideFeedback(trialType, trialScore);
     }
     
+    string DetermineTrialType(double reactionTime) {
+        if (reactionTime < 0)
+            return "early";
+        else if (reactionTime > trialManager.medianRT) // *2 makes things a bit easier
+            return "slow";
+        else
+            return "fast";
+    }
+
     // Calculate score from rt
-    public int calculateScore(double rt) {
-        // Calculate score
-        double clampedRT = Math.Clamp(rt, minRT, maxRT); // Clamp Reaction Time, ensures 0-1 when normalised
-        double normalisedRT = (clampedRT - minRT) / (maxRT - minRT); // Normalise as proportion of range
-        // Note normalisedRT will return NaN if minRT=maxRT
-        // Debug.Log("calcScore normalisedRT: " + normalisedRT);
-        double complementRT = (1 - normalisedRT); // Complement of proportion
-
-        // Score
-        int scoreRange = maxScore - minScore;
-        double adjustedRT = complementRT * scoreRange; // Multiply proportion by range
-        double bumpedScore = minScore + adjustedRT; // Bump up by minimum score
-        double clampedScore = Math.Min(bumpedScore, maxScore); // Techically does nothing if min=100 max=200
-
-        return (int)clampedScore;
-    }
-
-    public string getTrialType(double rt){
-        string trialType = "";
-        if(rt < 0) {
-            trialType = "early";
-        }  else if(rt > trialManager.medianRT) {
-            trialType = "slow";
-        } else if(rt < trialManager.medianRT) {
-            trialType = "fast";
+    private int CalculateTrialScore(string trialType, double reactionTime){
+        switch (trialType){
+            case "early":
+                return -minScore;
+            case "slow":
+                return 0;
+            case "fast":
+                return calculateScore(reactionTime);
+            default:
+                throw new ArgumentException("Invalid trial type", nameof(trialType));
         }
-
-        return(trialType);
-    }
-
-    public int getTrialScore(string trialType, double rt){
-        // get new median reaction time
-        int trialScore = 0;
-        if(trialType == "early") { // Early trial
-            trialScore = -minScore; // negative min score
-        }  else if(trialType == "slow") { // Slow trial
-            trialScore = 0; // no points
-        } else if(trialType == "fast") {
-           trialScore = calculateScore(rt); // get new 
-        }
-        return(trialScore);
     }
     
-    public int getNewTotalScore(int trialScore){
-        // Calc new total score
+    void UpdateTotalScore(int trialScore) {
         totalScore += trialScore;
-        // Compare to min/max healthbar
         int scoreLowerBound = (int)healthBarManager.currentHealthBar.GetMinHealth();
-        if(totalScore < scoreLowerBound) totalScore = scoreLowerBound; // Stop score going below healthbar minimum
-        // Return
-        return(totalScore);
+        totalScore = Math.Max(totalScore, scoreLowerBound);
+    }
+
+    void SaveTrialData(double reactionTime, string trialType, int trialScore){
+        DataManager.Instance.data.currentTrial().saveTrial(reactionTime, trialType, trialScore, totalScore);
+    }
+
+    void ProvideFeedback(string trialType, int trialScore) {
+        feedback.giveFeedback(trialType, totalScore, trialScore);
     }
 
     // CONSIDER MOVING THIS ELSEWHERE - feedback or healthbar
