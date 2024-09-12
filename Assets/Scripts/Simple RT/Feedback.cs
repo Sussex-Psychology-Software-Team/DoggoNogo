@@ -31,7 +31,8 @@ public class Feedback : MonoBehaviour
             // Animations + sounds
             dog.bark();
             dog.takeDamage();
-
+            dog.startJump(20);
+            
         } else if(trialType == "slow"){
             // Bar colour
             barColour = Color.blue;
@@ -40,6 +41,7 @@ public class Feedback : MonoBehaviour
             feedback = "A bit too slow!\nDoggo couldn't catch the bone.";
             // Animations + sounds
             dog.surprised();
+            dog.startJump(20);
 
         } else if(trialType == "fast"){
             // Bar colour
@@ -59,6 +61,7 @@ public class Feedback : MonoBehaviour
             feedback = "TOO SLOW!\nAnother dog got the bone first.";
             // Animations + sounds
             bone.Throw();
+            dog.startJump(20);
             //dog.whine();
         }
 
