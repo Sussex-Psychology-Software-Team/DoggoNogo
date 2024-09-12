@@ -12,20 +12,10 @@ public class Metadata {
 
     // Constructor
     public Metadata() {
-        id = GenerateRandomId(24);
+        id = Utility.GenerateRandomId(24);
         userAgentString = GetUserAgent();
         start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         retry = 0;
-    }
-
-    private static string GenerateRandomId(int size) {
-        var rand = new System.Random();
-        const string characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        var randId = new char[size];
-        for (var i = 0; i < size; i++) {
-            randId[i] = characters[rand.Next(characters.Length)];
-        }
-        return new string(randId);
     }
 
     private static string GetUserAgent() {
