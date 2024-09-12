@@ -41,11 +41,11 @@ public class Bone : MonoBehaviour
     Vector2 randomPosition(){
         // Bone size
         RectTransform boneRectTransform = image.rectTransform;
-        float boneOffset = (boneRectTransform.rect.width * boneRectTransform.localScale.x)/2;
+        float boneOffset = (boneRectTransform.rect.width * boneRectTransform.localScale.x)/2f;
         
         // Get dog width and position in local space
         RectTransform dogRectTransform = dogImage.rectTransform;
-        float dogOffset = (dogRectTransform.rect.width * dogRectTransform.localScale.x)/2;
+        float dogOffset = (dogRectTransform.rect.width * dogRectTransform.localScale.x)/2f;
         float dogLocation = dogRectTransform.localPosition.x;
 
         // X value: decide between left and right, avoiding the dog
