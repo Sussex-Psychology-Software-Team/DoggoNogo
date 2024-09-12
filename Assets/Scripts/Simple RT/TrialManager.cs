@@ -97,7 +97,7 @@ public class TrialManager : MonoBehaviour
 
     // ******************* UNITY *******************
     void Start(){ //IEnumerator is a hack to enable a delay before running first trial.
-        medianRT = scoreManager.maxRT/2; // initialise median to half maximum RT
+        medianRT = scoreManager.maxRT; // initialise median to half maximum RT
         feedback.Prompt("Get ready to catch the bone by pressing ↓...");
         StartCoroutine(DelayBeforeNextTrial(2f));
     }
