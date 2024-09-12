@@ -15,14 +15,17 @@ public class Trial {
         isi = isiVar;
         rt = -1.0;
         datetime = "";
-        trialScore = 0;
-        totalScore = 0;
+        trialScore = -1;
+        totalScore = -1;
+        trialType = "";
     }
 
-    public void saveTrial(double rt, string type) {
+    public void saveTrial(double rt, string type, int score, int total) {
         this.rt = roundTime(rt, 7);
         this.datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         this.trialType = type;
+        this.trialScore = score;
+        this.totalScore = total;
     }
 
     private double roundTime(double time, int dp) {

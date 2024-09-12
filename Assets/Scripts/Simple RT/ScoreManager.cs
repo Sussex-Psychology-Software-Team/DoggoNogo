@@ -32,10 +32,8 @@ public class ScoreManager : MonoBehaviour
         string trialType = getTrialType(rt);
         int trialScore = getTrialScore(trialType, rt);
         totalScore = getNewTotalScore(trialScore);
-        saveScore(trialScore, totalScore, trialType);
+        DataManager.Instance.data.currentTrial().saveTrial(rt, trialType, trialScore, totalScore);
         feedback.giveFeedback(trialType, totalScore, trialScore);
-
-        //return(trialScore);
     }
     
     // Calculate score from rt
@@ -90,12 +88,6 @@ public class ScoreManager : MonoBehaviour
         if(totalScore < scoreLowerBound) totalScore = scoreLowerBound; // Stop score going below healthbar minimum
         // Return
         return(totalScore);
-    }
-
-    public void saveScore(int trialScore, int totalScore, string trialType){ // Note need data function to save all together
-        DataManager.Instance.data.currentTrial().trialScore = trialScore;
-        DataManager.Instance.data.currentTrial().totalScore = totalScore;
-        DataManager.Instance.data.currentTrial().trialType = trialType;
     }
 
     // CONSIDER MOVING THIS ELSEWHERE - feedback or healthbar
