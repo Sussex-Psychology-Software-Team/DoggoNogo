@@ -8,14 +8,12 @@ public class Metadata {
     public string userAgentString;
     public string start;
     public string end;
-    public int retry;
 
     // Constructor
     public Metadata() {
         id = Utility.GenerateRandomId(24);
         userAgentString = GetUserAgent();
         start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        retry = 0;
     }
 
     private static string GetUserAgent() {
