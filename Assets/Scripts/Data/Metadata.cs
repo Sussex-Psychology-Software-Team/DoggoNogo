@@ -5,7 +5,6 @@ using UnityEngine;
 [System.Serializable]
 public class Metadata {
     public string id;
-    public string name;
     public string userAgentString;
     public string start;
     public string end;

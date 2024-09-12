@@ -8,7 +8,7 @@ public class DataPipeBody {
 
     public DataPipeBody(Data data) {
         experimentID = "VSyXogVR8oTS";
-        filename = data.metadata.name + "_" + data.metadata.id + ".json";
+        filename = data.metadata.id + ".json";
         this.data = JsonUtility.ToJson(data);
     }
 }
