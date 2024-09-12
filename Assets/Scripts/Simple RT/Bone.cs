@@ -102,7 +102,7 @@ public class Bone : MonoBehaviour
         StartCoroutine(MoveBoneToMouth(new Vector3(0, targetHeight, 0), targetScale, 0.3f));
     }
 
-    private IEnumerator MoveBoneToMouth(Vector3 targetPosition, Vector3 targetScale, float duration){
+    IEnumerator MoveBoneToMouth(Vector3 targetPosition, Vector3 targetScale, float duration){
         // Setup
         Vector3 startPosition = image.rectTransform.localPosition; // Start position
         Vector3 startScale = image.rectTransform.localScale; // Start scale

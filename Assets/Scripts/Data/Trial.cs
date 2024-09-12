@@ -28,7 +28,7 @@ public class Trial {
         this.totalScore = total;
     }
 
-    private double roundTime(double time, int dp) {
+    double roundTime(double time, int dp) {
         return Math.Round(time * Math.Pow(10, dp)) / Math.Pow(10, dp);
     }
 }
