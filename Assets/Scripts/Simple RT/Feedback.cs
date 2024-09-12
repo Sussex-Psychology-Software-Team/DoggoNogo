@@ -61,7 +61,6 @@ public class Feedback : MonoBehaviour
             feedback = "TOO SLOW!\nAnother dog got the bone first.";
             // Animations + sounds
             bone.Throw();
-            dog.startJump(20);
             //dog.whine();
         }
 
