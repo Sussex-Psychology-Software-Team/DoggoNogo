@@ -18,10 +18,6 @@ public class Data {
         return trials[trials.Count - 1];
     }
 
-    public Trial lastTrial() {
-        return trials[trials.Count - 2];
-    }
-
     public void ClearTrials() {
         trials.Clear();
     }
