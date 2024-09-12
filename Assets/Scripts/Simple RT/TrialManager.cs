@@ -74,7 +74,7 @@ public class TrialManager : MonoBehaviour
         } else {
             // Get score from RT
             double rt = timer.Elapsed.TotalSeconds - trialISI; // subtract ISI from time elapsed during press
-            scoreManager.getScore(rt); // Probs don't need score anywhere
+            scoreManager.ProcessTrialResult(rt); // Probs don't need score anywhere
             medianRT = calcMedianRT(rt);
         }
         /////// ---------------
