@@ -63,7 +63,7 @@ public class ScoreManager : MonoBehaviour
         return (int)clampedScore;
     }
     
-    private int CalculateTrialScore(string trialType, double reactionTime){
+    int CalculateTrialScore(string trialType, double reactionTime){
         switch (trialType){
             case "early":
                 return -minScore;

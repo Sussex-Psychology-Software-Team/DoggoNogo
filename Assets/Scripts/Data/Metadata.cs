@@ -16,7 +16,7 @@ public class Metadata {
         start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
     }
 
-    private static string GetUserAgent() {
+    static string GetUserAgent() {
         #if UNITY_EDITOR
             return "EDITOR";
         #elif UNITY_WEBGL

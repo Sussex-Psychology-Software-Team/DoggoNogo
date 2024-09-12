@@ -9,7 +9,7 @@ public class Continue : MonoBehaviour
     public Button button;
     public string url = "https://www.example.com";
     [DllImport("__Internal")]
-    private static extern string queryStringWhole();
+    static extern string queryStringWhole();
 
 
     // Start is called before the first frame update

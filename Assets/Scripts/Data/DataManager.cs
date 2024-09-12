@@ -8,7 +8,7 @@ public class DataManager : MonoBehaviour {
 
     public Data data = new Data();
 
-    private void Awake() {
+    void Awake() {
         if (Instance != null) {
             Destroy(gameObject);
             return;
