@@ -7,7 +7,7 @@ public class DataPipeBody {
     public string data;
 
     public DataPipeBody(Data dataObject) {
-        experimentID = Utility.getQueryVariable("experimentID"); //VSyXogVR8oTS
+        experimentID = Utility.GetQueryVariable("experimentID"); //VSyXogVR8oTS
         filename = Utility.GenerateRandomId(10) + ".json";
         data = JsonUtility.ToJson(dataObject);
     }
