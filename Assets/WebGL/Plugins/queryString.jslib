@@ -12,6 +12,6 @@ mergeInto(LibraryManager.library, {
                     return buffer;
                 }
         }
-        return("");
+        return _malloc(1); // Return empty buffer if not found, Unity should free it
     }
 });
