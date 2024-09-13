@@ -94,8 +94,25 @@ public class TrialManager : MonoBehaviour
         SceneManager.LoadScene("End");
     }
 
+    [DllImport("__Internal")]
+    static extern string queryString(string variable);
+
+    public static string getQueryVariable(string variable){
+        #if UNITY_EDITOR
+            return "";
+        #elif UNITY_WEBGL
+            return queryString(variable);
+        #else
+            Debug.Log("No value found for variable: " + variable);
+            return "";
+        #endif
+    }
+
     // ******************* UNITY *******************
     void Start(){ //IEnumerator is a hack to enable a delay before running first trial.
+        Debug.Log("Utility.: " + Utility.getQueryVariable("experimentID"));
+        Debug.Log("Direct: " + getQueryVariable("experimentID"));
+        
         medianRT = scoreManager.maxRT; // initialise median to half maximum RT
         feedback.Prompt("Get ready to catch the bone by pressing ↓...");
         StartCoroutine(DelayBeforeNextTrial(2f));
