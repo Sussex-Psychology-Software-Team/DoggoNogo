@@ -636,11 +636,9 @@ MonoBehaviour:
   data:
     metadata:
       id: vLF3FFLcUnRTYXhhMo7J1WyV
-      name: 
-      userAgent: EDITOR
+      userAgentString: EDITOR
       start: 2024-08-07 14:09:25
       end: 
-      retry: 0
     trials: []
 --- !u!4 &579798063
 Transform:
