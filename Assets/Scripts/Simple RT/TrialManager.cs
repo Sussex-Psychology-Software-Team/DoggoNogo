@@ -117,8 +117,8 @@ public class TrialManager : MonoBehaviour
 
     // ******************* UNITY *******************
     void Start(){
-        Debug.Log("Utility: " + Utility.getQueryVariable("experimentID"));
-        Debug.Log("Direct: " + getQueryVariable("experimentID"));
+        Debug.Log("Utility: " + Utility.GetQueryVariable("experimentID"));
+        Debug.Log("Direct: " + GetQueryVariable("experimentID"));
         //System.Runtime.InteropServices.Marshal.FreeHGlobal
         medianRT = scoreManager.maxRT; // initialise median to half maximum RT
         feedback.Prompt("Get ready to catch the bone by pressing ↓...");
