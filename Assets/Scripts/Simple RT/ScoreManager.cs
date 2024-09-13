@@ -39,7 +39,7 @@ public class ScoreManager : MonoBehaviour
     string DetermineTrialType(double reactionTime) {
         if (reactionTime < 0)
             return "early";
-        else if (reactionTime > trialManager.medianRT) // *2 makes things a bit easier
+        else if (reactionTime > trialManager.medianRT*2) // *2 makes things a bit easier
             return "slow";
         else
             return "fast";
