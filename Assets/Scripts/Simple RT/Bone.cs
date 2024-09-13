@@ -104,13 +104,13 @@ public class Bone : MonoBehaviour
 
     IEnumerator MoveBoneToMouth(Vector3 targetPosition, Vector3 targetScale, float duration){
         // Setup
-        Vector3 startPosition = image.rectTransform.localPosition; // Start position
+        Vector3 startPosition = image.rectTransform.position; // Start position
         Vector3 startScale = image.rectTransform.localScale; // Start scale
         float elapsedTime = 0f; // Elapsed time since the start of the animation
         // Run
         while (elapsedTime < duration){
             // Interpolate between the start and target positions and scales
-            image.rectTransform.localPosition = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
+            image.rectTransform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
             image.rectTransform.localScale = Vector3.Lerp(startScale, targetScale, elapsedTime / duration);
             // Increment enumerator
             elapsedTime += Time.deltaTime; // Increment elapsed time
