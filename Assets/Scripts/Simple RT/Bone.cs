@@ -51,18 +51,18 @@ public class Bone : MonoBehaviour
         // X value: decide between left and right, avoiding the dog
         float randomX = 0f;
         if (UnityEngine.Random.value < 0.5f){
-            float leftStart = -Screen.width + boneOffset;
+            float leftStart = -Camera.main.pixelWidth + boneOffset;
             float leftBound = dogLocation - dogOffset - boneOffset;
             randomX = UnityEngine.Random.Range(leftStart, leftBound); // Left side
         } else {
             float rightStart = dogLocation + dogOffset + boneOffset;
-            float rightBound = Screen.width - boneOffset;
+            float rightBound = Camera.main.pixelWidth - boneOffset;
             randomX = UnityEngine.Random.Range(rightStart, rightBound); // Right side
         }
             
         // Y value: within the range below the score card
         float topY = feedbackText.rectTransform.localPosition.y;
-        float randomY = UnityEngine.Random.Range(-Screen.height+boneOffset, topY-boneOffset);
+        float randomY = UnityEngine.Random.Range(-Camera.main.pixelHeight + boneOffset, topY-boneOffset);
 
         //float boneOffset = ((image.rectTransform.rect.width*image.rectTransform.localScale.x)/2);
         return new Vector2(randomX, randomY);//new Vector2(randomX, randomY);
