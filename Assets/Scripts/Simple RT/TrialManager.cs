@@ -102,7 +102,7 @@ public class TrialManager : MonoBehaviour
         #if UNITY_EDITOR
             return "UNITY EDITOR";
         #elif UNITY_WEBGL && !UNITY_EDITOR
-            string ptr = queryString(variable);
+            return queryString(variable);
         #else
             return "NOT EDITOR OR WEBGL";
         #endif
