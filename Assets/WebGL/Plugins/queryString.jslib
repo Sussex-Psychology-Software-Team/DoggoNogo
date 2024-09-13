@@ -1,17 +1,22 @@
 mergeInto(LibraryManager.library, {
     queryString: function (variable) {
-        const query = window.location.search.substring(1);
-        const vars = query.split("&");
-        for(let i=0; i<vars.length; i++) {
-                let pair = vars[i].split("=");
-                if(pair[0] == variable){ 
-                    const queryValue = pair[1];
-                    const bufferSize = lengthBytesUTF8(queryValue) + 1;
-                    const buffer = _malloc(bufferSize);
-                    stringToUTF8(queryValue, buffer, bufferSize);
-                    return buffer;
-                }
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (decodeURIComponent(pair[0]) == variable) {
+                var queryValue = decodeURIComponent(pair[1]);
+                var bufferSize = lengthBytesUTF8(queryValue) + 1;
+                var buffer = _malloc(bufferSize);
+                stringToUTF8(queryValue, buffer, bufferSize);
+                return buffer;
+            }
         }
-        return "NONE FOUND JS"; // need to return same type so return empty string here.
+        // If none found
+        var notFound = "NONE FOUND JS";
+        var bufferSize = lengthBytesUTF8(notFound) + 1;
+        var buffer = _malloc(bufferSize);
+        stringToUTF8(notFound, buffer, bufferSize);
+        return buffer;
     }
 });

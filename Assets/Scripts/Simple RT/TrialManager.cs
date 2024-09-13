@@ -96,20 +96,27 @@ public class TrialManager : MonoBehaviour
     }
 
     [DllImport("__Internal")]
-    static extern string queryString(string variable);
+    private static extern IntPtr queryString(string variable);
 
-    public static string getQueryVariable(string variable){
+    public static string GetQueryVariable(string variable) {
         #if UNITY_EDITOR
             return "UNITY EDITOR";
-        #elif UNITY_WEBGL
-            return queryString(variable);
+        #elif UNITY_WEBGL && !UNITY_EDITOR
+            IntPtr ptr = queryString(variable);
+            if (ptr != IntPtr.Zero)
+            {
+                string result = Marshal.PtrToStringAnsi(ptr);
+                Marshal.FreeHGlobal(ptr);
+                return result;
+            }
+            return "NONE FOUND";
         #else
             return "NOT EDITOR OR WEBGL";
         #endif
     }
 
     // ******************* UNITY *******************
-    void Start(){ //IEnumerator is a hack to enable a delay before running first trial.
+    void Start(){
         Debug.Log("Utility: " + Utility.getQueryVariable("experimentID"));
         Debug.Log("Direct: " + getQueryVariable("experimentID"));
         //System.Runtime.InteropServices.Marshal.FreeHGlobal

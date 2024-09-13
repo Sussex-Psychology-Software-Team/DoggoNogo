@@ -4,16 +4,21 @@ using System.Runtime.InteropServices; // DllImport
 public static class Utility
 {
     [DllImport("__Internal")]
-    static extern string queryString(string variable);
+    private static extern IntPtr queryString(string variable);
 
-    public static string getQueryVariable(string variable){
+    public static string GetQueryVariable(string variable){
         #if UNITY_EDITOR
-            return "";
-        #elif UNITY_WEBGL
-            return queryString(variable);
+            return "UNITY EDITOR";
+        #elif UNITY_WEBGL && !UNITY_EDITOR
+            IntPtr ptr = queryString(variable);
+            if (ptr != IntPtr.Zero){
+                string result = Marshal.PtrToStringAnsi(ptr);
+                Marshal.FreeHGlobal(ptr);
+                return result;
+            }
+            return "NONE FOUND";
         #else
-            Debug.Log("No value found for variable: " + variable);
-            return "";
+            return "NOT EDITOR OR WEBGL";
         #endif
     }
 
