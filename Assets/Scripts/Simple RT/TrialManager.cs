@@ -7,6 +7,7 @@ using System;
 using System.Diagnostics; // Stopwatch included here
 using System.Collections;
 using System.Collections.Generic; //for List
+using System.Runtime.InteropServices; // DllImport
 using TMPro; //for TextMeshProUGUI
 
 
@@ -112,7 +113,7 @@ public class TrialManager : MonoBehaviour
     void Start(){ //IEnumerator is a hack to enable a delay before running first trial.
         Debug.Log("Utility.: " + Utility.getQueryVariable("experimentID"));
         Debug.Log("Direct: " + getQueryVariable("experimentID"));
-        
+        //System.Runtime.InteropServices.Marshal.FreeHGlobal
         medianRT = scoreManager.maxRT; // initialise median to half maximum RT
         feedback.Prompt("Get ready to catch the bone by pressing ↓...");
         StartCoroutine(DelayBeforeNextTrial(2f));
