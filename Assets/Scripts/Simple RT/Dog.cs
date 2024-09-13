@@ -59,13 +59,13 @@ public class Dog : MonoBehaviour
         while (Time.time < endTime){
             image.color = flickerToggle ? Color.red : Color.white;
             // Apply 2D shaking effect
-            transform.position = transform.position + new Vector3(UnityEngine.Random.Range(-shakeAmount, shakeAmount), UnityEngine.Random.Range(-shakeAmount, shakeAmount), 0);
+            transform.localPosition = transform.localPosition + new Vector3(UnityEngine.Random.Range(-shakeAmount, shakeAmount), UnityEngine.Random.Range(-shakeAmount, shakeAmount), 0);
             flickerToggle = !flickerToggle; // Flip state of colour flicker
             yield return new WaitForSeconds(flickerInterval);
         }
         // Return to original state
         image.color = Color.white; // White is equal to original colour if left unaltered
-        transform.position = new Vector3(startingX, yPosition, 0); // Y position also relevant to jump
+        transform.localPosition = new Vector3(startingX, yPosition, 0); // Y position also relevant to jump
         takingDamage = false; // Allow function to run again
     }
 
@@ -83,7 +83,7 @@ public class Dog : MonoBehaviour
             else descending = false; // If grounded stop descent
         }
         // Change position
-        transform.position = new Vector3(transform.position.x, yPosition, 0);
+        transform.localPosition = new Vector3(transform.localPosition.x, yPosition, 0);
     }
 
     public void startJump(int jumpHeight){
@@ -113,9 +113,9 @@ public class Dog : MonoBehaviour
     // UNITY ************************************
     void Start(){
         // Save starting position
-        startingY = transform.position.y; // For jump
+        startingY = transform.localPosition.y; // For jump
         startingX = 0f;//transform.position.x; // For shake
-        yPosition = transform.position.y; // Shake and jump
+        yPosition = transform.localPosition.y; // Shake and jump
         // Image reference for sprite swap and colour
         image = gameObject.GetComponent<Image>();
     }
