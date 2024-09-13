@@ -100,18 +100,17 @@ public class TrialManager : MonoBehaviour
 
     public static string getQueryVariable(string variable){
         #if UNITY_EDITOR
-            return "";
+            return "UNITY EDITOR";
         #elif UNITY_WEBGL
             return queryString(variable);
         #else
-            Debug.Log("No value found for variable: " + variable);
-            return "";
+            return "NOT EDITOR OR WEBGL";
         #endif
     }
 
     // ******************* UNITY *******************
     void Start(){ //IEnumerator is a hack to enable a delay before running first trial.
-        Debug.Log("Utility.: " + Utility.getQueryVariable("experimentID"));
+        Debug.Log("Utility: " + Utility.getQueryVariable("experimentID"));
         Debug.Log("Direct: " + getQueryVariable("experimentID"));
         //System.Runtime.InteropServices.Marshal.FreeHGlobal
         medianRT = scoreManager.maxRT; // initialise median to half maximum RT

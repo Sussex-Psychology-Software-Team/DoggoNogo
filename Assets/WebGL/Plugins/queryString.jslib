@@ -12,6 +12,6 @@ mergeInto(LibraryManager.library, {
                     return buffer;
                 }
         }
-        return _malloc(1); // Return empty buffer if not found, Unity should free it
+        return "NONE FOUND JS"; // need to return same type so return empty string here.
     }
 });
