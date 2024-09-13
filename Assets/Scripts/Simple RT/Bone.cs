@@ -96,7 +96,7 @@ public class Bone : MonoBehaviour
     public void Eat(){
         // Rough position of dog's mouth
         RectTransform dogRectTransform = dogImage.rectTransform;
-        float targetHeight = -Camera.main.height + ((dogRectTransform.rect.height * dogRectTransform.localScale.y) * 2f / 3f); // 2/3rds down
+        float targetHeight = -Camera.main.pixelHeight + ((dogRectTransform.rect.height * dogRectTransform.localScale.y) * 2f / 3f); // 2/3rds down
         // Start animation
         Vector3 targetScale = new Vector3(0.2f, 0.2f, 0.2f);
         StartCoroutine(MoveBoneToMouth(new Vector3(0, targetHeight, 0), targetScale, 0.3f));
