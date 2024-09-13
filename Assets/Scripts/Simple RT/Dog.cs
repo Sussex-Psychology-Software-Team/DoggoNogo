@@ -114,7 +114,7 @@ public class Dog : MonoBehaviour
     void Start(){
         // Save starting position
         startingY = transform.position.y; // For jump
-        startingX = transform.position.x; // For shake
+        startingX = 0f;//transform.position.x; // For shake
         yPosition = transform.position.y; // Shake and jump
         // Image reference for sprite swap and colour
         image = gameObject.GetComponent<Image>();
