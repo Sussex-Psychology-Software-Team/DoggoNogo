@@ -100,6 +100,7 @@ public class TrialManager : MonoBehaviour
         medianRT = scoreManager.maxRT/2; // initialise median to half maximum RT
         feedback.Prompt("Get ready to catch the bone by pressing ↓...");
         StartCoroutine(DelayBeforeNextTrial(2f));
+        Debug.Log(DataManager.Instance.data);
     }
 
     // Update is called once per frame - maybe use FixedUpdate for inputs?
