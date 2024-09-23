@@ -95,24 +95,8 @@ public class TrialManager : MonoBehaviour
         SceneManager.LoadScene("End");
     }
 
-    [DllImport("__Internal")]
-    private static extern string queryString(string variable);
-
-    public static string GetQueryVariable(string variable) {
-        #if UNITY_EDITOR
-            return "UNITY EDITOR";
-        #elif UNITY_WEBGL && !UNITY_EDITOR
-            return queryString(variable);
-        #else
-            return "NOT EDITOR OR WEBGL";
-        #endif
-    }
-
     // ******************* UNITY *******************
     void Start(){
-        Debug.Log("Utility: " + Utility.GetQueryVariable("experimentID"));
-        Debug.Log("Direct: " + GetQueryVariable("experimentID"));
-        //System.Runtime.InteropServices.Marshal.FreeHGlobal
         medianRT = scoreManager.maxRT; // initialise median to half maximum RT
         feedback.Prompt("Get ready to catch the bone by pressing ↓...");
         StartCoroutine(DelayBeforeNextTrial(2f));
