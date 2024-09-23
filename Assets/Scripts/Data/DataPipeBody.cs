@@ -11,8 +11,4 @@ public class DataPipeBody {
         filename = Utility.GenerateRandomId(10) + ".json";
         data = JsonUtility.ToJson(dataObject);
     }
-
-    public string DataPipeJSON(){
-        return JsonUtility.ToJson(this);
-    }
 }

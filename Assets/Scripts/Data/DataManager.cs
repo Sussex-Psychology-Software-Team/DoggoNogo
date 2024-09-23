@@ -21,7 +21,6 @@ public class DataManager : MonoBehaviour {
     public void sendData() {
         // Add end date
         data.metadata.end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        Debug.Log(JsonUtility.ToJson(data));
         // Get id for current experimenters and send
         if(data.metadata.experimentID != "QUERY VAR NOT FOUND") SendDataToServer(data.metadata.experimentID);
         // Send to our own location
@@ -31,7 +30,7 @@ public class DataManager : MonoBehaviour {
     // Abstract the data sending logic
     void SendDataToServer(string experimentID) {
         DataPipeBody studyData = new DataPipeBody(data, experimentID);
-        string studyJSON = studyData.DataPipeJSON();
+        string studyJSON = JsonUtility.ToJson(studyData);
         StartCoroutine(dataPipe(studyJSON));
     }
 
