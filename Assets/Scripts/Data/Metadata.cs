@@ -15,12 +15,16 @@ public class Metadata {
     // Constructor
     public Metadata() {
         randomID = Utility.GenerateRandomId(24);
+        start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+    }
+
+    public void InitializeWebVariables(){
         experimentID = Utility.GetQueryVariable("osf");
         participantName = Utility.GetQueryVariable("p");
         studyName = Utility.GetQueryVariable("s");
         userAgentString = GetUserAgent();
-        start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
     }
+
 
     static string GetUserAgent() {
         #if UNITY_EDITOR

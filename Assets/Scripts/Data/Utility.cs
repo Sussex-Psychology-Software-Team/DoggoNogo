@@ -7,6 +7,7 @@ public static class Utility
     private static extern IntPtr queryString(string variable);
 
     public static string GetQueryVariable(string variable){
+        // Debug.Log("UNITY_WEBGL: " + UNITY_WEBGL);
         #if !UNITY_EDITOR && UNITY_WEBGL 
         //if(Application.platform == RuntimePlatform.WebGLPlayer){
             IntPtr ptr = queryString(variable);

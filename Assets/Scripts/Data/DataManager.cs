@@ -22,7 +22,9 @@ public class DataManager : MonoBehaviour {
         // Add end date
         data.metadata.end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         // Get id for current experimenters and send
-        if(data.metadata.experimentID != "QUERY VAR NOT FOUND") SendDataToServer(data.metadata.experimentID);
+        #if !UNITY_EDITOR && UNITY_WEBGL
+            if(data.metadata.experimentID != "QUERY VAR NOT FOUND") SendDataToServer(data.metadata.experimentID);
+        #endif
         // Send to our own location
         if(data.metadata.experimentID != "VSyXogVR8oTS") SendDataToServer("VSyXogVR8oTS");
     }
@@ -43,5 +45,9 @@ public class DataManager : MonoBehaviour {
                 Debug.Log("Form upload complete!");
             }
         }
+    }
+    
+    void Start(){
+        data.metadata.InitializeWebVariables(); // Needs to be done here to get UNITY_WEBGL to pass
     }
 }
