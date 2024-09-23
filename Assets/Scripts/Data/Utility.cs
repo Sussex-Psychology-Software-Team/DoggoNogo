@@ -7,18 +7,16 @@ public static class Utility
     private static extern IntPtr queryString(string variable);
 
     public static string GetQueryVariable(string variable){
-        #if UNITY_EDITOR
-            return "UNITY EDITOR";
-        #elif UNITY_WEBGL && !UNITY_EDITOR
+        #if UNITY_WEBGL && !UNITY_EDITOR
             IntPtr ptr = queryString(variable);
             if (ptr != IntPtr.Zero){
                 string result = Marshal.PtrToStringAnsi(ptr);
                 Marshal.FreeHGlobal(ptr);
                 return result;
             }
-            return "NONE FOUND";
+            return "QUERY VAR NOT FOUND";
         #else
-            return "NOT EDITOR OR WEBGL";
+            return "NOT BROWSER";
         #endif
     }
 
