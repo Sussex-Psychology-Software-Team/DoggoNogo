@@ -4,14 +4,16 @@ using UnityEngine;
 
 [System.Serializable]
 public class Metadata {
-    public string id;
+    public string randomId;
+    public string experimentID;
     public string userAgentString;
     public string start;
     public string end;
 
     // Constructor
     public Metadata() {
-        id = Utility.GenerateRandomId(24);
+        randomId = Utility.GenerateRandomId(24);
+        experimentID = Utility.GetQueryVariable("experimentID");
         userAgentString = GetUserAgent();
         start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
     }

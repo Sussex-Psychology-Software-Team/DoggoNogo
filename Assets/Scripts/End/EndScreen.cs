@@ -17,7 +17,10 @@ public class EndScreen : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Send experimental data
         DataManager.Instance.sendData();
+        // Clear trials ahead of repeat - probably just do this on a 'repeat' button listener
+        //data.ClearTrials();
         displayRelativeScore();
     }
 

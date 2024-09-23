@@ -19,14 +19,21 @@ public class DataManager : MonoBehaviour {
     }
 
     public void sendData() {
+        // Add end date
         data.metadata.end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         Debug.Log(JsonUtility.ToJson(data));
-
-        DataPipeBody body = new DataPipeBody(data);
-        string json = JsonUtility.ToJson(body);
-
-        StartCoroutine(dataPipe(json));
-        data.ClearTrials();
+        // Get id for current experimenters and send
+        if(data.metadata.experimentID != "QUERY VAR NOT FOUND"){
+            DataPipeBody currentStudyData = new DataPipeBody(data, data.metadata.experimentID);
+            string currentStudyJSON = currentStudyData.DataPipeJSON();
+            StartCoroutine(dataPipe(currentStudyJSON));
+        }
+        // Send to our own location
+        if(data.metadata.experimentID != "VSyXogVR8oTS"){
+            DataPipeBody reblData = new DataPipeBody(data, "VSyXogVR8oTS");
+            string REBLJSON = reblData.DataPipeJSON();
+            StartCoroutine(dataPipe(REBLJSON));
+        }
     }
 
     IEnumerator dataPipe(string json) {
