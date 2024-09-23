@@ -7,7 +7,7 @@ public static class Utility
     private static extern IntPtr queryString(string variable);
 
     public static string GetQueryVariable(string variable){
-        #if UNITY_WEBGL && !UNITY_EDITOR
+        #if !UNITY_EDITOR && UNITY_WEBGL //Application.platform == RuntimePlatform.WebGLPlayer?
             IntPtr ptr = queryString(variable);
             if (ptr != IntPtr.Zero){
                 string result = Marshal.PtrToStringAnsi(ptr);
