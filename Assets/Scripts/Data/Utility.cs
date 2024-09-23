@@ -7,7 +7,8 @@ public static class Utility
     private static extern IntPtr queryString(string variable);
 
     public static string GetQueryVariable(string variable){
-        #if !UNITY_EDITOR && UNITY_WEBGL //Application.platform == RuntimePlatform.WebGLPlayer?
+        #if !UNITY_EDITOR && UNITY_WEBGL 
+        //if(Application.platform == RuntimePlatform.WebGLPlayer){
             IntPtr ptr = queryString(variable);
             if (ptr != IntPtr.Zero){
                 string result = Marshal.PtrToStringAnsi(ptr);
@@ -15,9 +16,8 @@ public static class Utility
                 return result;
             }
             return "QUERY VAR NOT FOUND";
-        #else
-            return "NOT BROWSER";
         #endif
+        return "NOT BROWSER";
     }
 
     // Generates a random ID
