@@ -107,4 +107,18 @@ public class ScoreManager : MonoBehaviour
         Debug.Log("New Target Score: " + targetScore);
         return targetScore;
     }
+
+    int getL1nQuery(int defaultN = 60){
+        string queryVar = Utility.GetQueryVariable("l1n");
+        int l1n;
+        if (int.TryParse(queryVar, out l1n)) {
+            return l1n;
+        } else {
+            return defaultN
+        }
+    }
+
+    void Start(){
+        nTrials = getL1nQuery(60);
+    }
 }
