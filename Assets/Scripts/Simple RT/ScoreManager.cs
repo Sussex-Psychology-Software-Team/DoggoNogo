@@ -114,7 +114,7 @@ public class ScoreManager : MonoBehaviour
         if (int.TryParse(queryVar, out l1n)) {
             return l1n;
         } else {
-            return defaultN
+            return defaultN;
         }
     }
 

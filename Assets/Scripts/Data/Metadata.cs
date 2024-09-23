@@ -7,6 +7,7 @@ public class Metadata {
     public string randomID;
     public string experimentID;
     public string participantName;
+    public string studyName;
     public string userAgentString;
     public string start;
     public string end;
