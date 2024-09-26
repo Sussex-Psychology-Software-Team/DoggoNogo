@@ -427,8 +427,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 863856906}
-  - {fileID: 1390488368}
   - {fileID: 1504777851}
+  - {fileID: 1390488368}
   - {fileID: 1041837080}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -0.04}
@@ -1383,6 +1383,7 @@ MonoBehaviour:
   image: {fileID: 1390488370}
   feedbackText: {fileID: 1479691777}
   dogImage: {fileID: 1504777852}
+  dog: {fileID: 1504777854}
   boneThrow: {fileID: 1390488372}
 --- !u!114 &1390488370
 MonoBehaviour:
