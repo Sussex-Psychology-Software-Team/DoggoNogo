@@ -635,7 +635,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data:
     metadata:
-      id: vLF3FFLcUnRTYXhhMo7J1WyV
+      randomID: mK5HoLTMbvcUYpEtZtkROd9F
+      experimentID: 
+      participantName: 
+      studyName: 
       userAgentString: EDITOR
       start: 2024-08-07 14:09:25
       end: 
@@ -1742,10 +1745,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a13c3cdeb88f24808a2b9e2beb87b4d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  images:
-  - {fileID: 21300000, guid: d68d9d6950e034a088f2885e413d0cd3, type: 3}
-  - {fileID: 21300000, guid: 2f5bdc64d4ce2433cbb0ceaf42bae29e, type: 3}
-  - {fileID: 21300000, guid: f71eec15a1d5a47efa381560d4ceb610, type: 3}
+  images: []
   flickerDuration: 1
   flickerInterval: 0.2
   shakeAmount: 3
