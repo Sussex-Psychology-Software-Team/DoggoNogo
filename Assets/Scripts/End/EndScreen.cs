@@ -13,17 +13,6 @@ public class EndScreen : MonoBehaviour
     public static double mean = 4000.0;
     public static double sd = 2000.0;
 
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        // Send experimental data
-        DataManager.Instance.sendData();
-        // Clear trials ahead of repeat - probably just do this on a 'repeat' button listener
-        //data.ClearTrials();
-        displayRelativeScore();
-    }
-
     // Score display functions
     void displayRelativeScore(){
         // Calculate %
@@ -32,7 +21,7 @@ public class EndScreen : MonoBehaviour
         double zScore = percentileNormCDF(score); // Score under normal as %
         Debug.Log(zScore);
         // Change text and Healthbar
-        percentileText.text = "You scored better than " + zScore.ToString("F0") + "% of participants!";
+        percentileText.text = "The experiment is now over.\n\nYou scored better than " + zScore.ToString("F0") + "% of participants!\n\nPress the button below to retry.";
         StartCoroutine(scoreAnimator((int)zScore));
     }
 
@@ -69,5 +58,15 @@ public class EndScreen : MonoBehaviour
         double pecentile = 0.5 * (1.0 + sign*y);
         double percent = pecentile * 100;
         return percent;
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        // Send experimental data
+        DataManager.Instance.sendData();
+        // Clear trials ahead of repeat - probably just do this on a 'repeat' button listener
+        //data.ClearTrials();
+        displayRelativeScore();
     }
 }
