@@ -96,20 +96,15 @@ public class Bone : MonoBehaviour
     public void Eat(){
         // Start animation
         Vector3 targetScale = new(0.1f, 0.1f, 0.1f);
+
         // Get target position
-        // Convert the pixel coordinates to the proportion relative to the image
+        
         RectTransform dogRectTransform = dogImage.rectTransform;
-        float dogWidth = dogRectTransform.rect.width;
-        float dogHeight = dogRectTransform.rect.height;
-        float dogRenderWidth = dogWidth * dogRectTransform.localScale.x;
-        float dogRenderHeight = dogHeight * dogRectTransform.localScale.y;
-        // Bone
-        float mouthXFromCentre = ((dogWidth/2)-121f)* dogRectTransform.localScale.x; // Found coordinate on photoshop
-        float mouthYFromCentre = ((dogHeight/2)-219f)* dogRectTransform.localScale.y;
-         // OR: float targetX = dog.transform.position.x - (dogRectTransform.rect.width * dogRectTransform.localScale.x / 8f);
-        float targetX = dogRectTransform.localPosition.x - mouthXFromCentre;
-        float targetY = dogRectTransform.localPosition.y + mouthYFromCentre; // move a bit up
-        Vector3 targetPosition = new(targetX, targetY, 0);
+        // Get the pixel coordinates of mouth relative to rendered image scale
+        float mouthXFromCentre = ((dogRectTransform.rect.width/2)-121f) * dogRectTransform.localScale.x; // Found float coordinate on photoshop
+        float mouthYFromCentre = ((dogRectTransform.rect.height/2)-219f)* dogRectTransform.localScale.y;
+        Vector3 targetPosition = new(dogRectTransform.localPosition.x - mouthXFromCentre, dogRectTransform.localPosition.y + mouthYFromCentre, 0);
+
         // Animate
         StartCoroutine(MoveBoneToMouth(targetPosition, targetScale, 0.3f));
     }
