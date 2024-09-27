@@ -31,13 +31,14 @@ public class Bone : MonoBehaviour
 
     void randomTransform(){
         RectTransform boneRectTransform = image.rectTransform;
-        // Position
-        boneRectTransform.localPosition = randomPosition();
-        // Rotation - note just adds a 0-360 to whatever current rotation is, can create negatives
-        boneRectTransform.Rotate(new Vector3( 0, 0, UnityEngine.Random.Range(0, 360) ));
+        // Size first so position can be accurately calculated (consider taking rotation into account as well)
         // Size
         float randomScale = UnityEngine.Random.Range(0.3f, 0.7f);
-        boneRectTransform.localScale = new Vector3(randomScale,randomScale, 0f);
+        boneRectTransform.localScale = new Vector3(randomScale, randomScale, 0f);
+        // Rotation - note just adds a 0-360 to whatever current rotation is, can create negatives
+        boneRectTransform.Rotate(new Vector3( 0, 0, UnityEngine.Random.Range(0, 360) ));
+        // Position
+        boneRectTransform.localPosition = randomPosition();
     }
     
     Vector2 randomPosition(){
