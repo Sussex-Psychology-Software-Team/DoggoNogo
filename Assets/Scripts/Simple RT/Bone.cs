@@ -10,7 +10,6 @@ public class Bone : MonoBehaviour
     public Image image;
     public Image dogImage;
     public Canvas canvas;
-    public TextMeshProUGUI feedbackText; // Defines top bound of bone position
     public GameObject scoreContainer;
     public AudioSource boneThrow; // Barking on early press
     
