@@ -48,7 +48,12 @@ public class Dog : MonoBehaviour
     }
 
     public void takeDamage(){ // Flicker and shake coroutine wrapper.
-        if(!takingDamage) StartCoroutine(shakeRed()); // If not current running flicker and shake, do
+        // If not current running flicker and shake, do
+        if(!takingDamage){
+            startingX = transform.localPosition.x; // For shake
+            yPosition = transform.localPosition.y; // Shake and jump
+            StartCoroutine(shakeRed());
+        }
     }
 
     IEnumerator shakeRed(){
@@ -67,28 +72,6 @@ public class Dog : MonoBehaviour
         image.color = Color.white; // White is equal to original colour if left unaltered
         transform.localPosition = new Vector3(startingX, yPosition, 0); // Y position also relevant to jump
         takingDamage = false; // Allow function to run again
-    }
-
-    // Jumping
-    void jump(){ // Simple jump to avoid unity physics engine
-        if(ascending){
-            // // If not at max height increase
-            if(yPosition <= startingY+maxJumpHeight) yPosition += jumpSpeed * Time.deltaTime; //Time.deltaTime ensures this is not FPS dependent as Update called very regularly
-            else { // Else start descent
-                ascending = false;
-                descending = true;
-            }
-        } else if(descending){
-            if(yPosition > startingY) yPosition -= jumpSpeed * Time.deltaTime; // If not grounded
-            else descending = false; // If grounded stop descent
-        }
-        // Change position
-        transform.localPosition = new Vector3(transform.localPosition.x, yPosition, 0);
-    }
-
-    public void startJump(int jumpHeight){
-        maxJumpHeight = jumpHeight;
-        ascending = true;
     }
 
     // Audio
@@ -110,17 +93,56 @@ public class Dog : MonoBehaviour
         dogSurprised.Play();
     }
 
-    // UNITY ************************************
-    void Start(){
-        // Save starting position
-        startingY = transform.localPosition.y; // For jump
-        startingX = 0f;//transform.position.x; // For shake
-        yPosition = transform.localPosition.y; // Shake and jump
+    // Jumping Coroutine
+    IEnumerator JumpCoroutine(){
+        // While ascending
+        while (ascending) {
+            if (yPosition <= startingY + maxJumpHeight) {
+                yPosition += jumpSpeed * Time.deltaTime;
+            } else {
+                ascending = false;
+                descending = true;
+            }
+
+            UpdatePosition();
+            yield return null; // Wait for the next frame
+        }
+
+        // While descending
+        while (descending) {
+            if (yPosition > startingY) {
+                yPosition -= jumpSpeed * Time.deltaTime;
+            } else {
+                descending = false;
+            }
+
+            UpdatePosition();
+            yield return null; // Wait for the next frame
+        }
     }
 
-    void Update(){
-        // Initiate jump on down arrow
-        // if(Input.GetKeyDown(KeyCode.DownArrow)) ascending = true;
-        if(ascending || descending) jump();
+    // Update the object position
+    private void UpdatePosition(){
+        transform.localPosition = new Vector3(transform.localPosition.x, yPosition, 0);
     }
+
+    // Start the jump process
+    public void startJump(int jumpHeight) {
+        if(!ascending && !descending){ //only one jump at a time
+            startingY = transform.localPosition.y;
+            yPosition = transform.localPosition.y; // Shake and jump
+            maxJumpHeight = jumpHeight;
+            ascending = true;
+            StartCoroutine(JumpCoroutine());
+        }
+    }
+
+    // UNITY ************************************
+    // void Update(){
+    //     // Trigger jump on pressing Down Arrow key
+    //     if (Input.GetKeyDown(KeyCode.DownArrow)){
+    //         startJump(40); // Example jump height of 3
+    //     }
+    // }
+
 }
