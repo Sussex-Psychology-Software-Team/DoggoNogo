@@ -7,9 +7,6 @@ using System;
 using System.Diagnostics; // Stopwatch included here
 using System.Collections;
 using System.Collections.Generic; //for List
-using System.Runtime.InteropServices; // DllImport
-using TMPro; //for TextMeshProUGUI
-
 
 public class TrialManager : MonoBehaviour
 {
@@ -72,6 +69,9 @@ public class TrialManager : MonoBehaviour
         timer.Stop(); // Immediately stop timer
         if(missed){
             feedback.giveFeedback("missed", scoreManager.totalScore, 0);
+            // Just save total score directly for now
+            DataManager.Instance.data.currentTrial().totalScore = scoreManager.totalScore;
+            DataManager.Instance.data.currentTrial().datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         } else {
             // Get score from RT
             double rt = timer.Elapsed.TotalSeconds - trialISI; // subtract ISI from time elapsed during press

@@ -15,9 +15,9 @@ public class Trial {
         isi = isiVar;
         rt = -1.0;
         datetime = "";
-        trialScore = -1;
+        trialScore = 0;
         totalScore = -1;
-        trialType = "";
+        trialType = "missed";
     }
 
     public void saveTrial(double rt, string type, int score, int total) {
