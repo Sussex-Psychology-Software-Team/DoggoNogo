@@ -21,7 +21,7 @@ public class Metadata {
 
     public void InitializeWebVariables(){
         // Otherwise datamanager starts on Awake() and UNITY_WEBGL is not true
-        experimentID = Utility.GetQueryVariable("osf");
+        experimentID = Utility.GetQueryVariable("datapipe");
         participantName = Utility.GetQueryVariable("p");
         studyName = Utility.GetQueryVariable("s");
         l1n = Utility.GetQueryVariable("l1n");
