@@ -8,9 +8,12 @@ public class Bone : MonoBehaviour
 {
     // Refs
     public Image image;
-    public TextMeshProUGUI feedbackText; // Defines top bound of bone position
     public Image dogImage;
+    public Canvas canvas;
+    public TextMeshProUGUI feedbackText; // Defines top bound of bone position
+    public GameObject scoreContainer;
     public AudioSource boneThrow; // Barking on early press
+    
 
     // Hide
     public void Hide(){
@@ -46,25 +49,34 @@ public class Bone : MonoBehaviour
         // Get dog width and position in local space
         RectTransform dogRectTransform = dogImage.rectTransform;
         float dogOffset = (dogRectTransform.rect.width * dogRectTransform.localScale.x)/2f;
-        float dogLocation = dogRectTransform.localPosition.x;
+        float dogLocationX = dogRectTransform.localPosition.x;
+
+        // Get Canvas bounds
+        RectTransform canvasRectTransform = canvas.GetComponent<RectTransform>();
+        // Debug.Log(canvasRectTransform.localScale.x);
+        float xBound = canvasRectTransform.rect.width/2f;
+        float yBound = canvasRectTransform.rect.height/2f;
 
         // X value: decide between left and right, avoiding the dog
         float randomX = 0f;
         if (UnityEngine.Random.value < 0.5f){
-            float leftStart = -Camera.main.pixelWidth + boneOffset;
-            float leftBound = dogLocation - dogOffset - boneOffset;
+            float leftStart = -xBound + boneOffset;
+            float leftBound = dogLocationX - dogOffset - boneOffset;
             randomX = UnityEngine.Random.Range(leftStart, leftBound); // Left side
         } else {
-            float rightStart = dogLocation + dogOffset + boneOffset;
-            float rightBound = Camera.main.pixelWidth - boneOffset;
+            float rightStart = dogLocationX + dogOffset + boneOffset;
+            float rightBound = xBound - boneOffset;
             randomX = UnityEngine.Random.Range(rightStart, rightBound); // Right side
         }
             
         // Y value: within the range below the score card
-        float topY = feedbackText.rectTransform.localPosition.y;
-        float randomY = UnityEngine.Random.Range(-Camera.main.pixelHeight + boneOffset, topY-boneOffset);
+        // Score card bottom
+        RectTransform scoringRectTransform = scoreContainer.GetComponent<RectTransform>();
+        float scoringOffset = (scoringRectTransform.rect.height * scoringRectTransform.localScale.y) /2f;
+        float scoringBottom = scoringRectTransform.localPosition.y - scoringOffset;
 
-        //float boneOffset = ((image.rectTransform.rect.width*image.rectTransform.localScale.x)/2);
+        float randomY = UnityEngine.Random.Range(-yBound + boneOffset, scoringBottom-boneOffset);
+
         return new Vector2(randomX, randomY);//new Vector2(randomX, randomY);
     }
 
@@ -98,7 +110,6 @@ public class Bone : MonoBehaviour
         Vector3 targetScale = new(0.1f, 0.1f, 0.1f);
 
         // Get target position
-        
         RectTransform dogRectTransform = dogImage.rectTransform;
         // Get the pixel coordinates of mouth relative to rendered image scale
         float mouthXFromCentre = ((dogRectTransform.rect.width/2)-121f) * dogRectTransform.localScale.x; // Found float coordinate on photoshop
