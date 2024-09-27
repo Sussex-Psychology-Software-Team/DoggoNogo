@@ -108,8 +108,7 @@ public class ScoreManager : MonoBehaviour
         return targetScore;
     }
 
-    int getL1nQuery(int defaultN = 60){
-        string queryVar = Utility.GetQueryVariable("l1n");
+    int getL1nQuery(string queryVar, int defaultN = 60){
         int l1n;
         if (int.TryParse(queryVar, out l1n)) {
             return l1n;
@@ -119,6 +118,6 @@ public class ScoreManager : MonoBehaviour
     }
 
     void Start(){
-        nTrials = getL1nQuery(60);
+        nTrials = getL1nQuery(DataManager.Instance.data.metadata.l1n, 60);
     }
 }

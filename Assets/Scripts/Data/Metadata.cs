@@ -8,6 +8,7 @@ public class Metadata {
     public string experimentID;
     public string participantName;
     public string studyName;
+    public string l1n;
     public string userAgentString;
     public string start;
     public string end;
@@ -23,6 +24,7 @@ public class Metadata {
         experimentID = Utility.GetQueryVariable("osf");
         participantName = Utility.GetQueryVariable("p");
         studyName = Utility.GetQueryVariable("s");
+        l1n = Utility.GetQueryVariable("l1n");
         userAgentString = GetUserAgent();
     }
 
