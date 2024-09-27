@@ -1126,7 +1126,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 508.96625, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1026645576
@@ -1467,7 +1467,6 @@ MonoBehaviour:
   image: {fileID: 1390488370}
   dogImage: {fileID: 1504777852}
   canvas: {fileID: 281814265}
-  feedbackText: {fileID: 1479691777}
   scoreContainer: {fileID: 1041837079}
   boneThrow: {fileID: 1390488372}
 --- !u!114 &1390488370
@@ -1832,6 +1831,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   images: []
+  image: {fileID: 1504777852}
   flickerDuration: 1
   flickerInterval: 0.2
   shakeAmount: 3

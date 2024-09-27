@@ -10,7 +10,7 @@ public class Dog : MonoBehaviour
     public Sprite[] images; // Array of images of each evolution, increase on level change
 
     // Damage animation
-    Image image; // save reference to image
+    public Image image; // save reference to image
     public float flickerDuration = 1.0f;
     public float flickerInterval = 0.2f;
     public float shakeAmount = 3.0f;
@@ -116,8 +116,6 @@ public class Dog : MonoBehaviour
         startingY = transform.localPosition.y; // For jump
         startingX = 0f;//transform.position.x; // For shake
         yPosition = transform.localPosition.y; // Shake and jump
-        // Image reference for sprite swap and colour
-        image = gameObject.GetComponent<Image>();
     }
 
     void Update(){
