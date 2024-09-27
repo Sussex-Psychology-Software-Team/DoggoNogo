@@ -38,8 +38,9 @@ public class Dog : MonoBehaviour
     // Images
     public void GetSprite(int level){
         // Loops through sprites automatically
-        if ((level-1) < images.Length) {
-            image.sprite = images[level-1]; // Note first image just loaded automatically
+        int newLevel = level-1;
+        if (newLevel < images.Length) {
+            image.sprite = images[newLevel]; // Note first image just loaded automatically
             // Set new image to correct aspect ratio
             image.rectTransform.sizeDelta = new Vector2(image.sprite.texture.width, image.sprite.texture.height);
         } else {
