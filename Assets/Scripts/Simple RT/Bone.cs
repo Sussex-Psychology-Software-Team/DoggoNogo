@@ -10,7 +10,6 @@ public class Bone : MonoBehaviour
     public Image image;
     public TextMeshProUGUI feedbackText; // Defines top bound of bone position
     public Image dogImage;
-    public Dog dog;
     public AudioSource boneThrow; // Barking on early press
 
     // Hide
@@ -96,19 +95,34 @@ public class Bone : MonoBehaviour
     // Move to dog animation
     public void Eat(){
         // Start animation
-        Vector3 targetScale = new(0.2f, 0.2f, 0.2f);
-        StartCoroutine(MoveBoneToMouth(dog.transform.position, targetScale, 0.3f));
+        Vector3 targetScale = new(0.1f, 0.1f, 0.1f);
+        // Get target position
+        // Convert the pixel coordinates to the proportion relative to the image
+        RectTransform dogRectTransform = dogImage.rectTransform;
+        float dogWidth = dogRectTransform.rect.width;
+        float dogHeight = dogRectTransform.rect.height;
+        float dogRenderWidth = dogWidth * dogRectTransform.localScale.x;
+        float dogRenderHeight = dogHeight * dogRectTransform.localScale.y;
+        // Bone
+        float mouthXFromCentre = ((dogWidth/2)-121f)* dogRectTransform.localScale.x; // Found coordinate on photoshop
+        float mouthYFromCentre = ((dogHeight/2)-219f)* dogRectTransform.localScale.y;
+         // OR: float targetX = dog.transform.position.x - (dogRectTransform.rect.width * dogRectTransform.localScale.x / 8f);
+        float targetX = dogRectTransform.localPosition.x - mouthXFromCentre;
+        float targetY = dogRectTransform.localPosition.y + mouthYFromCentre; // move a bit up
+        Vector3 targetPosition = new(targetX, targetY, 0);
+        // Animate
+        StartCoroutine(MoveBoneToMouth(targetPosition, targetScale, 0.3f));
     }
 
     IEnumerator MoveBoneToMouth(Vector3 targetPosition, Vector3 targetScale, float duration){
         // Setup
-        Vector3 startPosition = image.transform.position; // Start position
+        Vector3 startPosition = image.rectTransform.localPosition; // Start position
         Vector3 startScale = image.rectTransform.localScale; // Start scale
         float elapsedTime = 0f; // Elapsed time since the start of the animation
         // Run
         while (elapsedTime < duration){
             // Interpolate between the start and target positions and scales
-            image.transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
+            image.rectTransform.localPosition = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
             image.rectTransform.localScale = Vector3.Lerp(startScale, targetScale, elapsedTime / duration);
             // Increment enumerator
             elapsedTime += Time.deltaTime; // Increment elapsed time
@@ -119,24 +133,10 @@ public class Bone : MonoBehaviour
 
     // For testing: (comment out TrialManager's call to new trial in Start() as well)
     // Test animations
-    void Start(){
-    }
+    // void Start(){
+    // }
 
     // Test random locations
-    void Update(){ 
-        // image.rectTransform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-        // // Convert the pixel coordinates to the proportion relative to the image
-        // RectTransform dogRectTransform = dog.GetComponent<Image>().rectTransform;
-        // float dogWidth = dogRectTransform.rect.width;
-        // float dogHeight = dogRectTransform.rect.height;
-        // float dogRenderWidth = dogWidth * dogRectTransform.localScale.x;
-        // float dogRenderHeight = dogHeight * dogRectTransform.localScale.y;
-        // float mouthX = ((121f / dogWidth) * dogRenderWidth);
-        // float mouthY = ((1-(219f / dogHeight)) * dogRenderHeight);
-        //  // OR: float targetX = dog.transform.position.x - (dogRectTransform.rect.width * dogRectTransform.localScale.x / 8f);
-        // float targetX = dog.transform.position.x + (dogRenderWidth/2f);
-        // float targetY = dog.transform.position.y + (dogRenderHeight/2f); // move a bit up
-        // Vector3 targetPosition = new(targetX, targetY, 0);
-        // image.transform.position = targetPosition;
-    }
+    // void Update(){ 
+    // }
 }
