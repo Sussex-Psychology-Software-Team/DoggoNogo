@@ -31,7 +31,7 @@ public class HealthBar : MonoBehaviour
 		slider.value = health;
 	}
 
-	public void setColour(Color c){
+	public void SetColour(Color c){
 		fill.color = c;
 	}
 }

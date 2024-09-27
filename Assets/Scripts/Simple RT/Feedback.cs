@@ -29,9 +29,9 @@ public class Feedback : MonoBehaviour
             feedbackText.color = Color.red;
             feedback = "TOO QUICK!\nWait until the bone has appeared.";
             // Animations + sounds
-            dog.bark();
-            dog.takeDamage();
-            dog.startJump(20);
+            dog.Bark();
+            dog.TakeDamage();
+            dog.StartJump(20);
 
         } else if(trialType == "slow"){
             // Bar colour
@@ -40,8 +40,8 @@ public class Feedback : MonoBehaviour
             feedbackText.color = Color.white;
             feedback = "A bit too slow!\nDoggo couldn't catch the bone.";
             // Animations + sounds
-            dog.surprised();
-            dog.startJump(20);
+            dog.Surprised();
+            dog.StartJump(20);
 
         } else if(trialType == "fast"){
             // Bar colour
@@ -51,8 +51,8 @@ public class Feedback : MonoBehaviour
             feedback = "GREAT!\nDoggo caught the bone!";
             // Animations + sounds
             bone.Eat();
-            dog.chew();
-            dog.startJump(trialScore/4);
+            dog.Chew();
+            dog.StartJump(trialScore/4);
 
         } else if(trialType == "missed"){
             // Bar colour
@@ -72,7 +72,7 @@ public class Feedback : MonoBehaviour
         feedbackText.text = feedback;
         scoreText.text = "Score: " + newTotalScore;
         // Display new score
-        healthBarManager.currentHealthBar.setColour(barColour);
+        healthBarManager.currentHealthBar.SetColour(barColour);
         // Check level
         if(newTotalScore >= healthBarManager.currentHealthBar.GetMaxHealth()) changeLevel(); // Switch healthbars if above maximum - confusingly lost in here maybe??
         healthBarManager.currentHealthBar.SetHealth(newTotalScore); // Note do this prior to changing level to start healthbar on new minimum
@@ -82,7 +82,7 @@ public class Feedback : MonoBehaviour
     public void changeLevel(){
         scoreManager.level += 1;
         if(scoreManager.level>scoreManager.nLevels){
-            trialManager.endTask();
+            trialManager.EndTask();
             return;
         } else {
             // Change dog

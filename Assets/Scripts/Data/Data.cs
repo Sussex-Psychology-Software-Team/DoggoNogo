@@ -10,11 +10,11 @@ public class Data {
         trials = new List<Trial>();
     }
 
-    public void newTrial(double isi) {
+    public void NewTrial(double isi) {
         trials.Add(new Trial(trials.Count + 1, isi));
     }
 
-    public Trial currentTrial() {
+    public Trial CurrentTrial() {
         return trials[trials.Count - 1];
     }
 

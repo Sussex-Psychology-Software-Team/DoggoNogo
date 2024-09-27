@@ -18,7 +18,7 @@ public class DataManager : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
-    public void sendData() {
+    public void SendData() {
         // Add end date
         data.metadata.end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         // Get id for current experimenters and send
@@ -33,10 +33,10 @@ public class DataManager : MonoBehaviour {
     void SendDataToServer(string experimentID) {
         DataPipeBody studyData = new DataPipeBody(data, experimentID);
         string studyJSON = JsonUtility.ToJson(studyData);
-        StartCoroutine(dataPipe(studyJSON));
+        StartCoroutine(DataPipe(studyJSON));
     }
 
-    IEnumerator dataPipe(string json) {
+    IEnumerator DataPipe(string json) {
         using (UnityWebRequest www = UnityWebRequest.Post("https://pipe.jspsych.org/api/data/", json, "application/json")) {
             yield return www.SendWebRequest();
             if (www.result != UnityWebRequest.Result.Success) {

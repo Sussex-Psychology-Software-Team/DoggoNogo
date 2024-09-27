@@ -14,25 +14,25 @@ public class EndScreen : MonoBehaviour
     public static double sd = 2000.0;
 
     // Score display functions
-    void displayRelativeScore(){
+    void DisplayRelativeScore(){
         // Calculate %
-        int score = DataManager.Instance.data.currentTrial().totalScore; //get copy of player score
+        int score = DataManager.Instance.data.CurrentTrial().totalScore; //get copy of player score
         Debug.Log(score);
-        double zScore = percentileNormCDF(score); // Score under normal as %
+        double zScore = PercentileNormCDF(score); // Score under normal as %
         Debug.Log(zScore);
         // Change text and Healthbar
         percentileText.text = "The experiment is now over.\n\nYou scored better than " + zScore.ToString("F0") + "% of participants!\n\nPress the button below to retry.";
-        StartCoroutine(scoreAnimator((int)zScore));
+        StartCoroutine(ScoreAnimator((int)zScore));
     }
 
-    IEnumerator scoreAnimator(int percentScore){
+    IEnumerator ScoreAnimator(int percentScore){
         for (int s=0; s<=percentScore; s++){ //note can make smoother by making SetHealth take a float.
             scoreBar.SetHealth(s);
             yield return new WaitForSeconds(.01f);
         }
     }
 
-    static double percentileNormCDF(int percentScore) { // Phi
+    static double PercentileNormCDF(int percentScore) { // Phi
         // Percentile function Polynomial approximation in c# - https://stackoverflow.com/questions/1662943/standard-normal-distribution-z-value-function-in-c-sharp
         double x = Convert.ToDouble(percentScore); // Convert score to double
         // constants
@@ -64,9 +64,9 @@ public class EndScreen : MonoBehaviour
     void Start()
     {
         // Send experimental data
-        DataManager.Instance.sendData();
+        DataManager.Instance.SendData();
         // Clear trials ahead of repeat - probably just do this on a 'repeat' button listener
         //data.ClearTrials();
-        displayRelativeScore();
+        DisplayRelativeScore();
     }
 }

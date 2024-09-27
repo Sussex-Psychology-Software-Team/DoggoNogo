@@ -27,7 +27,7 @@ public class TrialManager : MonoBehaviour
     // ******************* FUNCTIONS *******************
     // RT Helpers ------------------------------------------------------------
     // slow but simple median function - quicker algorithms here: https://stackoverflow.com/questions/4140719/calculate-median-in-c-sharp
-    double calcMedianRT(double rt) {
+    double CalcMedianRT(double rt) {
         // Add to array and sort
         sortedRTs.Add(rt); // Add to median score list
         sortedRTs.Sort(); // Note mutates original list
@@ -43,17 +43,17 @@ public class TrialManager : MonoBehaviour
     // Coroutine to delay the start of a new trial and show feedback
     IEnumerator DelayBeforeNextTrial(float delay = 1f) {
         yield return new WaitForSeconds(delay); // Wait for 1 second
-        newTrial(); // Start new trial after delay
+        NewTrial(); // Start new trial after delay
     }
 
-    void newTrial() { //function to reset variables and set-up for a new trials
+    void NewTrial() { //function to reset variables and set-up for a new trials
         bone.Hide();
         // Get new maxRT
         scoreManager.maxRT = Math.Max(scoreManager.minRT*2, medianRT*2); // Lowerbound on maxRT of minRT*2
         // Get new ISI
         trialISI = UnityEngine.Random.Range(ISIRange[0], ISIRange[1]); // New trialISI
         // Create new trial in data structure
-        DataManager.Instance.data.newTrial(trialISI); // Create an instance of a Trial
+        DataManager.Instance.data.NewTrial(trialISI); // Create an instance of a Trial
         // Prompt participant that new trial is starting
         feedback.Prompt("Getting a new bone for Doggo..."); // Prompt for new trial starting
         // Start timer
@@ -70,13 +70,13 @@ public class TrialManager : MonoBehaviour
         if(missed){
             feedback.giveFeedback("missed", scoreManager.totalScore, 0);
             // Just save total score directly for now
-            DataManager.Instance.data.currentTrial().totalScore = scoreManager.totalScore;
-            DataManager.Instance.data.currentTrial().datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            DataManager.Instance.data.CurrentTrial().totalScore = scoreManager.totalScore;
+            DataManager.Instance.data.CurrentTrial().datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         } else {
             // Get score from RT
             double rt = timer.Elapsed.TotalSeconds - trialISI; // subtract ISI from time elapsed during press
             scoreManager.ProcessTrialResult(rt); // Probs don't need score anywhere
-            medianRT = calcMedianRT(rt);
+            medianRT = CalcMedianRT(rt);
         }
         /////// ---------------
         StartCoroutine(DelayBeforeNextTrial());
@@ -90,7 +90,7 @@ public class TrialManager : MonoBehaviour
     }
 
     // Consider moving this to trial manager
-    public void endTask(){ // called from feedback
+    public void EndTask(){ // called from feedback
         // Load next scene
         SceneManager.LoadScene("End");
     }

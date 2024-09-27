@@ -32,16 +32,16 @@ public class slideshowManager : MonoBehaviour
     int chapter = 0;
     bool videoFinished = false;
 
-    void checkChapterNumber(){
+    void CheckChapterNumber(){
         chapter++;
         if(chapter == 11){ //Skip two chapters to allow participants to read instructions
             videoFinished = true;
         } else {
-            showNextChapter();
+            ShowNextChapter();
         }
     }
 
-    void showNextChapter(){
+    void ShowNextChapter(){
         // Swap media for each Chapter
         if(chapter == 1){
             metalDoor.Play(); // Play metal door sound
@@ -50,7 +50,7 @@ public class slideshowManager : MonoBehaviour
         } else if(chapter == 2){
             textBox.text = ""; // Get rid of text
             backgroundImage.color = Color.white; // Make white to show background Dog Pound image
-            StartCoroutine(fadeIn(1f, backgroundImage));
+            StartCoroutine(FadeIn(1f, backgroundImage));
             dogWhine.Play(); // Play dog whine
 
         } else if(chapter == 3){ 
@@ -70,7 +70,7 @@ public class slideshowManager : MonoBehaviour
             backgroundImage.color = Color.white; // White to show background image
             backgroundImage.sprite = garden; // Change to Garden
             dog.enabled = true; // Show dog in garden
-            StartCoroutine(fadeIn(1f, dog)); // Fade in dog image
+            StartCoroutine(FadeIn(1f, dog)); // Fade in dog image
 
         } else if(chapter == 7){ // Instructions
             textBox.fontSize = 90; // Smaller more readable text
@@ -87,7 +87,7 @@ public class slideshowManager : MonoBehaviour
         timer = timeBetweenImages;
     }
 
-    IEnumerator fadeIn(float seconds, Graphic graphic){
+    IEnumerator FadeIn(float seconds, Graphic graphic){
         // Graphic.color returns copy not reference so can't be set directly
         Color originalColor = graphic.color; // Get the current color
         originalColor.a = 0; // Set alpha to 0
@@ -105,7 +105,7 @@ public class slideshowManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(fadeIn(1f, textBox));
+        StartCoroutine(FadeIn(1f, textBox));
         timer = timeBetweenImages;
         // Opening page do nothing
         // Sound of metal
@@ -118,7 +118,7 @@ public class slideshowManager : MonoBehaviour
         timer -= Time.deltaTime;
         
         if (timer <= 0.0f && !videoFinished){
-            checkChapterNumber();
+            CheckChapterNumber();
         }
 
         if (videoFinished && Input.GetKeyDown(KeyCode.DownArrow)){

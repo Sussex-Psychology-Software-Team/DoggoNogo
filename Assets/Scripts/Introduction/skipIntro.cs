@@ -12,8 +12,7 @@ public class skipIntro : MonoBehaviour
     public Slider slider;
 
     //float startTime = 0f;
-
-    void loadNextScene(){
+    void LoadNextScene(){
         SceneManager.LoadScene("Simple RT");
     }
     
@@ -30,7 +29,7 @@ public class skipIntro : MonoBehaviour
         slider.value = (float)(spacebarHoldTimer.Elapsed.TotalSeconds / timeToSkip);
 
         if (Input.GetKey(KeyCode.Escape) || spacebarHoldTimer.Elapsed.TotalSeconds >= timeToSkip){
-            loadNextScene();
+            LoadNextScene();
         }
     }
 }

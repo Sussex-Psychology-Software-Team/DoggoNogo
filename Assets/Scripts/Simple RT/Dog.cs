@@ -48,16 +48,16 @@ public class Dog : MonoBehaviour
         }
     }
 
-    public void takeDamage(){ // Flicker and shake coroutine wrapper.
+    public void TakeDamage(){ // Flicker and shake coroutine wrapper.
         // If not current running flicker and shake, do
         if(!takingDamage){
             startingX = transform.localPosition.x; // For shake
             yPosition = transform.localPosition.y; // Shake and jump
-            StartCoroutine(shakeRed());
+            StartCoroutine(ShakeRed());
         }
     }
 
-    IEnumerator shakeRed(){
+    IEnumerator ShakeRed(){
         takingDamage = true; // Stop running script multiple times at once
         float endTime = Time.time + flickerDuration; // How long to run loops of function
         bool flickerToggle = false; // Turns colour flicker (consider shake too?) on and off repeatedly
@@ -82,15 +82,15 @@ public class Dog : MonoBehaviour
         else dogWhine2.Play();
     }
 
-    public void chew(){
+    public void Chew(){
         dogChew.Play();
     }
 
-    public void bark(){
+    public void Bark(){
         dogBark.Play();
     }
 
-    public void surprised(){
+    public void Surprised(){
         dogSurprised.Play();
     }
 
@@ -128,7 +128,7 @@ public class Dog : MonoBehaviour
     }
 
     // Start the jump process
-    public void startJump(int jumpHeight) {
+    public void StartJump(int jumpHeight) {
         if(!ascending && !descending){ //only one jump at a time
             startingY = transform.localPosition.y;
             yPosition = transform.localPosition.y; // Shake and jump

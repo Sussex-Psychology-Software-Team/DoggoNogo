@@ -46,7 +46,7 @@ public class ScoreManager : MonoBehaviour
     }
 
     // Calculate score from rt
-    int calculateScore(double rt) {
+    int CalculateScore(double rt) {
         // Calculate score
         double clampedRT = Math.Clamp(rt, minRT, maxRT); // Clamp Reaction Time, ensures 0-1 when normalised
         double normalisedRT = (clampedRT - minRT) / (maxRT - minRT); // Normalise as proportion of range
@@ -70,7 +70,7 @@ public class ScoreManager : MonoBehaviour
             case "slow":
                 return 0;
             case "fast":
-                return calculateScore(reactionTime);
+                return CalculateScore(reactionTime);
             default:
                 throw new ArgumentException("Invalid trial type", nameof(trialType));
         }
@@ -83,7 +83,7 @@ public class ScoreManager : MonoBehaviour
     }
 
     void SaveTrialData(double reactionTime, string trialType, int trialScore){
-        DataManager.Instance.data.currentTrial().saveTrial(reactionTime, trialType, trialScore, totalScore);
+        DataManager.Instance.data.CurrentTrial().SaveTrial(reactionTime, trialType, trialScore, totalScore);
     }
 
     void ProvideFeedback(string trialType, int trialScore) {
@@ -108,7 +108,7 @@ public class ScoreManager : MonoBehaviour
         return targetScore;
     }
 
-    int getL1nQuery(string queryVar, int defaultN = 60){
+    int GetL1nQuery(string queryVar, int defaultN = 60){
         int l1n;
         if (int.TryParse(queryVar, out l1n)) {
             return l1n;
@@ -118,6 +118,6 @@ public class ScoreManager : MonoBehaviour
     }
 
     void Start(){
-        nTrials = getL1nQuery(DataManager.Instance.data.metadata.l1n, 60);
+        nTrials = GetL1nQuery(DataManager.Instance.data.metadata.l1n, 60);
     }
 }

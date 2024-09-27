@@ -15,10 +15,10 @@ public class Continue : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        button.onClick.AddListener(continueExp);
+        button.onClick.AddListener(ContinueExp);
     }
 
-    void continueExp(){
+    void ContinueExp(){
         string query;
         #if !UNITY_EDITOR && UNITY_WEBGL
             query = queryStringWhole();

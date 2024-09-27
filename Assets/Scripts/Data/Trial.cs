@@ -20,15 +20,15 @@ public class Trial {
         trialType = "missed";
     }
 
-    public void saveTrial(double rt, string type, int score, int total) {
-        this.rt = roundTime(rt, 7);
+    public void SaveTrial(double rt, string type, int score, int total) {
+        this.rt = RoundTime(rt, 7);
         this.datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         this.trialType = type;
         this.trialScore = score;
         this.totalScore = total;
     }
 
-    double roundTime(double time, int dp) {
+    double RoundTime(double time, int dp) {
         return Math.Round(time * Math.Pow(10, dp)) / Math.Pow(10, dp);
     }
 }
