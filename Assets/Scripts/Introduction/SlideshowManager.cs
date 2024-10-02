@@ -25,8 +25,7 @@ public class slideshowManager : MonoBehaviour
         "During your last raid, your hear something.",
         "You decide to take him home, and name him…<br><br>  ",
         "Doggo",
-        "Doggo is in need of urgent care and feeding.<br>Help him get as many bones as possible by pressing the down arrow (↓) as fast as possible.",
-        "Ready?<br>Press ↓ to start<br><br>  "
+        "Doggo is in need of urgent care and feeding.<br>Help him get as many bones as possible by pressing the down arrow (↓) as fast as possible."
     };
     float timer;
     int chapter = 0;
@@ -34,7 +33,7 @@ public class slideshowManager : MonoBehaviour
 
     void CheckChapterNumber(){
         chapter++;
-        if(chapter == 11){ //Skip two chapters to allow participants to read instructions
+        if(chapter == 9){ //Skip two chapters to allow participants to read instructions
             videoFinished = true;
         } else {
             ShowNextChapter();
@@ -77,10 +76,6 @@ public class slideshowManager : MonoBehaviour
             textBackground.color = new Color(1f, 1f, 1f, 0.5f); // Set alpha to .5
             textBox.text = storyText[4]; // "Doggo is in need of urgent care and feeding.<br>Help him get as many bones as possible by pressing the down arrow (↓) as fast as possible."
 
-        } else if(chapter == 10){ // Skip 2 chapters to allow participants to read instructions
-            textBackground.color = new Color(1f, 1f, 1f, 0f); // Set alpha to 0
-            textBox.text = storyText[5]; // "<p style="font-size: 90">Ready?</p><br>Press ↓ to start"
-
         }
 
         // Reset timer
@@ -107,9 +102,6 @@ public class slideshowManager : MonoBehaviour
     {
         StartCoroutine(FadeIn(1f, textBox));
         timer = timeBetweenImages;
-        // Opening page do nothing
-        // Sound of metal
-        // Show pic 1
     }
 
     // Update is called once per frame
@@ -121,7 +113,7 @@ public class slideshowManager : MonoBehaviour
             CheckChapterNumber();
         }
 
-        if (videoFinished && Input.GetKeyDown(KeyCode.DownArrow)){
+        if (videoFinished){
             SceneManager.LoadScene("Simple RT");
         }
     }

@@ -97,14 +97,14 @@ public class TrialManager : MonoBehaviour
 
     // ******************* UNITY *******************
     void Start(){
-        medianRT = scoreManager.maxRT/2; // initialise median to half maximum RT
-        feedback.Prompt("Get ready to catch the bone by pressing ↓...");
-        StartCoroutine(DelayBeforeNextTrial(2f));
+        medianRT = scoreManager.maxRT/2; // initialise median to half maximum RT  
     }
 
     // Update is called once per frame - maybe use FixedUpdate for inputs?
     void Update(){
-        if(timer.IsRunning){
+        if(trialISI == 0 && Input.GetKeyDown(KeyCode.DownArrow)){
+            NewTrial();
+        } else if(timer.IsRunning){
             // If ISI ended show bone
             if(timer.Elapsed.TotalSeconds > trialISI && bone.Hidden()){
                 EndISI();
