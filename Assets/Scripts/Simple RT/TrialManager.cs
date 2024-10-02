@@ -104,6 +104,7 @@ public class TrialManager : MonoBehaviour
 
     // ******************* UNITY *******************
     void Start(){
+        DataManager.Instance.data.ClearTrials(); // Incase of retry
         medianRT = scoreManager.maxRT/2; // initialise median to half maximum RT  
     }
 
