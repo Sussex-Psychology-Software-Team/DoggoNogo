@@ -60,15 +60,10 @@ public class TrialManager : MonoBehaviour
         trialISI = UnityEngine.Random.Range(ISIRange[0], ISIRange[1]); // New trialISI
         // Create new trial in data structure
         DataManager.Instance.data.NewTrial(trialISI); // Create an instance of a Trial
-        // Prompt participant that new trial is starting
-        feedback.Prompt(""); // Prompt for new trial starting
+        // Hide Feedback
+        feedback.Hide();
         // Start timer
         RestartTimer();
-    }
-
-    void EndISI(){
-        bone.Show();
-        feedback.Prompt("");
     }
 
     void EndTrial(bool missed = false){ // Don't forget missed trials here
@@ -83,7 +78,7 @@ public class TrialManager : MonoBehaviour
             double rt = timer.Elapsed.TotalSeconds - trialISI; // subtract ISI from time elapsed during press
             scoreManager.ProcessTrialResult(rt); // Probs don't need score anywhere
             medianRT = CalcMedianRT(rt);
-            
+
             // Adjust for starter trials
             int trialN = DataManager.Instance.data.trials.Count;
             if(trialN <= 10){
@@ -119,7 +114,7 @@ public class TrialManager : MonoBehaviour
         } else if(timer.IsRunning){
             // If ISI ended show bone
             if(timer.Elapsed.TotalSeconds > trialISI && bone.Hidden()){
-                EndISI();
+                bone.Show(); // End ISI
             // If > max trial time = missed trial
             } else if(timer.Elapsed.TotalSeconds > (trialISI + scoreManager.maxRT)){
                 //Missed Trial
