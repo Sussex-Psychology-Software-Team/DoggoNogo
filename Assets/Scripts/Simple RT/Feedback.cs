@@ -111,4 +111,9 @@ public class Feedback : MonoBehaviour
         feedbackText.text = text;
     }
 
+    public void Hide(){
+        scoreChange.enabled = false;
+        feedbackText.enabled = false;
+    }
+
 }
