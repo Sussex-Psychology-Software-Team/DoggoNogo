@@ -55,7 +55,7 @@ public class TrialManager : MonoBehaviour
         // Create new trial in data structure
         DataManager.Instance.data.NewTrial(trialISI); // Create an instance of a Trial
         // Prompt participant that new trial is starting
-        feedback.Prompt("Getting a new bone for Doggo..."); // Prompt for new trial starting
+        feedback.Prompt(""); // Prompt for new trial starting
         // Start timer
         RestartTimer();
     }
