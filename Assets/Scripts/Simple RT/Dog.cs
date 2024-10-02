@@ -21,8 +21,8 @@ public class Dog : MonoBehaviour
     float startingY; // Initial starting point - ground
     float startingX; // For putting back to original X position after shake
     float yPosition;
-    bool ascending = false;
-    bool descending = false;
+    bool isJumping = false; // Flag to track if a jump is in progress
+
 
     // Audio feeback
     public AudioSource dogBark; // Barking on early press
@@ -95,31 +95,38 @@ public class Dog : MonoBehaviour
     }
 
     // Jumping Coroutine
-    IEnumerator JumpCoroutine(){
-        // While ascending
-        while (ascending) {
-            if (yPosition <= startingY + maxJumpHeight) {
-                yPosition += jumpSpeed * Time.deltaTime;
-            } else {
-                ascending = false;
-                descending = true;
-            }
+    IEnumerator JumpCoroutine(float jumpDuration) {
+        isJumping = true; // Mark that the jump has started
+        float elapsedTime = 0f;
+        float halfJumpTime = jumpDuration / 2f; // Split time evenly for ascent and descent
 
+        // Ascend phase
+        while (elapsedTime < halfJumpTime) {
+            float percentageComplete = elapsedTime / halfJumpTime;
+            yPosition = Mathf.Lerp(startingY, startingY + maxJumpHeight, percentageComplete);
+            
             UpdatePosition();
+            elapsedTime += Time.deltaTime;
             yield return null; // Wait for the next frame
         }
 
-        // While descending
-        while (descending) {
-            if (yPosition > startingY) {
-                yPosition -= jumpSpeed * Time.deltaTime;
-            } else {
-                descending = false;
-            }
+        // Reset time for the descent phase
+        elapsedTime = 0f;
 
+        // Descend phase
+        while (elapsedTime < halfJumpTime) {
+            float percentageComplete = elapsedTime / halfJumpTime;
+            yPosition = Mathf.Lerp(startingY + maxJumpHeight, startingY, percentageComplete);
+            
             UpdatePosition();
+            elapsedTime += Time.deltaTime;
             yield return null; // Wait for the next frame
         }
+
+        // Ensure the position is exactly at the startingY after the jump
+        yPosition = startingY;
+        UpdatePosition();
+        isJumping = false; // Mark that the jump has started
     }
 
     // Update the object position
@@ -129,12 +136,11 @@ public class Dog : MonoBehaviour
 
     // Start the jump process
     public void StartJump(int jumpHeight) {
-        if(!ascending && !descending){ //only one jump at a time
+        if (!isJumping) { // Only start a jump if no jump is in progress
             startingY = transform.localPosition.y;
-            yPosition = transform.localPosition.y; // Shake and jump
+            yPosition = transform.localPosition.y; 
             maxJumpHeight = jumpHeight;
-            ascending = true;
-            StartCoroutine(JumpCoroutine());
+            StartCoroutine(JumpCoroutine(0.3f));
         }
     }
 
