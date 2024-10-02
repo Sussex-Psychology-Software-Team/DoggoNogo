@@ -678,6 +678,7 @@ GameObject:
   - component: {fileID: 1483463715}
   - component: {fileID: 1483463717}
   - component: {fileID: 1483463716}
+  - component: {fileID: 1483463718}
   m_Layer: 5
   m_Name: Instructions
   m_TagString: Untagged
@@ -724,17 +725,15 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '<b>Welcome to Doggo-Nogo!</b>
+  m_text: '<size=150%>Doggo/Nogo<br>
 
+    <size=100%>This game was designed by psychologists
+    to accurately assess your cognitive reflexes. At the end of the level, you will
+    receive information about your score.<br>
 
-    This game was designed by psychologists
-    to accurately assess your cognitive reflexes. After each level, you will be told
-    how well you did compared to others.
-
-
-    By playing, you agree that your data
-    will be anonymously stored for scientific research. Read the full consent form
-    [here]'
+    <size=80%>By playing, you agree
+    that your data will be anonymously collected for scientific research. You can
+    find more information by clicking <color=#0000EE><u><link="https://www.github.com/sussex-psychology-software-team/doggonogo/">here</link></u></color>.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -811,6 +810,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1483463714}
   m_CullTransparentMesh: 1
+--- !u!114 &1483463718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1483463714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5ba793e3b76e4c0ca5ed54d601dd646, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textMeshPro: {fileID: 1483463716}
 --- !u!1 &1489027814
 GameObject:
   m_ObjectHideFlags: 0
