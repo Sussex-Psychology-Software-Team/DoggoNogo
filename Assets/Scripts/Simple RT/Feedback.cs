@@ -9,6 +9,7 @@ public class Feedback : MonoBehaviour
 {
     // Element references
     public TextMeshProUGUI scoreText; // Score display text
+    public TextMeshProUGUI scoreChange; // Score display text
     public TextMeshProUGUI feedbackText; // Feedback
     public HealthBarManager healthBarManager; // Contains reference to current selected health bar
     public Dog dog; // For changing dog sprite
@@ -21,6 +22,7 @@ public class Feedback : MonoBehaviour
         // feedback
         Color barColour = Color.green;
         string feedback = "";
+        string changeTextHex = "";
 
         if(trialType == "early"){
             // Bar colour
@@ -28,6 +30,7 @@ public class Feedback : MonoBehaviour
             // Feedback text
             feedbackText.color = Color.red;
             feedback = "TOO QUICK!\nWait until the bone has appeared.";
+            changeTextHex = "#FF0000";
             // Animations + sounds
             dog.Bark();
             dog.TakeDamage();
@@ -39,6 +42,7 @@ public class Feedback : MonoBehaviour
             // Feedback text
             feedbackText.color = Color.white;
             feedback = "A bit too slow!\nDoggo couldn't catch the bone.";
+            changeTextHex = "#0000FF";
             // Animations + sounds
             dog.Surprised();
             dog.StartJump(30);
@@ -53,6 +57,7 @@ public class Feedback : MonoBehaviour
             bone.Eat();
             dog.Chew();
             dog.StartJump((int)(trialScore/2));
+            changeTextHex = "#119400";
 
         } else if(trialType == "missed"){
             // Bar colour
@@ -60,17 +65,22 @@ public class Feedback : MonoBehaviour
             feedbackText.color = Color.red;
             // Feedback text
             feedback = "TOO SLOW!\nAnother dog got the bone first.";
+            changeTextHex = "#0000FF";
             // Animations + sounds
             bone.Throw();
             //dog.whine();
         }
 
-        displayFeedback(feedback, newTotalScore, barColour);
+        displayFeedback(feedback, newTotalScore, trialScore, changeTextHex, barColour);
     }
 
-    void displayFeedback(string feedback, int newTotalScore, Color barColour){
+    void displayFeedback(string feedback, int newTotalScore, int trialScore, string changeTextHex, Color barColour){
+        scoreChange.enabled = true;
+        feedbackText.enabled = true;
         feedbackText.text = feedback;
         scoreText.text = "Score: " + newTotalScore;
+        string sign = trialScore >= 0 ? "+" : "";
+        scoreChange.text = "<color=" + changeTextHex + ">" + sign + trialScore;
         // Display new score
         healthBarManager.currentHealthBar.SetColour(barColour);
         // Check level
