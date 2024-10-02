@@ -31,7 +31,7 @@ public class Feedback : MonoBehaviour
             // Animations + sounds
             dog.Bark();
             dog.TakeDamage();
-            dog.StartJump(20);
+            dog.StartJump(15);
 
         } else if(trialType == "slow"){
             // Bar colour
@@ -41,7 +41,7 @@ public class Feedback : MonoBehaviour
             feedback = "A bit too slow!\nDoggo couldn't catch the bone.";
             // Animations + sounds
             dog.Surprised();
-            dog.StartJump(20);
+            dog.StartJump(30);
 
         } else if(trialType == "fast"){
             // Bar colour
@@ -52,7 +52,7 @@ public class Feedback : MonoBehaviour
             // Animations + sounds
             bone.Eat();
             dog.Chew();
-            dog.StartJump(trialScore/4);
+            dog.StartJump((int)(trialScore/2));
 
         } else if(trialType == "missed"){
             // Bar colour
