@@ -36,6 +36,12 @@ public class TrialManager : MonoBehaviour
         int mid = size / 2;
         double middleValue = (double)sortedRTs[mid];
         double median = (size % 2 != 0) ? middleValue : (middleValue + (double)sortedRTs[mid - 1]) / 2;
+        
+        return median;
+    }
+
+    double MedianBurnInAdjustment(double median, int trialN){
+        median += median * Math.Min(0, 1-trialN/10);
         return median;
     }
 
@@ -77,6 +83,12 @@ public class TrialManager : MonoBehaviour
             double rt = timer.Elapsed.TotalSeconds - trialISI; // subtract ISI from time elapsed during press
             scoreManager.ProcessTrialResult(rt); // Probs don't need score anywhere
             medianRT = CalcMedianRT(rt);
+            
+            // Adjust for starter trials
+            int trialN = DataManager.Instance.data.trials.Count;
+            if(trialN <= 10){
+                medianRT = MedianBurnInAdjustment(medianRT, trialN);
+            }
         }
         /////// ---------------
         StartCoroutine(DelayBeforeNextTrial());
