@@ -55,7 +55,8 @@ public class TrialManager : MonoBehaviour
     void NewTrial() { //function to reset variables and set-up for a new trials
         bone.Hide();
         // Get new maxRT
-        scoreManager.maxRT = Math.Max(scoreManager.minRT*2, medianRT*2); // Lowerbound on maxRT of minRT*2
+        scoreManager.maxRT = medianRT*2;//Math.Max(scoreManager.minRT*2, medianRT*2); // Lowerbound on maxRT of minRT*2
+        Debug.Log(scoreManager.maxRT);
         // Get new ISI
         trialISI = UnityEngine.Random.Range(ISIRange[0], ISIRange[1]); // New trialISI
         // Create new trial in data structure
