@@ -105,7 +105,7 @@ public class TrialManager : MonoBehaviour
     // ******************* UNITY *******************
     void Start(){
         DataManager.Instance.data.ClearTrials(); // Incase of retry
-        medianRT = scoreManager.maxRT/2; // initialise median to half maximum RT  
+        medianRT = scoreManager.minRT + ((scoreManager.maxRT-scoreManager.minRT)/2); // initialise median to half maximum RT  
     }
 
     // Update is called once per frame - maybe use FixedUpdate for inputs?
