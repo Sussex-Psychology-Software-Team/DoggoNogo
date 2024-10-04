@@ -8,13 +8,15 @@ public class Dog : MonoBehaviour
 {
     // Images
     public Sprite[] images; // Array of images of each evolution, increase on level change
+    public Image image; // save reference to image
+    public Sparkles sparkles;
 
     // Damage animation
-    public Image image; // save reference to image
     public float flickerDuration = 1.0f;
     public float flickerInterval = 0.2f;
     public float shakeAmount = 3.0f;
     bool takingDamage = false;
+
     // Jumping
     public int maxJumpHeight = 40;
     public int jumpSpeed = 250;
@@ -22,7 +24,6 @@ public class Dog : MonoBehaviour
     float startingX; // For putting back to original X position after shake
     float yPosition;
     bool isJumping = false; // Flag to track if a jump is in progress
-
 
     // Audio feeback
     public AudioSource dogBark; // Barking on early press
@@ -38,6 +39,7 @@ public class Dog : MonoBehaviour
     // Images
     public void GetSprite(int level){
         // Loops through sprites automatically
+        sparkles.Sparkle();
         int newLevel = level-1;
         if (newLevel < images.Length) {
             image.sprite = images[newLevel]; // Note first image just loaded automatically
@@ -145,6 +147,9 @@ public class Dog : MonoBehaviour
     }
 
     // UNITY ************************************
+    // void Start(){
+    //     GetSprite(2);
+    // }
     // void Update(){
     //     // Trigger jump on pressing Down Arrow key
     //     if (Input.GetKeyDown(KeyCode.DownArrow)){
