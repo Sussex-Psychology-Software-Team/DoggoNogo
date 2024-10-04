@@ -2,13 +2,14 @@ using System;
 
 [System.Serializable]
 public class Trial {
-    public int trial_n;
+    public int trialNumber;
     public double isi;
     public double rt;
     public string datetime;
     public int trialScore;
     public int totalScore;
-    public string trialType;
+    public string responseType;
+    public double threshold;
 
     public Trial(int trialN, double isiVar) {
         trialNumber = trialN;
