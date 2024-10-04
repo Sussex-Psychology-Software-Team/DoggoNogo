@@ -21,7 +21,7 @@ public class EndScreen : MonoBehaviour
         double zScore = PercentileNormCDF(score); // Score under normal as %
         Debug.Log(zScore);
         // Change text and Healthbar
-        percentileText.text = "The experiment is now over.\n\nYou scored better than " + zScore.ToString("F0") + "% of participants!\n\nPress the button below to retry.";
+        percentileText.text = "You completed the game, congratulations!\n\nYou scored better than " + zScore.ToString("F0") + "% of participants!\n\nPress the button below to continue to the next part of the experiment, or try again.";
         StartCoroutine(ScoreAnimator((int)zScore));
     }
 
