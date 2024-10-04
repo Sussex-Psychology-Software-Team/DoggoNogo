@@ -26,20 +26,52 @@ public class ScoreManager : MonoBehaviour
     // RTs
     public double minRT = .15; // Minimum RT bound
     public double maxRT = .6; // Init Maximum RT bound to 600ms, to be changed later
+    ArrayList sortedRTs = new(); // Store rts in ArrayList to allow for easier median computation and store as sorted list (i.e. sortedRTs.Sort() method)
 
     // ******************* METHODS/FUNCTIONS *******************
     public void ProcessTrialResult(double reactionTime) {
-        string trialType = DetermineTrialType(reactionTime);
-        int trialScore = CalculateTrialScore(trialType, reactionTime);
+        double medianRT = GetMedianRT(reactionTime);
+        maxRT = medianRT*2;//Math.Max(scoreManager.minRT*2, medianRT*2); // Lowerbound on maxRT of minRT*2
+        string responseType = DetermineResponseType(reactionTime, medianRT);
+        int trialScore = CalculateTrialScore(responseType, reactionTime);
         UpdateTotalScore(trialScore);
-        SaveTrialData(reactionTime, trialType, trialScore);
-        ProvideFeedback(trialType, trialScore);
+        SaveTrialData(reactionTime, responseType, trialScore, medianRT);
+        ProvideFeedback(responseType, trialScore);
     }
     
-    string DetermineTrialType(double reactionTime) {
+    // slow but simple median function - quicker algorithms here: https://stackoverflow.com/questions/4140719/calculate-median-in-c-sharp
+    double GetMedianRT(double rt){
+        double medianRT = CalculateMedianRT(rt);
+        // Adjust for starter trials
+        int trialN = DataManager.Instance.data.trials.Count;
+        if(trialN <= 10){
+            medianRT = MedianBurnInAdjustment(medianRT, trialN);
+        }
+
+        return medianRT;
+    }
+
+    double CalculateMedianRT(double rt){
+        // Add to array and sort
+        sortedRTs.Add(rt); // Add to median score list
+        sortedRTs.Sort(); // Note mutates original list
+        // Get the median
+        int size = sortedRTs.Count;
+        int mid = size / 2;
+        double middleValue = (double)sortedRTs[mid];
+        double median = (size % 2 != 0) ? middleValue : (middleValue + (double)sortedRTs[mid - 1]) / 2;
+        return median;
+    }
+
+    double MedianBurnInAdjustment(double median, int trialN){
+        median += median * Math.Min(0, 1-trialN/10);
+        return median;
+    }
+
+    string DetermineResponseType(double reactionTime, double medianRT) {
         if (reactionTime < 0)
             return "early";
-        else if (reactionTime > trialManager.medianRT) // *2 makes things a bit easier
+        else if (reactionTime > medianRT) // *2 makes things a bit easier
             return "slow";
         else
             return "fast";
@@ -63,8 +95,8 @@ public class ScoreManager : MonoBehaviour
         return (int)clampedScore;
     }
     
-    int CalculateTrialScore(string trialType, double reactionTime){
-        switch (trialType){
+    int CalculateTrialScore(string responseType, double reactionTime){
+        switch (responseType){
             case "early":
                 return -minScore;
             case "slow":
@@ -72,7 +104,7 @@ public class ScoreManager : MonoBehaviour
             case "fast":
                 return CalculateScore(reactionTime);
             default:
-                throw new ArgumentException("Invalid trial type", nameof(trialType));
+                throw new ArgumentException("Invalid trial type", nameof(responseType));
         }
     }
     
@@ -82,12 +114,12 @@ public class ScoreManager : MonoBehaviour
         totalScore = Math.Max(totalScore, scoreLowerBound);
     }
 
-    void SaveTrialData(double reactionTime, string trialType, int trialScore){
-        DataManager.Instance.data.CurrentTrial().SaveTrial(reactionTime, trialType, trialScore, totalScore);
+    void SaveTrialData(double reactionTime, string responseType, int trialScore, double medianRT){
+        DataManager.Instance.data.CurrentTrial().SaveTrial(reactionTime, responseType, trialScore, totalScore, medianRT);
     }
 
-    void ProvideFeedback(string trialType, int trialScore) {
-        feedback.giveFeedback(trialType, totalScore, trialScore);
+    void ProvideFeedback(string responseType, int trialScore) {
+        feedback.giveFeedback(responseType, totalScore, trialScore);
     }
 
     // CONSIDER MOVING THIS ELSEWHERE - feedback or healthbar

@@ -15,7 +15,6 @@ public class TrialManager : MonoBehaviour
     
     // ISI global vars
     double trialISI; // Stores each trial's trialISI for speed of access
-    ArrayList sortedRTs = new(); // Store rts in ArrayList to allow for easier median computation and store as sorted list (i.e. sortedRTs.Sort() method)
     // Timer - https://stackoverflow.com/questions/394020/how-accurate-is-system-diagnostics-stopwatch
     Stopwatch timer = new Stopwatch(); // High precision timer: https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.stopwatch?view=net-8.0&redirectedfrom=MSDN#remarks
 
@@ -25,27 +24,6 @@ public class TrialManager : MonoBehaviour
     public Feedback feedback; // For prompting new trial states (and missed trial for now)
 
     // ******************* FUNCTIONS *******************
-    // RT Helpers ------------------------------------------------------------
-    // slow but simple median function - quicker algorithms here: https://stackoverflow.com/questions/4140719/calculate-median-in-c-sharp
-    double CalcMedianRT(double rt) {
-        // Add to array and sort
-        sortedRTs.Add(rt); // Add to median score list
-        sortedRTs.Sort(); // Note mutates original list
-        // Get the median
-        int size = sortedRTs.Count;
-        int mid = size / 2;
-        double middleValue = (double)sortedRTs[mid];
-        double median = (size % 2 != 0) ? middleValue : (middleValue + (double)sortedRTs[mid - 1]) / 2;
-        
-        return median;
-    }
-
-    double MedianBurnInAdjustment(double median, int trialN){
-        median += median * Math.Min(0, 1-trialN/10);
-        return median;
-    }
-
-    // TRIAL MANAGEMENT ------------------------------------------------------------
     // Coroutine to delay the start of a new trial and show feedback
     IEnumerator DelayBeforeNextTrial(float delay = 1f) {
         yield return new WaitForSeconds(delay); // Wait for 1 second
@@ -54,9 +32,6 @@ public class TrialManager : MonoBehaviour
 
     void NewTrial() { //function to reset variables and set-up for a new trials
         bone.Hide();
-        // Get new maxRT
-        scoreManager.maxRT = medianRT*2;//Math.Max(scoreManager.minRT*2, medianRT*2); // Lowerbound on maxRT of minRT*2
-        Debug.Log(scoreManager.maxRT);
         // Get new ISI
         trialISI = UnityEngine.Random.Range(ISIRange[0], ISIRange[1]); // New trialISI
         // Create new trial in data structure
@@ -78,13 +53,6 @@ public class TrialManager : MonoBehaviour
             // Get score from RT
             double rt = timer.Elapsed.TotalSeconds - trialISI; // subtract ISI from time elapsed during press
             scoreManager.ProcessTrialResult(rt); // Probs don't need score anywhere
-            medianRT = CalcMedianRT(rt);
-
-            // Adjust for starter trials
-            int trialN = DataManager.Instance.data.trials.Count;
-            if(trialN <= 10){
-                medianRT = MedianBurnInAdjustment(medianRT, trialN);
-            }
         }
         /////// ---------------
         StartCoroutine(DelayBeforeNextTrial());

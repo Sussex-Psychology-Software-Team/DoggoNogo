@@ -20,12 +20,13 @@ public class Trial {
         trialType = "missed";
     }
 
-    public void SaveTrial(double rt, string type, int score, int total) {
+    public void SaveTrial(double rt, string type, int score, int total, double threshold) {
         this.rt = RoundTime(rt, 7);
         this.datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         this.trialType = type;
         this.trialScore = score;
         this.totalScore = total;
+        this.threshold = threshold;
     }
 
     double RoundTime(double time, int dp) {
