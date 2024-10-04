@@ -83,9 +83,9 @@ public class Feedback : MonoBehaviour
         scoreChange.text = "<color=" + changeTextHex + ">" + sign + trialScore;
         // Display new score
         healthBarManager.currentHealthBar.SetColour(barColour);
+        healthBarManager.currentHealthBar.SetHealth(newTotalScore); // Note do this prior to changing level to start healthbar on new minimum
         // Check level
         if(newTotalScore >= healthBarManager.currentHealthBar.GetMaxHealth()) changeLevel(); // Switch healthbars if above maximum - confusingly lost in here maybe??
-        healthBarManager.currentHealthBar.SetHealth(newTotalScore); // Note do this prior to changing level to start healthbar on new minimum
     }
 
     // Level 1,2,3
