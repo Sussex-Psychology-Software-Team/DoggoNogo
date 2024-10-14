@@ -39,8 +39,7 @@ public class ScoreManager : MonoBehaviour
         SaveTrialData(reactionTime, responseType, trialScore, validTrial);
         ProvideFeedback(responseType, trialScore);
         // Get new thresholds and bounds using this trials RT
-        UpdateMedianRT(reactionTime);
-        maxRT = medianRT*2; //Math.Max(scoreManager.minRT*2, medianRT*2); // Lowerbound on maxRT of minRT*2
+        if(validTrial) UpdateThresholds(reactionTime);
     }
     
     // slow but simple median function - quicker algorithms here: https://stackoverflow.com/questions/4140719/calculate-median-in-c-sharp
@@ -137,6 +136,11 @@ public class ScoreManager : MonoBehaviour
 
     void ProvideFeedback(string responseType, int trialScore) {
         feedback.giveFeedback(responseType, totalScore, trialScore);
+    }
+
+    void UpdateThresholds(double reactionTime){
+        UpdateMedianRT(reactionTime);
+        maxRT = medianRT*2; //Math.Max(scoreManager.minRT*2, medianRT*2); // Lowerbound on maxRT of minRT*2
     }
 
     // CONSIDER MOVING THIS ELSEWHERE - feedback or healthbar
