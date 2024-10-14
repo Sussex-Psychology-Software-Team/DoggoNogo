@@ -27,30 +27,30 @@ public class ScoreManager : MonoBehaviour
     // RTs
     public double minRT = .15; // Minimum RT bound
     public double maxRT = .6; // Init Maximum RT bound to 600ms, to be changed later
+    public double medianRT = 0;
     ArrayList sortedRTs = new(); // Store rts in ArrayList to allow for easier median computation and store as sorted list (i.e. sortedRTs.Sort() method)
 
     // ******************* METHODS/FUNCTIONS *******************
     public void ProcessTrialResult(double reactionTime) {
-        double medianRT = GetMedianRT(reactionTime);
-        maxRT = medianRT*2; //Math.Max(scoreManager.minRT*2, medianRT*2); // Lowerbound on maxRT of minRT*2
-        string responseType = DetermineResponseType(reactionTime, medianRT);
+        string responseType = DetermineResponseType(reactionTime);
         bool validTrial = TestTrialValidity(responseType);
         int trialScore = CalculateTrialScore(responseType, reactionTime);
         UpdateTotalScore(trialScore);
-        SaveTrialData(reactionTime, responseType, trialScore, medianRT, validTrial);
+        SaveTrialData(reactionTime, responseType, trialScore, validTrial);
         ProvideFeedback(responseType, trialScore);
+        // Get new thresholds and bounds using this trials RT
+        UpdateMedianRT(reactionTime);
+        maxRT = medianRT*2; //Math.Max(scoreManager.minRT*2, medianRT*2); // Lowerbound on maxRT of minRT*2
     }
     
     // slow but simple median function - quicker algorithms here: https://stackoverflow.com/questions/4140719/calculate-median-in-c-sharp
-    double GetMedianRT(double rt){
-        double medianRT = CalculateMedianRT(rt);
+    void UpdateMedianRT(double rt){
+        medianRT = CalculateMedianRT(rt);
         // Adjust for starter trials
         int trialN = DataManager.Instance.data.trials.Count;
         if(trialN <= 10){
             medianRT = MedianBurnInAdjustment(medianRT, trialN);
         }
-
-        return medianRT;
     }
 
     double CalculateMedianRT(double rt){
@@ -71,7 +71,7 @@ public class ScoreManager : MonoBehaviour
         return median;
     }
 
-    string DetermineResponseType(double reactionTime, double medianRT) {
+    string DetermineResponseType(double reactionTime) {
         if (reactionTime < 0)
             return "early";
         else if (reactionTime > medianRT) // *2 makes things a bit easier
@@ -131,7 +131,7 @@ public class ScoreManager : MonoBehaviour
         totalScore = Math.Max(totalScore, scoreLowerBound);
     }
 
-    void SaveTrialData(double reactionTime, string responseType, int trialScore, double medianRT, bool validTrial){ // This could be better?
+    void SaveTrialData(double reactionTime, string responseType, int trialScore, bool validTrial){ // This could be better?
         DataManager.Instance.data.CurrentTrial().SaveTrial(reactionTime, responseType, trialScore, totalScore, medianRT, validTrial, validTrialCount);
     }
 
@@ -168,5 +168,6 @@ public class ScoreManager : MonoBehaviour
 
     void Start(){
         nTrials = GetL1nQuery(DataManager.Instance.data.metadata.l1n, 60);
+        medianRT = minRT + ((maxRT-minRT)/2); // initialise median to half maximum RT  
     }
 }
