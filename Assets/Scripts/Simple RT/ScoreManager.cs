@@ -76,8 +76,12 @@ public class ScoreManager : MonoBehaviour
             return "early";
         else if (reactionTime > medianRT) // *2 makes things a bit easier
             return "slow";
-        else
+        else if(reactionTime < maxRT)
             return "fast";
+        else if(reactionTime >= maxRT)
+            return "missed";
+        else
+            throw new ArgumentException("Could not determine response type", nameof(reactionTime));
     }
 
     bool TestTrialValidity(string trialType){
