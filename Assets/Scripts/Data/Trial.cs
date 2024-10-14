@@ -10,6 +10,8 @@ public class Trial {
     public int totalScore;
     public string responseType;
     public double threshold;
+    public bool validTrial;
+    public int validTrialCount;
 
     public Trial(int trialN, double isiVar) {
         trialNumber = trialN;
@@ -19,15 +21,18 @@ public class Trial {
         trialScore = 0;
         totalScore = -1;
         responseType = "missed";
+        validTrial = false;
     }
 
-    public void SaveTrial(double rt, string type, int score, int total, double threshold) {
+    public void SaveTrial(double rt, string type, int score, int total, double threshold, bool validTrial, int validTrialCount) {
         this.rt = RoundTime(rt, 7);
         this.datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         this.responseType = type;
         this.trialScore = score;
         this.totalScore = total;
         this.threshold = threshold;
+        this.validTrial = validTrial;
+        this.validTrialCount = validTrialCount;
     }
 
     double RoundTime(double time, int dp) {

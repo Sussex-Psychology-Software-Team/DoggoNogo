@@ -18,6 +18,7 @@ public class ScoreManager : MonoBehaviour
     public int level = 1; // Track progress
     // Trials
     public int nTrials = 60; // Rough number of trials per participant
+    public int validTrialCount = 0;
     public int minTrials = 10; // Minimum number of trials per level
     // Scores
     public int minScore = 100; // Minimum score for fast trial
@@ -31,11 +32,12 @@ public class ScoreManager : MonoBehaviour
     // ******************* METHODS/FUNCTIONS *******************
     public void ProcessTrialResult(double reactionTime) {
         double medianRT = GetMedianRT(reactionTime);
-        maxRT = medianRT*2;//Math.Max(scoreManager.minRT*2, medianRT*2); // Lowerbound on maxRT of minRT*2
+        maxRT = medianRT*2; //Math.Max(scoreManager.minRT*2, medianRT*2); // Lowerbound on maxRT of minRT*2
         string responseType = DetermineResponseType(reactionTime, medianRT);
+        bool validTrial = TestTrialValidity(responseType);
         int trialScore = CalculateTrialScore(responseType, reactionTime);
         UpdateTotalScore(trialScore);
-        SaveTrialData(reactionTime, responseType, trialScore, medianRT);
+        SaveTrialData(reactionTime, responseType, trialScore, medianRT, validTrial);
         ProvideFeedback(responseType, trialScore);
     }
     
@@ -77,6 +79,15 @@ public class ScoreManager : MonoBehaviour
             return "fast";
     }
 
+    bool TestTrialValidity(string trialType){
+        if(trialType == "slow" || trialType == "fast"){
+            validTrialCount++;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // Calculate score from rt
     int CalculateScore(double rt) {
         // Calculate score
@@ -114,8 +125,8 @@ public class ScoreManager : MonoBehaviour
         totalScore = Math.Max(totalScore, scoreLowerBound);
     }
 
-    void SaveTrialData(double reactionTime, string responseType, int trialScore, double medianRT){
-        DataManager.Instance.data.CurrentTrial().SaveTrial(reactionTime, responseType, trialScore, totalScore, medianRT);
+    void SaveTrialData(double reactionTime, string responseType, int trialScore, double medianRT, bool validTrial){ // This could be better?
+        DataManager.Instance.data.CurrentTrial().SaveTrial(reactionTime, responseType, trialScore, totalScore, medianRT, validTrial, validTrialCount);
     }
 
     void ProvideFeedback(string responseType, int trialScore) {
