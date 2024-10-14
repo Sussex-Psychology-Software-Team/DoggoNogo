@@ -55,7 +55,8 @@ public class ScoreManager : MonoBehaviour
 
     double CalculateMedianRT(double rt){
         // Add to array and sort
-        sortedRTs.Add(rt); // Add to median score list
+        double clampedRT = Math.Clamp(rt, minRT, maxRT); // Clamp Reaction Time
+        sortedRTs.Add(clampedRT); // Add to median score list
         sortedRTs.Sort(); // Note mutates original list
         // Get the median
         int size = sortedRTs.Count;
