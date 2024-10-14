@@ -41,18 +41,12 @@ public class TrialManager : MonoBehaviour
         RestartTimer();
     }
 
-    void EndTrial(bool missed = false){ // Don't forget missed trials here
+    void EndTrial(){ // Don't forget missed trials here
         timer.Stop(); // Immediately stop timer
-        if(missed){
-            feedback.giveFeedback("missed", scoreManager.totalScore, 0);
-            // Just save total score directly for now
-            DataManager.Instance.data.CurrentTrial().totalScore = scoreManager.totalScore;
-            DataManager.Instance.data.CurrentTrial().datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        } else {
-            // Get score from RT
-            double rt = timer.Elapsed.TotalSeconds - trialISI; // subtract ISI from time elapsed during press
-            scoreManager.ProcessTrialResult(rt); // Probs don't need score anywhere
-        }
+        double rt = timer.Elapsed.TotalSeconds - trialISI; // subtract ISI from time elapsed during press
+        scoreManager.ProcessTrialResult(rt); // Probs don't need score anywhere
+        // feedback.giveFeedback("missed", scoreManager.totalScore, 0);
+        // SaveTrial(null, "missed", 0, scoreManager.totalScore, medianRT, false, scoreManager.validTrialCount);
         /////// ---------------
         StartCoroutine(DelayBeforeNextTrial());
         // presentText(feedback); // Prompt for new trial starting
@@ -83,13 +77,9 @@ public class TrialManager : MonoBehaviour
             // If ISI ended show bone
             if(timer.Elapsed.TotalSeconds > trialISI && bone.Hidden()){
                 bone.Show(); // End ISI
-            // If > max trial time = missed trial
-            } else if(timer.Elapsed.TotalSeconds > (trialISI + scoreManager.maxRT)){
-                //Missed Trial
-                EndTrial(true);
             }
             // On down arrow (early or valid press)
-            if(Input.GetKeyDown(KeyCode.DownArrow)){
+            if(Input.GetKeyDown(KeyCode.DownArrow) || timer.Elapsed.TotalSeconds > (trialISI + scoreManager.maxRT)){
                 EndTrial();
             }
         }
