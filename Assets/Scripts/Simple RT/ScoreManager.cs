@@ -41,35 +41,8 @@ public class ScoreManager : MonoBehaviour
         // Get new thresholds and bounds using this trials RT
         if(validTrial) UpdateThresholds(reactionTime);
     }
-    
-    // slow but simple median function - quicker algorithms here: https://stackoverflow.com/questions/4140719/calculate-median-in-c-sharp
-    void UpdateMedianRT(double rt){
-        medianRT = CalculateMedianRT(rt);
-        // Adjust for starter trials
-        int trialN = DataManager.Instance.data.trials.Count;
-        if(trialN <= 10){
-            medianRT = MedianBurnInAdjustment(medianRT, trialN);
-        }
-    }
 
-    double CalculateMedianRT(double rt){
-        // Add to array and sort
-        double clampedRT = Math.Clamp(rt, minRT, maxRT); // Clamp Reaction Time
-        sortedRTs.Add(clampedRT); // Add to median score list
-        sortedRTs.Sort(); // Note mutates original list
-        // Get the median
-        int size = sortedRTs.Count;
-        int mid = size / 2;
-        double middleValue = (double)sortedRTs[mid];
-        double median = (size % 2 != 0) ? middleValue : (middleValue + (double)sortedRTs[mid - 1]) / 2;
-        return median;
-    }
-
-    double MedianBurnInAdjustment(double median, int trialN){
-        median += median * Math.Min(0, 1-trialN/10);
-        return median;
-    }
-
+    // Response Types
     string DetermineResponseType(double reactionTime) {
         if (reactionTime < 0)
             return "early";
@@ -123,7 +96,8 @@ public class ScoreManager : MonoBehaviour
                 throw new ArgumentException("Invalid trial type", nameof(responseType));
         }
     }
-    
+
+    // Saving/ Presenting
     void UpdateTotalScore(int trialScore) {
         totalScore += trialScore;
         int scoreLowerBound = (int)healthBarManager.currentHealthBar.GetMinHealth();
@@ -138,9 +112,38 @@ public class ScoreManager : MonoBehaviour
         feedback.giveFeedback(responseType, totalScore, trialScore);
     }
 
+    // Threshold Functions
     void UpdateThresholds(double reactionTime){
         UpdateMedianRT(reactionTime);
         maxRT = medianRT*2; //Math.Max(scoreManager.minRT*2, medianRT*2); // Lowerbound on maxRT of minRT*2
+    }
+
+        // slow but simple median function - quicker algorithms here: https://stackoverflow.com/questions/4140719/calculate-median-in-c-sharp
+    void UpdateMedianRT(double rt){
+        medianRT = CalculateMedianRT(rt);
+        // Adjust for starter trials
+        int trialN = DataManager.Instance.data.trials.Count
+        if(trialN <= 10){
+            medianRT = MedianBurnInAdjustment(medianRT, trialN);
+        }
+    }
+
+    double CalculateMedianRT(double rt){
+        // Add to array and sort
+        double clampedRT = Math.Clamp(rt, minRT, maxRT); // Clamp Reaction Time
+        sortedRTs.Add(clampedRT); // Add to median score list
+        sortedRTs.Sort(); // Note mutates original list
+        // Get the median
+        int size = sortedRTs.Count;
+        int mid = size / 2;
+        double middleValue = (double)sortedRTs[mid];
+        double median = (size % 2 != 0) ? middleValue : (middleValue + (double)sortedRTs[mid - 1]) / 2;
+        return median;
+    }
+
+    double MedianBurnInAdjustment(double median, int trialN){
+        median += median * Math.Min(0, 1-trialN/10);
+        return median;
     }
 
     // CONSIDER MOVING THIS ELSEWHERE - feedback or healthbar
