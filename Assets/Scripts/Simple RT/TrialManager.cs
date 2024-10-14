@@ -44,14 +44,9 @@ public class TrialManager : MonoBehaviour
     void EndTrial(){ // Don't forget missed trials here
         timer.Stop(); // Immediately stop timer
         double rt = timer.Elapsed.TotalSeconds - trialISI; // subtract ISI from time elapsed during press
-        scoreManager.ProcessTrialResult(rt); // Probs don't need score anywhere
-        // feedback.giveFeedback("missed", scoreManager.totalScore, 0);
-        // SaveTrial(null, "missed", 0, scoreManager.totalScore, medianRT, false, scoreManager.validTrialCount);
-        /////// ---------------
+        scoreManager.ProcessTrialResult(rt);
         StartCoroutine(DelayBeforeNextTrial());
-        // presentText(feedback); // Prompt for new trial starting
-    }   
-
+    }
 
     void RestartTimer(){
         timer.Reset();
@@ -71,7 +66,7 @@ public class TrialManager : MonoBehaviour
 
     // Update is called once per frame - maybe use FixedUpdate for inputs?
     void Update(){
-        if(trialISI == 0 && Input.GetKeyDown(KeyCode.DownArrow)){
+        if(trialISI == 0 && Input.GetKeyDown(KeyCode.DownArrow)){ // Note consider trial count or a bool for first trial check
             NewTrial();
         } else if(timer.IsRunning){
             // If ISI ended show bone
