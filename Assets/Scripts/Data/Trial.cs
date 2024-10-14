@@ -4,7 +4,7 @@ using System;
 public class Trial {
     public int trialNumber;
     public double isi;
-    public double rt;
+    public double? rt;
     public string datetime;
     public int trialScore;
     public int totalScore;
@@ -16,7 +16,7 @@ public class Trial {
     public Trial(int trialN, double isiVar) {
         trialNumber = trialN;
         isi = isiVar;
-        rt = -1.0;
+        rt = null;
         datetime = "";
         trialScore = 0;
         totalScore = -1;
@@ -24,8 +24,8 @@ public class Trial {
         validTrial = false;
     }
 
-    public void SaveTrial(double rt, string type, int score, int total, double threshold, bool validTrial, int validTrialCount) {
-        this.rt = RoundTime(rt, 7);
+    public void SaveTrial(double? rt, string type, int score, int total, double threshold, bool validTrial, int validTrialCount) {
+        if(rt.HasValue) this.rt = RoundTime(rt.Value, 7);
         this.datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         this.responseType = type;
         this.trialScore = score;
