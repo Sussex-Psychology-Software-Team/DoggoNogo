@@ -122,9 +122,8 @@ public class ScoreManager : MonoBehaviour
     void UpdateMedianRT(double rt){
         medianRT = CalculateMedianRT(rt);
         // Adjust for starter trials
-        int trialN = DataManager.Instance.data.trials.Count
-        if(trialN <= 10){
-            medianRT = MedianBurnInAdjustment(medianRT, trialN);
+        if(validTrialCount <= 10){
+            medianRT = MedianBurnInAdjustment(medianRT, validTrialCount);
         }
     }
 
