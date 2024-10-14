@@ -115,6 +115,7 @@ public class ScoreManager : MonoBehaviour
         switch (responseType){
             case "early":
                 return -minScore;
+            case "missed":
             case "slow":
                 return 0;
             case "fast":
