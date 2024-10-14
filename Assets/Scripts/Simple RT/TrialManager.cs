@@ -11,7 +11,6 @@ using System.Collections.Generic; //for List
 public class TrialManager : MonoBehaviour
 {
     public float[] ISIRange = { 1f, 4f }; // Input floats to Random.Range to return a float
-    public double medianRT; // Used by other scripts too
     
     // ISI global vars
     double trialISI; // Stores each trial's trialISI for speed of access
@@ -74,7 +73,6 @@ public class TrialManager : MonoBehaviour
     // ******************* UNITY *******************
     void Start(){
         DataManager.Instance.data.ClearTrials(); // Incase of retry
-        medianRT = scoreManager.minRT + ((scoreManager.maxRT-scoreManager.minRT)/2); // initialise median to half maximum RT  
     }
 
     // Update is called once per frame - maybe use FixedUpdate for inputs?
