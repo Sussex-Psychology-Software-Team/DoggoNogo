@@ -136,7 +136,7 @@ public class ScoreManager : MonoBehaviour
     // CONSIDER MOVING THIS ELSEWHERE - feedback or healthbar
     public int GetNewTargetScore(){
         // Calculate number of trials in current level.
-        int nTrialsRemaining = nTrials - DataManager.Instance.data.trials.Count; // Number of trials remaining in task.
+        int nTrialsRemaining = nTrials - validTrialCount; // Number of trials remaining in task.
         int nTrialsPerLevelsRemaining = nTrialsRemaining / ((nLevels+1) - level); // Number of trials in each remaining level.
         // Calulate target score
         int nFastTrials = nTrialsPerLevelsRemaining/2; 
