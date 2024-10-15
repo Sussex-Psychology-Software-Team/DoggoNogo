@@ -32,19 +32,20 @@ public class ScoreManager : MonoBehaviour
 
     // ******************* METHODS/FUNCTIONS *******************
     public bool ProcessTrialResult(double reactionTime) {
+        // Calculate
         string responseType = DetermineResponseType(reactionTime);
         bool validTrial = TestTrialValidity(responseType);
         int trialScore = CalculateTrialScore(responseType, reactionTime);
         UpdateTotalScore(trialScore);
-        // Check level
+        // Save and feedback
+        SaveTrialData(reactionTime, responseType, trialScore, validTrial);
+        ProvideFeedback(responseType, trialScore);
+        // Handle levels
         bool pauseTrial = false;
         if(totalScore >= healthBarManager.currentHealthBar.GetMaxHealth()){
             ChangeLevel(); // Switch healthbars if above maximum - confusingly lost in here maybe??
             pauseTrial = true;
         }
-
-        SaveTrialData(reactionTime, responseType, trialScore, validTrial);
-        ProvideFeedback(responseType, trialScore);
         // Get new thresholds and bounds using this trials RT
         if(validTrial) UpdateThresholds(reactionTime);
         return pauseTrial;
