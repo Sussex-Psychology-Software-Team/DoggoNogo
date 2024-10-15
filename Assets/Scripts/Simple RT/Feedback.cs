@@ -84,25 +84,16 @@ public class Feedback : MonoBehaviour
         // Display new score
         healthBarManager.currentHealthBar.SetColour(barColour);
         healthBarManager.currentHealthBar.SetHealth(newTotalScore); // Note do this prior to changing level to start healthbar on new minimum
-        // Check level
-        if(newTotalScore >= healthBarManager.currentHealthBar.GetMaxHealth()) ChangeLevel(); // Switch healthbars if above maximum - confusingly lost in here maybe??
     }
 
     // Level 1,2,3
-    public void ChangeLevel(){
-        scoreManager.level += 1;
-        if(scoreManager.level>scoreManager.nLevels){
-            trialManager.EndTask();
-            return;
-        } else {
-            // Change dog
-            dog.IncreaseLevel(scoreManager.level);
-            // Change Health Bars
-            int newTargetScore = scoreManager.GetNewTargetScore();
-            healthBarManager.SetNewHealthBar(scoreManager.level, newTargetScore);
-            // Prompt new level
-            Prompt("Level " +scoreManager.level+"!");
-        }
+    public void ChangeLevel(int level, int targetScore){
+        // Change dog
+        dog.IncreaseLevel(level);
+        // Change Health Bars
+        healthBarManager.SetNewHealthBar(level, targetScore);
+        // Prompt new level
+        Prompt("Level " + level +"!");
     }
 
     // Use this for presenting standard black text in between trials
