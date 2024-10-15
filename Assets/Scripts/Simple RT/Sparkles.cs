@@ -7,7 +7,7 @@ public class Sparkles : MonoBehaviour
     public ParticleSystem sparkles;
 
     public void Sparkle(){
-        StartCoroutine(PlaySparkles(5.0f));  // 5 seconds
+        StartCoroutine(PlaySparkles(3.0f));  // 5 seconds
     }
 
     IEnumerator PlaySparkles(float duration){

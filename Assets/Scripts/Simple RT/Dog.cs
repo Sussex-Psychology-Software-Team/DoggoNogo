@@ -44,7 +44,7 @@ public class Dog : MonoBehaviour
         sparkles.Sparkle();
         startingX = transform.localPosition.x; // For shake
         yPosition = transform.localPosition.y; // Shake and jump
-        yield return StartCoroutine(ShakeAndColour(Color.grey, 5.0f, 5.0f, 0.2f));
+        yield return StartCoroutine(ShakeAndColour(Color.grey, 4.0f, 3.0f, 0.2f));
         // After both have finished, call GetSprite
         GetSprite(level);
         Pant();
