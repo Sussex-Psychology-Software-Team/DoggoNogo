@@ -109,7 +109,7 @@ public class ScoreManager : MonoBehaviour
     }
 
     void ProvideFeedback(string responseType, int trialScore) {
-        feedback.giveFeedback(responseType, totalScore, trialScore);
+        feedback.GiveFeedback(responseType, totalScore, trialScore);
     }
 
     // Threshold Functions

@@ -18,7 +18,7 @@ public class Feedback : MonoBehaviour
     public TrialManager trialManager; // Contains endTask function
 
     // Main function for displaying feedback based on performance
-    public void giveFeedback(string trialType, int newTotalScore, int trialScore=0){
+    public void GiveFeedback(string trialType, int newTotalScore, int trialScore=0){
         // feedback
         Color barColour = Color.green;
         string feedback = "";
@@ -71,10 +71,10 @@ public class Feedback : MonoBehaviour
             //dog.whine();
         }
 
-        displayFeedback(feedback, newTotalScore, trialScore, changeTextHex, barColour);
+        DisplayFeedback(feedback, newTotalScore, trialScore, changeTextHex, barColour);
     }
 
-    void displayFeedback(string feedback, int newTotalScore, int trialScore, string changeTextHex, Color barColour){
+    void DisplayFeedback(string feedback, int newTotalScore, int trialScore, string changeTextHex, Color barColour){
         scoreChange.enabled = true;
         feedbackText.enabled = true;
         feedbackText.text = feedback;
@@ -85,11 +85,11 @@ public class Feedback : MonoBehaviour
         healthBarManager.currentHealthBar.SetColour(barColour);
         healthBarManager.currentHealthBar.SetHealth(newTotalScore); // Note do this prior to changing level to start healthbar on new minimum
         // Check level
-        if(newTotalScore >= healthBarManager.currentHealthBar.GetMaxHealth()) changeLevel(); // Switch healthbars if above maximum - confusingly lost in here maybe??
+        if(newTotalScore >= healthBarManager.currentHealthBar.GetMaxHealth()) ChangeLevel(); // Switch healthbars if above maximum - confusingly lost in here maybe??
     }
 
     // Level 1,2,3
-    public void changeLevel(){
+    public void ChangeLevel(){
         scoreManager.level += 1;
         if(scoreManager.level>scoreManager.nLevels){
             trialManager.EndTask();
