@@ -104,6 +104,17 @@ public class ScoreManager : MonoBehaviour
         totalScore = Math.Max(totalScore, scoreLowerBound);
     }
 
+    void ChangeLevel(){
+        level += 1;
+        if(level>nLevels){
+            trialManager.EndTask();
+        } else {
+            // Change Health Bars
+            int targetScore = GetNewTargetScore();
+            feedback.ChangeLevel(level, targetScore);
+        }
+    }
+
     void SaveTrialData(double reactionTime, string responseType, int trialScore, bool validTrial){ // This could be better?
         DataManager.Instance.data.CurrentTrial().SaveTrial(reactionTime, responseType, trialScore, totalScore, medianRT, validTrial, validTrialCount);
     }
