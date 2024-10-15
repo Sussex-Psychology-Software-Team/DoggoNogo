@@ -31,15 +31,23 @@ public class ScoreManager : MonoBehaviour
     ArrayList sortedRTs = new(); // Store rts in ArrayList to allow for easier median computation and store as sorted list (i.e. sortedRTs.Sort() method)
 
     // ******************* METHODS/FUNCTIONS *******************
-    public void ProcessTrialResult(double reactionTime) {
+    public bool ProcessTrialResult(double reactionTime) {
         string responseType = DetermineResponseType(reactionTime);
         bool validTrial = TestTrialValidity(responseType);
         int trialScore = CalculateTrialScore(responseType, reactionTime);
         UpdateTotalScore(trialScore);
+        // Check level
+        bool pauseTrial = false;
+        if(totalScore >= healthBarManager.currentHealthBar.GetMaxHealth()){
+            ChangeLevel(); // Switch healthbars if above maximum - confusingly lost in here maybe??
+            pauseTrial = true;
+        }
+
         SaveTrialData(reactionTime, responseType, trialScore, validTrial);
         ProvideFeedback(responseType, trialScore);
         // Get new thresholds and bounds using this trials RT
         if(validTrial) UpdateThresholds(reactionTime);
+        return pauseTrial;
     }
 
     // Response Types
@@ -129,7 +137,7 @@ public class ScoreManager : MonoBehaviour
         maxRT = medianRT*2; //Math.Max(scoreManager.minRT*2, medianRT*2); // Lowerbound on maxRT of minRT*2
     }
 
-        // slow but simple median function - quicker algorithms here: https://stackoverflow.com/questions/4140719/calculate-median-in-c-sharp
+    // slow but simple median function - quicker algorithms here: https://stackoverflow.com/questions/4140719/calculate-median-in-c-sharp
     void UpdateMedianRT(double rt){
         medianRT = CalculateMedianRT(rt);
         // Adjust for starter trials
@@ -157,6 +165,8 @@ public class ScoreManager : MonoBehaviour
     }
 
     // CONSIDER MOVING THIS ELSEWHERE - feedback or healthbar
+    // INCREASE LEVEL SCRIPT HERE.
+
     public int GetNewTargetScore(){
         // Calculate number of trials in current level.
         int nTrialsRemaining = nTrials - validTrialCount; // Number of trials remaining in task.
