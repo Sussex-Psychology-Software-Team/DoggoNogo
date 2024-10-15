@@ -168,9 +168,9 @@ public class Dog : MonoBehaviour
     }
 
     // UNITY ************************************
-    void Start(){
-        IncreaseLevel(2);
-    }
+    // void Start(){
+    //     IncreaseLevel(2);
+    // }
     // void Update(){
     //     // Trigger jump on pressing Down Arrow key
     //     if (Input.GetKeyDown(KeyCode.DownArrow)){
