@@ -93,12 +93,13 @@ public class Feedback : MonoBehaviour
         // Change Health Bars
         healthBarManager.SetNewHealthBar(level, targetScore);
         // Prompt new level
-        Prompt("Level " + level +"!");
+        Prompt("Level " + level +"!\n<size=80%>Press the down arrow to continue.");
     }
 
     // Use this for presenting standard black text in between trials
     public void Prompt(string text=""){
-        feedbackText.color = Color.black;
+        scoreChange.text = "";
+        feedbackText.color = Color.white;
         feedbackText.text = text;
     }
 
