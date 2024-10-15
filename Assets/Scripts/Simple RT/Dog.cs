@@ -14,7 +14,6 @@ public class Dog : MonoBehaviour
     // Damage animation
     public float flickerDuration = 1.0f;
     public float flickerInterval = 0.2f;
-    public float shakeAmount = 3.0f;
     bool takingDamage = false;
 
     // Jumping
@@ -55,11 +54,11 @@ public class Dog : MonoBehaviour
         if(!takingDamage){
             startingX = transform.localPosition.x; // For shake
             yPosition = transform.localPosition.y; // Shake and jump
-            StartCoroutine(ShakeAndColour(Color.red));
+            StartCoroutine(ShakeAndColour(3.0f, Color.red));
         }
     }
 
-    IEnumerator ShakeAndColour(Color colour){
+    IEnumerator ShakeAndColour(float shakeAmount, Color colour){
         takingDamage = true; // Stop running script multiple times at once
         float endTime = Time.time + flickerDuration; // How long to run loops of function
         bool flickerToggle = false; // Turns colour flicker (consider shake too?) on and off repeatedly
