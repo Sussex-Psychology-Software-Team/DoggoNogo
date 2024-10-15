@@ -31,6 +31,8 @@ public class Dog : MonoBehaviour
     // Surprised on slow
     public AudioSource dogSurprised;
     // Pant on change level
+    public AudioSource twinkle;
+    public AudioSource levelUp;
     public AudioSource dogPant;
 
 
@@ -42,6 +44,8 @@ public class Dog : MonoBehaviour
 
     IEnumerator IncreaseLevelRoutine(int level){
         sparkles.Sparkle();
+        twinkle.Play();
+        levelUp.Play();
         startingX = transform.localPosition.x; // For shake
         yPosition = transform.localPosition.y; // Shake and jump
         yield return StartCoroutine(ShakeAndColour(Color.grey, 4.0f, 3.0f, 0.2f));
