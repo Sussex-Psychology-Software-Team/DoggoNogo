@@ -29,7 +29,9 @@ public class Dog : MonoBehaviour
     public AudioSource dogWhine1; 
     public AudioSource dogWhine2;
     // Surprised on slow
-    public AudioSource dogSurprised; 
+    public AudioSource dogSurprised;
+    // Pant on change level
+    public AudioSource dogPant;
 
 
     // FUNCTIONS ********************************
@@ -45,6 +47,7 @@ public class Dog : MonoBehaviour
         yield return StartCoroutine(ShakeAndColour(Color.grey, 5.0f, 5.0f, 0.2f));
         // After both have finished, call GetSprite
         GetSprite(level);
+        Pant();
     }
 
     IEnumerator ShakeAndColour(Color colour, float shakeAmount = 3.0f, float flickerDuration = 1.0f, float flickerInterval = 0.2f){
@@ -106,6 +109,10 @@ public class Dog : MonoBehaviour
         dogSurprised.Play();
     }
 
+    public void Pant(){
+        dogPant.Play();
+    }
+
     // Jumping Coroutine
     IEnumerator JumpCoroutine(float jumpDuration) {
         isJumping = true; // Mark that the jump has started
@@ -157,9 +164,9 @@ public class Dog : MonoBehaviour
     }
 
     // UNITY ************************************
-    // void Start(){
-    //     GetSprite(2);
-    // }
+    void Start(){
+        IncreaseLevel(2);
+    }
     // void Update(){
     //     // Trigger jump on pressing Down Arrow key
     //     if (Input.GetKeyDown(KeyCode.DownArrow)){
