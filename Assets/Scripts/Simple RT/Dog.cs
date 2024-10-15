@@ -36,26 +36,17 @@ public class Dog : MonoBehaviour
 
     // FUNCTIONS ********************************
     // Images
-    public void GetSprite(int level){
-        // Loops through sprites automatically
-        sparkles.Sparkle();
-        int newLevel = level-1;
-        if (newLevel < images.Length) {
-            image.sprite = images[newLevel]; // Note first image just loaded automatically
-            // Set new image to correct aspect ratio
-            image.rectTransform.sizeDelta = new Vector2(image.sprite.texture.width, image.sprite.texture.height);
-        } else {
-            Debug.LogError("Out of range error in NextSprite");
-        }
+    public void IncreaseLevel(int level){
+        StartCoroutine(IncreaseLevelRoutine(level));
     }
 
-    public void TakeDamage(){ // Flicker and shake coroutine wrapper.
-        // If not current running flicker and shake, do
-        if(!takingDamage){
-            startingX = transform.localPosition.x; // For shake
-            yPosition = transform.localPosition.y; // Shake and jump
-            StartCoroutine(ShakeAndColour(3.0f, Color.red));
-        }
+    IEnumerator IncreaseLevelRoutine(int level){
+        sparkles.Sparkle();
+        startingX = transform.localPosition.x; // For shake
+        yPosition = transform.localPosition.y; // Shake and jump
+        yield return StartCoroutine(ShakeAndColour(5.0f, Color.grey));
+        // After both have finished, call GetSprite
+        GetSprite(level);
     }
 
     IEnumerator ShakeAndColour(float shakeAmount, Color colour){
@@ -74,6 +65,28 @@ public class Dog : MonoBehaviour
         image.color = Color.white; // White is equal to original colour if left unaltered
         transform.localPosition = new Vector3(startingX, yPosition, 0); // Y position also relevant to jump
         takingDamage = false; // Allow function to run again
+    }
+
+    void GetSprite(int level){
+        // Loops through sprites automatically
+        int newLevel = level-1;
+        if (newLevel < images.Length) {
+            image.sprite = images[newLevel]; // Note first image just loaded automatically
+            // Set new image to correct aspect ratio
+            image.rectTransform.sizeDelta = new Vector2(image.sprite.texture.width, image.sprite.texture.height);
+        } else {
+            Debug.LogError("Out of range error in NextSprite");
+        }
+    }
+
+    // Shake red and return to original pos
+    public void TakeDamage(){ // Flicker and shake coroutine wrapper.
+        // If not current running flicker and shake, do
+        if(!takingDamage){
+            startingX = transform.localPosition.x; // For shake
+            yPosition = transform.localPosition.y; // Shake and jump
+            StartCoroutine(ShakeAndColour(3.0f, Color.red));
+        }
     }
 
     // Audio

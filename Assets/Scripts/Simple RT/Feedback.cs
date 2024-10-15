@@ -96,7 +96,7 @@ public class Feedback : MonoBehaviour
             return;
         } else {
             // Change dog
-            dog.GetSprite(scoreManager.level);
+            dog.IncreaseLevel(scoreManager.level);
             // Change Health Bars
             int newTargetScore = scoreManager.GetNewTargetScore();
             healthBarManager.SetNewHealthBar(scoreManager.level, newTargetScore);
