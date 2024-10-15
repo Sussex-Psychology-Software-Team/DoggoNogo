@@ -55,17 +55,17 @@ public class Dog : MonoBehaviour
         if(!takingDamage){
             startingX = transform.localPosition.x; // For shake
             yPosition = transform.localPosition.y; // Shake and jump
-            StartCoroutine(ShakeRed());
+            StartCoroutine(ShakeAndColour(Color.red));
         }
     }
 
-    IEnumerator ShakeRed(){
+    IEnumerator ShakeAndColour(Color colour){
         takingDamage = true; // Stop running script multiple times at once
         float endTime = Time.time + flickerDuration; // How long to run loops of function
         bool flickerToggle = false; // Turns colour flicker (consider shake too?) on and off repeatedly
         // Flickering function
         while (Time.time < endTime){
-            image.color = flickerToggle ? Color.red : Color.white;
+            image.color = flickerToggle ? colour : Color.white;
             // Apply 2D shaking effect
             transform.localPosition = transform.localPosition + new Vector3(UnityEngine.Random.Range(-shakeAmount, shakeAmount), UnityEngine.Random.Range(-shakeAmount, shakeAmount), 0);
             flickerToggle = !flickerToggle; // Flip state of colour flicker
