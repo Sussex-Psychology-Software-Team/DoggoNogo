@@ -12,7 +12,7 @@ public class TrialManager : MonoBehaviour
 {
     public float[] ISIRange = { 1f, 4f }; // Input floats to Random.Range to return a float
     double trialISI; // Stores each trial's trialISI for speed of access
-    bool pauseTrial = true;
+    bool pauseTrial = true; // At start and each level change
     // Timer - https://stackoverflow.com/questions/394020/how-accurate-is-system-diagnostics-stopwatch
     Stopwatch timer = new Stopwatch(); // High precision timer: https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.stopwatch?view=net-8.0&redirectedfrom=MSDN#remarks
 
@@ -66,6 +66,7 @@ public class TrialManager : MonoBehaviour
     // Update is called once per frame - maybe use FixedUpdate for inputs?
     void Update(){
         if(pauseTrial && Input.GetKeyDown(KeyCode.DownArrow)){ // Note consider trial count or a bool for first trial check
+            pauseTrial = false;
             NewTrial();
         } else if(timer.IsRunning){
             // If ISI ended show bone
