@@ -13,15 +13,9 @@ public class Trial {
     public bool validTrial;
     public int validTrialCount;
 
-    public Trial(int trialN, double isiVar) {
+    public Trial(int trialN, double isi) {
         trialNumber = trialN;
-        isi = isiVar;
-        rt = null;
-        datetime = "";
-        trialScore = 0;
-        totalScore = -1;
-        responseType = "missed";
-        validTrial = false;
+        this.isi = isi;
     }
 
     public void SaveTrial(double? rt, string type, int score, int total, double threshold, bool validTrial, int validTrialCount) {
