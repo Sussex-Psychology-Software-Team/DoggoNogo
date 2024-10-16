@@ -84,6 +84,8 @@ public class Feedback : MonoBehaviour
 
     // Level 1,2,3
     public void ChangeLevel(int level, int targetScore){
+        scoreChange.text = "";
+        scoreText.text = "Score: 0"; 
         // Change dog
         dog.IncreaseLevel(level);
         // Change Health Bars
