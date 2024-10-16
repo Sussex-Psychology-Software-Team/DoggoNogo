@@ -93,17 +93,13 @@ public class ScoreManager : MonoBehaviour
     }
     
     int CalculateTrialScore(string responseType, double reactionTime){
-        switch (responseType){
-            case "early":
-                return -minScore;
-            case "missed":
-            case "slow":
-                return 0;
-            case "fast":
-                return CalculateScore(reactionTime);
-            default:
-                throw new ArgumentException("Invalid trial type", nameof(responseType));
-        }
+        return responseType switch
+        {
+            "early" => -minScore,
+            "missed" or "slow" => 0,
+            "fast" => CalculateScore(reactionTime),
+            _ => throw new ArgumentException("Invalid trial type", nameof(responseType)),
+        };
     }
 
     // Saving/ Presenting
