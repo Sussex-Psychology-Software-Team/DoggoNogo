@@ -37,7 +37,7 @@ public class ScoreManager : MonoBehaviour
         // Save and feedback
         SaveTrialData(reactionTime, responseType, trialScore, validTrial);
         ProvideFeedback(responseType, trialScore);
-        // Handle levels
+        // Handle levels - after presenting trial
         bool pauseTrial = false;
         if(totalScore >= healthBarManager.currentHealthBar.GetMaxHealth()){
             ChangeLevel(); // Switch healthbars if above maximum - confusingly lost in here maybe??
@@ -89,6 +89,7 @@ public class ScoreManager : MonoBehaviour
         return (int)clampedScore;
     }
     
+    // Calculate score from trial
     int CalculateTrialScore(string responseType, double reactionTime){
         return responseType switch
         {
@@ -99,14 +100,14 @@ public class ScoreManager : MonoBehaviour
         };
     }
 
-    // Saving/ Presenting
     void UpdateTotalScore(int trialScore) {
         totalScore += trialScore;
-        int scoreLowerBound = (int)healthBarManager.currentHealthBar.GetMinHealth();
-        totalScore = Math.Max(totalScore, scoreLowerBound);
+        //int scoreLowerBound = (int)healthBarManager.currentHealthBar.GetMinHealth();
+        totalScore = Math.Max(totalScore, 0);
     }
 
     void ChangeLevel(){
+        totalScore = 0;
         level += 1;
         if(level>nLevels){
             trialManager.EndTask();
@@ -171,8 +172,6 @@ public class ScoreManager : MonoBehaviour
         // Clamp to minimum
         int minTargetScore = (minTrials/2) * minScore; // e.g. 10 min trials = 10/2=5*100=500
         if(targetScore < minTargetScore) targetScore = minTargetScore;
-        // Add target to current score
-        if(nTrialsRemaining < nTrials) targetScore += totalScore;
         // Log Score and return
         Debug.Log("New Target Score: " + targetScore);
         return targetScore;
@@ -189,5 +188,6 @@ public class ScoreManager : MonoBehaviour
     void Start(){
         nTrials = GetL1nQuery(DataManager.Instance.data.metadata.l1n, 60);
         medianRT = minRT + ((maxRT-minRT)/2); // initialise median to half maximum RT  
+        
     }
 }

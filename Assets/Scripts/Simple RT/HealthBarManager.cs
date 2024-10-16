@@ -10,15 +10,12 @@ public class HealthBarManager : MonoBehaviour
 
     // Switch healthbars
     public void SetNewHealthBar(int level, int targetScore){
-        // Get previous healthbar maximum
-        int previousMaximum = (int)currentHealthBar.GetMaxHealth(); // Minimum set to last healthbar's maximum
         // Fill current healthbar
-        currentHealthBar.SetHealth(previousMaximum);
+        currentHealthBar.SetHealth(currentHealthBar.GetMaxHealth());
         // Change healthbar from array
         currentHealthBar = healthBarList[level-1];
         // Set min and max for new healthbar
-        currentHealthBar.SetMinHealth(previousMaximum); // Healthbar minimum to last healthbar's maximum
-        currentHealthBar.SetMaxHealth(scoreManager.GetNewTargetScore()); // Set healthbar maximum
+        currentHealthBar.SetMaxHealth(targetScore); // Set healthbar maximum
         currentHealthBar.SetColour(new Color(0.06770712f, 0.5817609f, 0f, 1f)); // "forest"
     }
 
