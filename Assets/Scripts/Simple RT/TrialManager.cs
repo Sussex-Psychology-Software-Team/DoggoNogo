@@ -29,13 +29,13 @@ public class TrialManager : MonoBehaviour
     }
 
     void NewTrial() { //function to reset variables and set-up for a new trials
+        // Reset stim
         bone.Hide();
+        feedback.Hide();
         // Get new ISI
         trialISI = UnityEngine.Random.Range(ISIRange[0], ISIRange[1]); // New trialISI
         // Create new trial in data structure
         DataManager.Instance.data.NewTrial(trialISI); // Create an instance of a Trial
-        // Hide Feedback
-        feedback.Hide();
         // Start timer
         RestartTimer();
     }
