@@ -52,17 +52,17 @@ public class ScoreManager : MonoBehaviour
     }
 
     // Response Types
-    string DetermineResponseType(double reactionTime) {
-        if (reactionTime < 0)
+    string DetermineResponseType(double rt) {
+        if (rt < 0)
             return "early";
-        else if (reactionTime > medianRT) // *2 makes things a bit easier
-            return "slow";
-        else if(reactionTime < maxRT)
-            return "fast";
-        else if(reactionTime >= maxRT)
+        else if(rt > maxRT)
             return "missed";
+        else if (rt > medianRT) // *2 makes things a bit easier
+            return "slow";
+        else if(rt < medianRT)
+            return "fast";
         else
-            throw new ArgumentException("Could not determine response type", nameof(reactionTime));
+            throw new ArgumentException("Could not determine response type", nameof(rt));
     }
 
     bool TestTrialValidity(string trialType){
