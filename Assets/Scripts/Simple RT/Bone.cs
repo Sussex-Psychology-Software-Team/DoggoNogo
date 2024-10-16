@@ -1,4 +1,5 @@
 using System.Collections; // For IEnumerator
+using System.Collections.Generic; // Dictionaries
 using UnityEngine;
 using UnityEngine.UI; // Image namespace
 
@@ -12,7 +13,7 @@ public class Bone : MonoBehaviour
     public AudioSource boneThrow; // Barking on early press
     
 
-    // Hide
+    // SHOW/HIDE ------------------
     public void Hide(){
         image.enabled = false; // Hide bone
     }
@@ -21,11 +22,14 @@ public class Bone : MonoBehaviour
         return image.enabled == false; // Is bone hidden
     }
 
-    // Show
     public void Show(){
         RandomTransform(); // Change position
+        Dictionary<string, float> stimSpec = GetTransform();
+        DataManager.Instance.data.CurrentTrial().SaveStimulus(stimSpec);
         image.enabled = true; // Show bone
     }
+
+    // TRANSFORMATIONS ------------------
 
     void RandomTransform(){
         RectTransform boneRectTransform = image.rectTransform;
@@ -37,6 +41,27 @@ public class Bone : MonoBehaviour
         boneRectTransform.Rotate(new Vector3( 0, 0, UnityEngine.Random.Range(0, 360) ));
         // Position
         boneRectTransform.localPosition = RandomPosition();
+    }
+
+    public Dictionary<string, float> GetTransform(){
+        RectTransform boneRectTransform = image.rectTransform;
+        RectTransform canvasRectTransform = canvas.GetComponent<RectTransform>();
+
+        var boneTransform = new Dictionary<string, float>(){
+            // Canvas
+            {"screenWidth", Screen.width},
+            {"screenHeight", Screen.height},
+            {"canvasWidth", canvasRectTransform.rect.width},
+            {"canvasHeight", canvasRectTransform.rect.height},
+            {"canvasScale", canvasRectTransform.localScale.x},
+            // Bone
+            {"x", boneRectTransform.localPosition.x}, 
+            {"y", boneRectTransform.localPosition.y}, 
+            {"scale", boneRectTransform.localScale.x},
+            {"rotation", boneRectTransform.rotation.z},
+        };
+
+        return boneTransform;
     }
     
     Vector2 RandomPosition(){
@@ -78,7 +103,8 @@ public class Bone : MonoBehaviour
         return new Vector2(randomX, randomY);//new Vector2(randomX, randomY);
     }
 
-    // Throw
+
+    // ANIMATIONS ------------------
     public void Throw(){
         boneThrow.Play();
         StartShrink(1f, 360f);
