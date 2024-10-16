@@ -1,9 +1,6 @@
 using System; // Math
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement; // Change scenes
-using TMPro; // TextMeshProUGUI
 
 public class ScoreManager : MonoBehaviour
 {

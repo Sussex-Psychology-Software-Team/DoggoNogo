@@ -1,8 +1,6 @@
-using System;
 using System.Collections; // For IEnumerator
 using UnityEngine;
 using UnityEngine.UI; // Image namespace
-using TMPro; // TextMeshProUGUI
 
 public class Bone : MonoBehaviour
 {

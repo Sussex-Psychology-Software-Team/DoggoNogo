@@ -1,12 +1,7 @@
 using UnityEngine;
-using Debug = UnityEngine.Debug;
-using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using System;
 using System.Diagnostics; // Stopwatch included here
 using System.Collections;
-using System.Collections.Generic; //for List
 
 public class TrialManager : MonoBehaviour
 {
