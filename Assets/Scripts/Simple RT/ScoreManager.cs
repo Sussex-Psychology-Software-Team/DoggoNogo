@@ -159,9 +159,6 @@ public class ScoreManager : MonoBehaviour
         return median;
     }
 
-    // CONSIDER MOVING THIS ELSEWHERE - feedback or healthbar
-    // INCREASE LEVEL SCRIPT HERE.
-
     public int GetNewTargetScore(){
         // Calculate number of trials in current level.
         int nTrialsRemaining = nTrials - validTrialCount; // Number of trials remaining in task.

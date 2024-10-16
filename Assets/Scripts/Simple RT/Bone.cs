@@ -11,7 +11,6 @@ public class Bone : MonoBehaviour
     public Canvas canvas;
     public GameObject scoreContainer;
     public AudioSource boneThrow; // Barking on early press
-    
 
     // SHOW/HIDE ------------------
     public void Hide(){
@@ -30,7 +29,6 @@ public class Bone : MonoBehaviour
     }
 
     // TRANSFORMATIONS ------------------
-
     void RandomTransform(){
         RectTransform boneRectTransform = image.rectTransform;
         // Size first so position can be accurately calculated (consider taking rotation into account as well)
@@ -160,13 +158,4 @@ public class Bone : MonoBehaviour
         }
         Hide();
     }
-
-    // For testing: (comment out TrialManager's call to new trial in Start() as well)
-    // Test animations
-    // void Start(){
-    // }
-
-    // Test random locations
-    // void Update(){ 
-    // }
 }
