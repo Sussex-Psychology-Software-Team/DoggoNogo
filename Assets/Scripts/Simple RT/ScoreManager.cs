@@ -28,7 +28,7 @@ public class ScoreManager : MonoBehaviour
     public double minRT = .15; // Minimum RT bound
     public double maxRT = .6; // Init Maximum RT bound to 600ms, to be changed later
     public double medianRT = 0;
-    ArrayList sortedRTs = new(); // Store rts in ArrayList to allow for easier median computation and store as sorted list (i.e. sortedRTs.Sort() method)
+    readonly ArrayList sortedRTs = new(); // Store rts in ArrayList to allow for easier median computation and store as sorted list (i.e. sortedRTs.Sort() method)
 
     // ******************* METHODS/FUNCTIONS *******************
     public bool ProcessTrialResult(double reactionTime) {

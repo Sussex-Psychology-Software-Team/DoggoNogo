@@ -14,7 +14,7 @@ public class TrialManager : MonoBehaviour
     double trialISI; // Stores each trial's trialISI for speed of access
     bool pauseTrial = true; // At start and each level change
     // Timer - https://stackoverflow.com/questions/394020/how-accurate-is-system-diagnostics-stopwatch
-    Stopwatch timer = new Stopwatch(); // High precision timer: https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.stopwatch?view=net-8.0&redirectedfrom=MSDN#remarks
+    readonly Stopwatch timer = new(); // High precision timer: https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.stopwatch?view=net-8.0&redirectedfrom=MSDN#remarks
 
     // Feedback/score
     public ScoreManager scoreManager; // Get score based on RT
