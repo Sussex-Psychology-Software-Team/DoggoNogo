@@ -182,8 +182,7 @@ public class ScoreManager : MonoBehaviour
     }
 
     int GetL1nQuery(string queryVar, int defaultN = 60){
-        int l1n;
-        if (int.TryParse(queryVar, out l1n)) {
+        if(int.TryParse(queryVar, out int l1n)){ //inline declaration
             return l1n;
         } else {
             return defaultN;
