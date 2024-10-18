@@ -9,6 +9,7 @@ public class EndScreen : MonoBehaviour
     // Asset references
     public HealthBar scoreBar;
     public TextMeshProUGUI percentileText; // displays score
+    public EndDog endDogScript; 
     // Average score distribution params
     public static double mean = 4000.0;
     public static double sd = 2000.0;
@@ -30,6 +31,7 @@ public class EndScreen : MonoBehaviour
             scoreBar.SetHealth(s);
             yield return new WaitForSeconds(.01f);
         }
+        endDogScript.ToggleJump(false); // Stop jumping on button press
     }
 
     static double PercentileNormCDF(int percentScore) { // Phi
