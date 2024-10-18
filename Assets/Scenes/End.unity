@@ -311,10 +311,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 100
-    m_Right: 100
-    m_Top: 100
-    m_Bottom: 100
+    m_Left: 200
+    m_Right: 200
+    m_Top: 200
+    m_Bottom: 200
   m_ChildAlignment: 4
   m_Spacing: 100
   m_ChildForceExpandWidth: 1
@@ -647,8 +647,13 @@ MonoBehaviour:
   m_text: 'You completed the game, congratulations!
 
 
-    Press the button below
-    to continue to the next part of the experiment, or try again'
+    Your reflexes were faster
+    and more accurate than XX% of people. Well done!
+
+
+    <size=70%>But can you
+    do better? Click Restart to try again, or Continue to move to the next part of
+    the experiment.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -675,7 +680,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
+  m_fontSize: 62.65
   m_fontSizeBase: 70
   m_fontWeight: 400
   m_enableAutoSizing: 1
