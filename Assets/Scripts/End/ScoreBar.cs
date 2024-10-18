@@ -7,6 +7,7 @@ public class ScoreBar : MonoBehaviour
     public AudioSource fillSound;
     public HealthBar healthBarScript;
     public EndDog endDogScript; 
+    public Sparkles sparkles;
     
     // Animation control variables
     public float animationDuration = 3f; // Total duration in seconds
@@ -15,6 +16,7 @@ public class ScoreBar : MonoBehaviour
 
     public void AnimateScore(int zScore){
         FillSound();
+        sparkles.Play();
         StartCoroutine(ScoreAnimator(zScore));
     }
 
@@ -43,5 +45,6 @@ public class ScoreBar : MonoBehaviour
         // Final dog animations and sound
         endDogScript.makeNoise();
         endDogScript.ToggleJump(false); // Stop jumping on button press
+        sparkles.Stop();
     }
 }

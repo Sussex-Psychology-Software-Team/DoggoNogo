@@ -21,4 +21,11 @@ public class Sparkles : MonoBehaviour
         sparkles.Stop();
     }
 
+    public void Play(){
+        sparkles.Play();
+    }
+
+    public void Stop(){
+        sparkles.Stop();
+    }
 }
