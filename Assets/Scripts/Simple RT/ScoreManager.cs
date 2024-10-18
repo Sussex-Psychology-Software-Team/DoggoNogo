@@ -187,4 +187,10 @@ public class ScoreManager : MonoBehaviour
         medianRT = minRT + ((maxRT-minRT)/2); // initialise median to half maximum RT  
         
     }
+    
+    void Update(){
+        if(Input.GetKeyDown(KeyCode.DownArrow)){
+            ChangeLevel();
+        }
+    }
 }

@@ -19,9 +19,6 @@ public class Sparkles : MonoBehaviour
 
         // Stop the particle system
         sparkles.Stop();
-
-        // Optionally, disable the GameObject to hide the Particle System
-        gameObject.SetActive(false);
     }
 
 }
