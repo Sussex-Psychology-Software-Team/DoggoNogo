@@ -9,7 +9,8 @@ public class EndScreen : MonoBehaviour
     // Asset references
     public HealthBar scoreBar;
     public TextMeshProUGUI percentileText; // displays score
-    public EndDog endDogScript; 
+    public ScoreBar scoreScript;
+
     // Average score distribution params
     public static double mean = 4000.0;
     public static double sd = 2000.0;
@@ -17,22 +18,19 @@ public class EndScreen : MonoBehaviour
     // Score display functions
     void DisplayRelativeScore(){
         // Calculate %
-        int score = DataManager.Instance.data.CurrentTrial().totalScore; //get copy of player score
+        int score;
+        if(DataManager.Instance.data.trials.Count > 0) score = DataManager.Instance.data.CurrentTrial().totalScore; //get copy of player score
+        else score = (int)mean;
+
         Debug.Log(score);
         double zScore = PercentileNormCDF(score); // Score under normal as %
         Debug.Log(zScore);
         // Change text and Healthbar
         percentileText.text = "You completed the game, congratulations!\n\nYour reflexes were faster and more accurate than " + zScore.ToString("F0") + "% of people. Well done!\n\n<size=70%>But can you do better? Click Restart to try again, or Continue to move to the next part of the experiment.";
-        StartCoroutine(ScoreAnimator((int)zScore));
+        scoreScript.AnimateScore((int)zScore);
     }
 
-    IEnumerator ScoreAnimator(int percentScore){
-        for (int s=0; s<=percentScore; s++){ //note can make smoother by making SetHealth take a float.
-            scoreBar.SetHealth(s);
-            yield return new WaitForSeconds(.01f);
-        }
-        endDogScript.ToggleJump(false); // Stop jumping on button press
-    }
+
 
     static double PercentileNormCDF(int percentScore) { // Phi
         // Percentile function Polynomial approximation in c# - https://stackoverflow.com/questions/1662943/standard-normal-distribution-z-value-function-in-c-sharp

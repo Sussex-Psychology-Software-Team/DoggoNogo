@@ -9,8 +9,10 @@ public class EndDog : MonoBehaviour
     public float jumpDelay = 0.5f; // Delay between jumps
     public float jumpSpeed = 1f; // Speed multiplier for the jump
 
-    private Vector3 originalPosition;
-    private bool isJumping = true; // Controls whether the object is jumping
+    Vector3 originalPosition;
+    bool isJumping = true; // Controls whether the object is jumping
+
+    public AudioSource endDogNoise;
 
     void Start()
     {
@@ -21,6 +23,9 @@ public class EndDog : MonoBehaviour
         StartCoroutine(JumpLoop());
     }
 
+    public void makeNoise(){
+        endDogNoise.Play();
+    }
     public void ToggleJump(bool enable)
     {
         isJumping = enable;
