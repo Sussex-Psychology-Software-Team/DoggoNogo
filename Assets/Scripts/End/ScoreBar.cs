@@ -44,7 +44,7 @@ public class ScoreBar : MonoBehaviour
         healthBarScript.SetHealth(percentScore);
         // Final dog animations and sound
         endDogScript.makeNoise();
-        endDogScript.ToggleJump(false); // Stop jumping on button press
+        endDogScript.ToggleJump(false);
         sparkles.Stop();
     }
 }

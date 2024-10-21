@@ -188,9 +188,9 @@ public class ScoreManager : MonoBehaviour
         
     }
     
-    void Update(){
-        if(Input.GetKeyDown(KeyCode.DownArrow)){
-            ChangeLevel();
-        }
-    }
+    // void Update(){
+    //     if(Input.GetKeyDown(KeyCode.DownArrow)){
+    //         ChangeLevel();
+    //     }
+    // }
 }
