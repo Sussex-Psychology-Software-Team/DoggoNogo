@@ -12,6 +12,7 @@ public class Feedback : MonoBehaviour
     public Bone bone;
     public ScoreManager scoreManager;
     public TrialManager trialManager; // Contains endTask function
+    public BackgroundMusic backgroundMusic;
 
     // Main function for displaying feedback based on performance
     public void GiveFeedback(string trialType, int newTotalScore, int trialScore=0){
@@ -92,6 +93,18 @@ public class Feedback : MonoBehaviour
         healthBarManager.SetNewHealthBar(level, targetScore);
         // Prompt new level
         Prompt("Level " + level +"!\n<size=80%>Press the down arrow to continue.");
+
+        // Background Music
+        backgroundMusic.Stop();
+        if(level==2){
+            backgroundMusic.ChangePitch(1.25f);
+        } else if(level==3){
+            backgroundMusic.ChangePitch(1.5f);
+        }
+    }
+
+    public void PlayBackgroundMusic(){
+        if (!backgroundMusic.Playing()) backgroundMusic.Play();
     }
 
     // Use this for presenting standard black text in between trials

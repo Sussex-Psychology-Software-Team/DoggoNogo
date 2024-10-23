@@ -549,6 +549,7 @@ MonoBehaviour:
   bone: {fileID: 1390488369}
   scoreManager: {fileID: 598913041}
   trialManager: {fileID: 1108526965}
+  backgroundMusic: {fileID: 1012875225}
 --- !u!4 &512615218
 Transform:
   m_ObjectHideFlags: 0
@@ -1285,6 +1286,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ead3651140a94181b069f2958c0daa8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backgroundMusic: {fileID: 1012875223}
 --- !u!1 &1026645574
 GameObject:
   m_ObjectHideFlags: 0
@@ -1323,7 +1325,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 301.20273, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1026645576
