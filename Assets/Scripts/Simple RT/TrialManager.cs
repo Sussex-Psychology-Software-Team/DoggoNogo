@@ -62,7 +62,7 @@ public class TrialManager : MonoBehaviour
     void Update(){
         if(pauseTrial && Input.GetKeyDown(KeyCode.DownArrow)){ // Note consider trial count or a bool for first trial check
             pauseTrial = false;
-            feedback.PlayBackgroundMusic();
+            feedback.ResumeBackgroundMusic();
             NewTrial();
         } else if(timer.IsRunning){
             // If ISI ended show bone

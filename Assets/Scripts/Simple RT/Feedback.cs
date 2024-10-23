@@ -12,7 +12,7 @@ public class Feedback : MonoBehaviour
     public Bone bone;
     public ScoreManager scoreManager;
     public TrialManager trialManager; // Contains endTask function
-    public BackgroundMusic backgroundMusic;
+    public AudioSource backgroundMusic;
 
     // Main function for displaying feedback based on performance
     public void GiveFeedback(string trialType, int newTotalScore, int trialScore=0){
@@ -94,17 +94,17 @@ public class Feedback : MonoBehaviour
         // Prompt new level
         Prompt("Level " + level +"!\n<size=80%>Press the down arrow to continue.");
 
-        // Background Music
+        // Stop background music and change pitch before resume function called in trialmanager
         backgroundMusic.Stop();
         if(level==2){
-            backgroundMusic.ChangePitch(1.25f);
+            backgroundMusic.pitch = 1.25f;
         } else if(level==3){
-            backgroundMusic.ChangePitch(1.5f);
+            backgroundMusic.pitch = 1.5f;
         }
     }
 
-    public void PlayBackgroundMusic(){
-        if (!backgroundMusic.Playing()) backgroundMusic.Play();
+    public void ResumeBackgroundMusic(){
+        if(!backgroundMusic.isPlaying) backgroundMusic.Play();
     }
 
     // Use this for presenting standard black text in between trials
