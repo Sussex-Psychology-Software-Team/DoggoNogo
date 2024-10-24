@@ -97,9 +97,9 @@ public class Feedback : MonoBehaviour
         // Stop background music and change pitch before resume function called in trialmanager
         backgroundMusic.Stop();
         if(level==2){
-            backgroundMusic.pitch = 1.25f;
+            backgroundMusic.pitch = 1.15f;
         } else if(level==3){
-            backgroundMusic.pitch = 1.5f;
+            backgroundMusic.pitch = 1.3f;
         }
     }
 
