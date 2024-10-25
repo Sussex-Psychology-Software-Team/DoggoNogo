@@ -73,7 +73,7 @@ public class slideshowManager : MonoBehaviour
 
         } else if(chapter == 7){ // Instructions
             textBox.fontSize = 90; // Smaller more readable text
-            textBackground.color = new Color(1f, 1f, 1f, 0.5f); // Set alpha to .5
+            textBackground.color = new Color(1f, 1f, 1f, 1f); // Set alpha to 1 to show wooden background
             textBox.text = storyText[4]; // "Doggo is in need of urgent care and feeding.<br>Help him get as many bones as possible by pressing the down arrow (↓) as fast as possible."
 
         }
