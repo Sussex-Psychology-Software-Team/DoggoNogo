@@ -25,7 +25,7 @@ public class slideshowManager : MonoBehaviour
         "During your last raid, your hear something.",
         "You decide to take him home, and name him…<br><br>  ",
         "Doggo",
-        "Doggo is in need of urgent care and feeding.<br>Help him get as many bones as possible by pressing the down arrow (↓) as fast as possible."
+        "Doggo is in need of urgent care and feeding.<br>Help him get as many bones as possible by pressing the <color=red>down arrow (↓) when the bone appears <color=white>as fast as possible."
     };
     float timer;
     int chapter = 0;
@@ -33,7 +33,7 @@ public class slideshowManager : MonoBehaviour
 
     void CheckChapterNumber(){
         chapter++;
-        if(chapter == 10){ //Skip three chapters to allow participants to read instructions
+        if(chapter == 11){ //Skip three chapters to allow participants to read instructions
             videoFinished = true;
         } else {
             ShowNextChapter();
