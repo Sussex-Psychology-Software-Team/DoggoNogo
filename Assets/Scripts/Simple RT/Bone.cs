@@ -96,9 +96,9 @@ public class Bone : MonoBehaviour
         float scoringOffset = (scoringRectTransform.rect.height * scoringRectTransform.localScale.y) /2f;
         float scoringBottom = scoringRectTransform.localPosition.y - scoringOffset;
 
-        float randomY = UnityEngine.Random.Range(-yBound + boneOffset, scoringBottom-boneOffset);
+        float randomY = UnityEngine.Random.Range(-yBound + boneOffset, scoringBottom-(boneOffset*2f));
 
-        return new Vector2(randomX, randomY);//new Vector2(randomX, randomY);
+        return  new Vector2(randomX, randomY);
     }
 
 
@@ -158,4 +158,8 @@ public class Bone : MonoBehaviour
         }
         Hide();
     }
+
+    // void Update(){
+    //    image.rectTransform.localPosition = RandomPosition();
+    // }
 }
