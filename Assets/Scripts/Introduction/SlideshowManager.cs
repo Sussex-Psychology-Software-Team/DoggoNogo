@@ -33,7 +33,7 @@ public class slideshowManager : MonoBehaviour
 
     void CheckChapterNumber(){
         chapter++;
-        if(chapter == 9){ //Skip two chapters to allow participants to read instructions
+        if(chapter == 10){ //Skip three chapters to allow participants to read instructions
             videoFinished = true;
         } else {
             ShowNextChapter();
