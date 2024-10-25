@@ -12,8 +12,8 @@ public class EndScreen : MonoBehaviour
     public ScoreBar scoreScript;
 
     // Average score distribution params
-    public static double mean = 4000.0;
-    public static double sd = 2000.0;
+    public static double mean = 2000.0;
+    public static double sd = 500.0;
 
     // Score display functions
     void DisplayRelativeScore(){
