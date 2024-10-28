@@ -15,6 +15,7 @@ public class TrialManager : MonoBehaviour
     public ScoreManager scoreManager; // Get score based on RT
     public Bone bone; // Show/hide bone depending on timer
     public Feedback feedback; // For prompting new trial states (and missed trial for now)
+    public IntroRoutine intro;
 
     // ******************* FUNCTIONS *******************
     // Coroutine to delay the start of a new trial and show feedback
@@ -60,7 +61,7 @@ public class TrialManager : MonoBehaviour
 
     // Update is called once per frame - maybe use FixedUpdate for inputs?
     void Update(){
-        if(pauseTrial && Input.GetKeyDown(KeyCode.DownArrow)){ // Note consider trial count or a bool for first trial check
+        if(intro.viewingInstructions == false && pauseTrial && Input.GetKeyDown(KeyCode.DownArrow)){ // Note consider trial count or a bool for first trial check
             pauseTrial = false;
             feedback.ResumeBackgroundMusic();
             NewTrial();
