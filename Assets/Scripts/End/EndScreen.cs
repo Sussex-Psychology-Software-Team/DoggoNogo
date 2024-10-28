@@ -12,29 +12,23 @@ public class EndScreen : MonoBehaviour
     public ScoreBar scoreScript;
 
     // Average score distribution params
-    public static double mean = 2000.0;
-    public static double sd = 500.0;
+    public static double normMean = 0.30;
+    public static double normSD = 0.0304;
 
     // Score display functions
     void DisplayRelativeScore(){
         // Calculate %
-        int score;
-        if(DataManager.Instance.data.trials.Count > 0) score = DataManager.Instance.data.CurrentTrial().totalScore; //get copy of player score
-        else score = (int)mean;
-
-        Debug.Log(score);
-        double zScore = PercentileNormCDF(score); // Score under normal as %
-        Debug.Log(zScore);
+        double threshold;
+        if(DataManager.Instance.data.trials.Count > 0) threshold = DataManager.Instance.data.CurrentTrial().threshold; //get copy of player score
+        else threshold = normMean;
+        double zScore = PercentileNormCDF(threshold); // Score under normal as %
         // Change text and Healthbar
-        percentileText.text = "You completed the game, congratulations!\n\nYour reflexes were faster and more accurate than " + zScore.ToString("F0") + "% of people. Well done!\n\n<size=70%>But can you do better? Click Restart to try again, or Continue to move to the next part of the experiment.";
+        percentileText.text = "You completed the game, congratulations!\n\nYour reflexes were faster and more accurate than " + zScore.ToString("F0") + "% of people. Well done!\n\n<size=70%>You can now close the tab.";
         scoreScript.AnimateScore((int)zScore);
     }
 
-
-
-    static double PercentileNormCDF(int percentScore) { // Phi
+    static double PercentileNormCDF(double x) { // Phi
         // Percentile function Polynomial approximation in c# - https://stackoverflow.com/questions/1662943/standard-normal-distribution-z-value-function-in-c-sharp
-        double x = Convert.ToDouble(percentScore); // Convert score to double
         // constants
         double a1 = 0.254829592;
         double a2 = -0.284496736;
@@ -44,7 +38,7 @@ public class EndScreen : MonoBehaviour
         double p = 0.3275911;
             
         // Save the sign of x
-        x = (x - mean) / sd; // Normalise to z score
+        x = (x - normMean) / normSD; // Normalise to z score
         int sign = 1;
         if (x < 0)
             sign = -1;
