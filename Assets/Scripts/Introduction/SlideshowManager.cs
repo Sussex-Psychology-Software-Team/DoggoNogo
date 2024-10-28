@@ -22,7 +22,7 @@ public class slideshowManager : MonoBehaviour
     // Private globals
     string[] storyText = {
         "You are an investigator tasked with bringing down criminals that mistreat animals.",
-        "During your last raid, your hear something.",
+        "During your last raid, you hear something.",
         "You decide to take him home, and name him…<br><br>  ",
         "Doggo"
     };
