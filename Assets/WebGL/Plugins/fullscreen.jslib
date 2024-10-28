@@ -2,7 +2,7 @@ mergeInto(LibraryManager.library, {
     GoFullscreen: function() {
         try {
             if (!document.fullscreenElement) {
-                var canvas = document.getElementById("unityContainer"); // Update the ID if needed
+                var canvas = document.getElementById("canvas"); // Update the ID if needed
                 if (canvas.requestFullscreen) {
                     canvas.requestFullscreen();
                 } else if (canvas.mozRequestFullScreen) { // Firefox
