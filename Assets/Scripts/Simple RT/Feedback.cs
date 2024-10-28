@@ -92,7 +92,7 @@ public class Feedback : MonoBehaviour
         // Change Health Bars
         healthBarManager.SetNewHealthBar(level, targetScore);
         // Prompt new level
-        Prompt("Level " + level +"!\n<size=80%>Press the down arrow to continue.");
+        Prompt("Level " + level +"!\n<size=80%>Press the down arrow <sprite name=\"down_arrow\"> to continue");
 
         // Stop background music and change pitch before resume function called in trialmanager
         backgroundMusic.Stop();
