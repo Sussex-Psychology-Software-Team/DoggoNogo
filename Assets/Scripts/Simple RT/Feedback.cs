@@ -37,8 +37,8 @@ public class Feedback : MonoBehaviour
             // Bar colour
             barColour = Color.blue;
             // Feedback text
-            feedbackText.color = Color.white;
-            feedback = "A bit too slow!\nDoggo couldn't catch the bone.";
+            feedbackText.color = Color.blue;
+            feedback = "ALMOST!\nDoggo missed the bone";
             changeTextHex = "#0000FF";
             // Animations + sounds
             dog.Surprised();
@@ -49,7 +49,7 @@ public class Feedback : MonoBehaviour
             barColour = new Color(0.06770712f, 0.5817609f, 0f, 1f); // "forest"
             // Feedback text
             feedbackText.color = Color.green;
-            feedback = "GREAT!\nDoggo caught the bone!";
+            feedback = "GREAT!\nDoggo caught the bone in the air";
             // Animations + sounds
             bone.Eat();
             dog.Chew();
@@ -61,7 +61,7 @@ public class Feedback : MonoBehaviour
             barColour = Color.blue;
             feedbackText.color = Color.red;
             // Feedback text
-            feedback = "TOO SLOW!\nAnother dog got the bone first.";
+            feedback = "TOO SLOW!\nThe bone has been stolen by another animal...";
             changeTextHex = "#0000FF";
             // Animations + sounds
             bone.Throw();
