@@ -12,6 +12,8 @@ public class Metadata {
     public string userAgentString;
     public string start;
     public string end;
+    public string trialsStart;
+    public string trialsEnd;
 
     // Constructor
     public Metadata() {
