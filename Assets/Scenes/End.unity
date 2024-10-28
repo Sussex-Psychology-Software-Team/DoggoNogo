@@ -633,7 +633,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &478986424
 RectTransform:
   m_ObjectHideFlags: 0
@@ -650,10 +650,10 @@ RectTransform:
   - {fileID: 1288292324}
   m_Father: {fileID: 524606914}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 413.68454, y: -611.7028}
+  m_SizeDelta: {x: 827.3691, y: 271.86792}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &478986425
 MonoBehaviour:
@@ -850,9 +850,8 @@ MonoBehaviour:
     and more accurate than XX% of people. Well done!
 
 
-    <size=70%>But can you
-    do better? Click Restart to try again, or Continue to move to the next part of
-    the experiment.'
+    <size=70%>You can now
+    close the tab'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -879,7 +878,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 51.9
+  m_fontSize: 68.65
   m_fontSizeBase: 70
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1174,10 +1173,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1364641158}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 393.72723, y: -135.93396}
+  m_SizeDelta: {x: 787.45447, y: 271.86792}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1041774161
 MonoBehaviour:
@@ -1462,7 +1461,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1721.5784, y: 0}
+  m_AnchoredPosition: {x: 1720.5872, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1256120379
@@ -1767,10 +1766,10 @@ RectTransform:
   - {fileID: 2145544355}
   m_Father: {fileID: 478986424}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 618.256, y: -135.93396}
+  m_SizeDelta: {x: 943.2645, y: 271.86792}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1288292325
 MonoBehaviour:
@@ -1930,10 +1929,10 @@ RectTransform:
   - {fileID: 1041774160}
   m_Father: {fileID: 478986424}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 174.57144, y: -135.93396}
+  m_SizeDelta: {x: 787.45447, y: 271.86792}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1364641159
 MonoBehaviour:
@@ -7224,10 +7223,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1288292324}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 471.63226, y: -135.93396}
+  m_SizeDelta: {x: 943.2645, y: 271.86792}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2145544356
 MonoBehaviour:
