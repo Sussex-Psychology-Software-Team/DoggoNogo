@@ -24,8 +24,7 @@ public class slideshowManager : MonoBehaviour
         "You are an investigator tasked with bringing down criminals that mistreat animals.",
         "During your last raid, your hear something.",
         "You decide to take him home, and name him…<br><br>  ",
-        "Doggo",
-        "Doggo is in need of urgent care and feeding.<br>Help him get as many bones as possible by pressing the <color=red>down arrow (↓) when the bone appears <color=white>as fast as possible."
+        "Doggo"
     };
     float timer;
     int chapter = 0;
@@ -33,7 +32,7 @@ public class slideshowManager : MonoBehaviour
 
     void CheckChapterNumber(){
         chapter++;
-        if(chapter == 11){ //Skip three chapters to allow participants to read instructions
+        if(chapter == 6){ //Skip three chapters to allow participants to read instructions
             videoFinished = true;
         } else {
             ShowNextChapter();
@@ -64,18 +63,6 @@ public class slideshowManager : MonoBehaviour
             textBox.fontSize = 100; // BOOM: Title card
             textBox.text = storyText[3]; // "Doggo"
             
-        } else if(chapter == 6){ // Doggo in Garden
-            textBox.text = ""; // Get rid of text
-            backgroundImage.color = Color.white; // White to show background image
-            backgroundImage.sprite = garden; // Change to Garden
-            dog.enabled = true; // Show dog in garden
-            StartCoroutine(FadeIn(1f, dog)); // Fade in dog image
-
-        } else if(chapter == 7){ // Instructions
-            textBox.fontSize = 90; // Smaller more readable text
-            textBackground.color = new Color(1f, 1f, 1f, 1f); // Set alpha to 1 to show wooden background
-            textBox.text = storyText[4]; // "Doggo is in need of urgent care and feeding.<br>Help him get as many bones as possible by pressing the down arrow (↓) as fast as possible."
-
         }
 
         // Reset timer
