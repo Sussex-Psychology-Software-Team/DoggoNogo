@@ -52,7 +52,7 @@ public class TrialManager : MonoBehaviour
     // Consider moving this to trial manager
     public void EndTask(){ // called from feedback
         // Load next scene
-        DataManager.Instance.data.metadata.trialsEnd = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        DataManager.Instance.data.metadata.endL1 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         SceneManager.LoadScene("End");
     }
 
@@ -67,7 +67,7 @@ public class TrialManager : MonoBehaviour
             pauseTrial = false;
             feedback.ResumeBackgroundMusic();
             NewTrial();
-            DataManager.Instance.data.metadata.trialsStart = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            DataManager.Instance.data.metadata.startL1 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         } else if(timer.IsRunning){
             // If ISI ended show bone
             if(timer.Elapsed.TotalSeconds > trialISI && bone.Hidden()){
