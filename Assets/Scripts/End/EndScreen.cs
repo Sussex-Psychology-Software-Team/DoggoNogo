@@ -20,7 +20,7 @@ public class EndScreen : MonoBehaviour
     void DisplayRelativeScore(){
         // Calculate %
         double threshold;
-        if(DataManager.Instance.data.trials.Count > 0) threshold = DataManager.Instance.data.CurrentTrial().threshold; //get copy of player score
+        if(DataManager.Instance.data.level1.Count > 0) threshold = DataManager.Instance.data.CurrentTrial().threshold; //get copy of player score
         else threshold = normMean;
         double zScore = PercentileNormCDF(threshold); // Score under normal as %
         // Change text and Healthbar
