@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 public class DataManager : MonoBehaviour {
     public static DataManager Instance;
 
-    public Data data = new Data();
+    public Data data = new();
 
     void Awake() {
         if (Instance != null) {
