@@ -29,8 +29,8 @@ public class Trial {
         this.isi = isi;
     }
 
-    public void SaveTrial(double? rt, string type, int score, int total, double threshold, bool validTrial, int validTrialCount) {
-        if(rt.HasValue) this.rt = RoundTime(rt.Value, 7);
+    public void SaveTrial(double rt, string type, int score, int total, double threshold, bool validTrial, int validTrialCount) {
+        this.rt = type == "missed" ? null : RoundTime(rt, 7);
         this.datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         this.responseType = type;
         this.trialScore = score;
