@@ -14,10 +14,13 @@ public class Trial {
     public bool validTrial;
     public int validTrialCount;
     // Stim spec
-    public float[] screenSize;
-    public float[] canvasSize;
+    public float screenWidth;
+    public float screenHeight;
+    public float canvasWidth;
+    public float canvasHeight;
     public float canvasScaleFactor;
-    public float[] bonePosition;
+    public float boneX;
+    public float boneY;
     public float boneOrientation;
     public float boneScale;
 
@@ -38,10 +41,13 @@ public class Trial {
     }
 
     public void SaveStimulus(Dictionary<string, float> stimSpec){
-        this.screenSize = new float[] {stimSpec["screenWidth"], stimSpec["screenHeight"]};
-        this.canvasSize = new float[] {stimSpec["canvasWidth"], stimSpec["canvasHeight"]};
+        this.screenWidth = stimSpec["screenWidth"];
+        this.screenHeight = stimSpec["screenHeight"];
+        this.canvasWidth = stimSpec["canvasWidth"];
+        this.canvasHeight = stimSpec["canvasHeight"];
         this.canvasScaleFactor = stimSpec["canvasScale"];
-        this.bonePosition = new float[] {stimSpec["x"], stimSpec["y"]};
+        this.boneX = stimSpec["x"];
+        this.boneY = stimSpec["y"];
         this.boneOrientation = stimSpec["rotation"];
         this.boneScale = stimSpec["scale"];
     }
