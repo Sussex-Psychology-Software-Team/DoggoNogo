@@ -10,6 +10,7 @@ public class EndScreen : MonoBehaviour
     public HealthBar scoreBar;
     public TextMeshProUGUI percentileText; // displays score
     public ScoreBar scoreScript;
+    public FullscreenManager fullscreenManager;
 
     // Average score distribution params
     public static double normMean = 0.30;
@@ -59,6 +60,7 @@ public class EndScreen : MonoBehaviour
     {
         // Send experimental data
         DataManager.Instance.SendData();
+        fullscreenManager.ToggleFullscreen();
         // Clear trials ahead of repeat - probably just do this on a 'repeat' button listener
         //data.ClearTrials();
         DisplayRelativeScore();
