@@ -23,15 +23,15 @@ public class DataManager : MonoBehaviour {
         data.metadata.end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         // Get id for current experimenters and send
         #if !UNITY_EDITOR && UNITY_WEBGL
-            if(data.metadata.experimentID != "QUERY VAR NOT FOUND") SendDataToServer(data.metadata.experimentID);
+            if(data.metadata.experimentID != "QUERY VAR NOT FOUND") SendDataToServer(data.metadata.experimentID, data.metadata.participantName);
         #endif
         // Send to our own location
-        if(data.metadata.experimentID != "VSyXogVR8oTS") SendDataToServer("VSyXogVR8oTS");
+        if(data.metadata.experimentID != "VSyXogVR8oTS") SendDataToServer("VSyXogVR8oTS", data.metadata.participantName);
     }
 
     // Abstract the data sending logic
-    void SendDataToServer(string experimentID) {
-        DataPipeBody studyData = new DataPipeBody(data, experimentID);
+    void SendDataToServer(string experimentID, string participantName) {
+        DataPipeBody studyData = new(data, experimentID, participantName);
         string studyJSON = JsonUtility.ToJson(studyData);
         StartCoroutine(DataPipe(studyJSON));
     }
