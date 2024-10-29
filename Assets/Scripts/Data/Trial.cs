@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic; // Dictionaries
+using UnityEngine;
 
 [System.Serializable]
 public class Trial {
@@ -27,6 +28,8 @@ public class Trial {
     public Trial(int trialN, double isi) {
         trialNumber = trialN;
         this.isi = isi;
+        this.screenWidth = Screen.width; // Directly accessing the screen width
+        this.screenHeight = Screen.height;
     }
 
     public void SaveTrial(double rt, string type, int score, int total, double threshold, bool validTrial, int validTrialCount) {
@@ -41,8 +44,6 @@ public class Trial {
     }
 
     public void SaveStimulus(Dictionary<string, float> stimSpec){
-        this.screenWidth = stimSpec["screenWidth"];
-        this.screenHeight = stimSpec["screenHeight"];
         this.canvasWidth = stimSpec["canvasWidth"];
         this.canvasHeight = stimSpec["canvasHeight"];
         this.canvasScaleFactor = stimSpec["canvasScale"];

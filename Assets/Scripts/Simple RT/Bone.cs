@@ -47,8 +47,6 @@ public class Bone : MonoBehaviour
 
         var boneTransform = new Dictionary<string, float>(){
             // Canvas
-            {"screenWidth", Screen.width},
-            {"screenHeight", Screen.height},
             {"canvasWidth", canvasRectTransform.rect.width},
             {"canvasHeight", canvasRectTransform.rect.height},
             {"canvasScale", canvasRectTransform.localScale.x},
