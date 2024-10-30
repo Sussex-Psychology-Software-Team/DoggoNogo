@@ -6,7 +6,7 @@ using UnityEngine;
 public class Trial {
     public int trialNumber;
     public double isi;
-    public double? rt;
+    public double rt;
     public string datetime;
     public int trialScore;
     public int totalScore;
@@ -33,7 +33,7 @@ public class Trial {
     }
 
     public void SaveTrial(double rt, string type, int score, int total, double threshold, bool validTrial, int validTrialCount) {
-        this.rt = type == "missed" ? null : RoundTime(rt, 7);
+        this.rt = rt;
         this.datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         this.responseType = type;
         this.trialScore = score;
@@ -41,6 +41,7 @@ public class Trial {
         this.threshold = threshold;
         this.validTrial = validTrial;
         this.validTrialCount = validTrialCount;
+        Debug.Log(JsonUtility.ToJson(this));
     }
 
     public void SaveStimulus(Dictionary<string, float> stimSpec){
@@ -51,9 +52,5 @@ public class Trial {
         this.boneY = stimSpec["y"];
         this.boneOrientation = stimSpec["rotation"];
         this.boneScale = stimSpec["scale"];
-    }
-
-    double RoundTime(double time, int dp) {
-        return Math.Round(time * Math.Pow(10, dp)) / Math.Pow(10, dp);
     }
 }
