@@ -20,10 +20,10 @@ public class Trial {
     public float canvasWidth;
     public float canvasHeight;
     public float canvasScaleFactor;
-    public float boneX;
-    public float boneY;
-    public float boneOrientation;
-    public float boneScale;
+    public float stimulusX;
+    public float stimulusY;
+    public float stimulusOrientation;
+    public float stimulusScale;
 
     public Trial(int trialN, double isi) {
         trialNumber = trialN;
@@ -48,9 +48,9 @@ public class Trial {
         this.canvasWidth = stimSpec["canvasWidth"];
         this.canvasHeight = stimSpec["canvasHeight"];
         this.canvasScaleFactor = stimSpec["canvasScale"];
-        this.boneX = stimSpec["x"];
-        this.boneY = stimSpec["y"];
-        this.boneOrientation = stimSpec["rotation"];
-        this.boneScale = stimSpec["scale"];
+        this.stimulusX = stimSpec["x"];
+        this.stimulusY = stimSpec["y"];
+        this.stimulusOrientation = stimSpec["rotation"];
+        this.stimulusScale = stimSpec["scale"];
     }
 }
