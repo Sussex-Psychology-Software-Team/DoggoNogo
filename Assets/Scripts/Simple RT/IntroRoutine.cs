@@ -91,7 +91,7 @@ public class IntroRoutine : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(allowContinue && viewingInstructions && (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))){
+        if(allowContinue && viewingInstructions && Input.GetKeyDown(KeyCode.Space)){
             StartGame();
         }
         
