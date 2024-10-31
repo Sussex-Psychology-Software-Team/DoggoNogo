@@ -44,7 +44,7 @@ public class ScoreManager : MonoBehaviour
             pauseTrial = true;
         }
         // Get new thresholds and bounds using this trials RT
-        if(validTrial) UpdateThresholds(reactionTime);
+        if(validTrial || responseType=="missed") UpdateThresholds(reactionTime);
         return pauseTrial;
     }
 
