@@ -114,7 +114,7 @@ public class ScoreManager : MonoBehaviour
         } else {
             // Change Health Bars
             int targetScore = GetNewTargetScore();
-            feedback.ChangeLevel(level, targetScore);
+            StartCoroutine(feedback.ChangeLevel(level, targetScore));
         }
     }
 

@@ -63,7 +63,7 @@ public class TrialManager : MonoBehaviour
 
     // Update is called once per frame - maybe use FixedUpdate for inputs?
     void Update(){
-        if(intro.viewingInstructions == false && pauseTrial && Input.GetKeyDown(KeyCode.DownArrow)){ // Note consider trial count or a bool for first trial check
+        if(intro.viewingInstructions == false && feedback.changingLevel == false && pauseTrial && Input.GetKeyDown(KeyCode.DownArrow)){ // Note consider trial count or a bool for first trial check
             pauseTrial = false;
             feedback.ResumeBackgroundMusic();
             NewTrial();

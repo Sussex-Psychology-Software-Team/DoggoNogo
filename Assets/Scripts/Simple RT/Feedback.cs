@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro; // TextMeshProUGUI
+using System.Collections; // IEnumerator
 
 public class Feedback : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class Feedback : MonoBehaviour
     public ScoreManager scoreManager;
     public TrialManager trialManager; // Contains endTask function
     public AudioSource backgroundMusic;
+    // Global var
+    public bool changingLevel = false;
 
     // Main function for displaying feedback based on performance
     public void GiveFeedback(string trialType, int newTotalScore, int trialScore=0){
@@ -84,23 +87,27 @@ public class Feedback : MonoBehaviour
     }
 
     // Level 1,2,3
-    public void ChangeLevel(int level, int targetScore){
-        scoreChange.text = "";
-        scoreText.text = "Score: 0"; 
+    public IEnumerator ChangeLevel(int level, int targetScore){
+        // Clear prompts
+        changingLevel = true;
+        backgroundMusic.Stop();
+        scoreChange.text = ""; 
         // Change dog
-        dog.IncreaseLevel(level);
-        // Change Health Bars
-        healthBarManager.SetNewHealthBar(level, targetScore);
+        Prompt("What? Doggo is changing...");
+        yield return StartCoroutine(dog.Evolve(level));
         // Prompt new level
         Prompt("Level " + level +"!\n<size=80%>Press the down arrow <sprite name=\"down_arrow\"> to continue");
+        // Reset Health Bars and score
+        healthBarManager.SetNewHealthBar(level, targetScore);
+        scoreText.text = "Score: 0";
 
-        // Stop background music and change pitch before resume function called in trialmanager
-        backgroundMusic.Stop();
+        // Change background music pitch before resume function called in trialmanager
         if(level==2){
             backgroundMusic.pitch = 1.15f;
         } else if(level==3){
             backgroundMusic.pitch = 1.3f;
         }
+        changingLevel = false;
     }
 
     public void ResumeBackgroundMusic(){

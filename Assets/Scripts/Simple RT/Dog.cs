@@ -36,11 +36,7 @@ public class Dog : MonoBehaviour
 
     // FUNCTIONS ********************************
     // Images
-    public void IncreaseLevel(int level){
-        StartCoroutine(IncreaseLevelRoutine(level));
-    }
-
-    IEnumerator IncreaseLevelRoutine(int level){
+    public IEnumerator Evolve(int level){
         sparkles.Sparkle();
         twinkle.Play();
         levelUp.Play();
