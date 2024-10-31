@@ -12,12 +12,14 @@
     <script>
         const canvas = document.getElementById('canvas')
         function resize(){
-            canvas.width = window.innerWidth // canvas.clientWidth;
-            canvas.height = window.innerHeight // canvas.clientHeight;
-            canvas.click() //simulate click to redraw canvas - remove if listening for clicks
-            canvas.dispatchEvent(new Event('click', {bubbles: true, cancelable: true}));
-            canvas.dispatchEvent(new PointerEvent('click', {bubbles: true, cancelable: true}));
-            canvas.dispatchEvent(new MouseEvent('click'))
+            if (myGameInstance !== undefined && myGameLoaded === true){
+                canvas.width = window.innerWidth // canvas.clientWidth;
+                canvas.height = window.innerHeight // canvas.clientHeight;
+            }
+            // canvas.click() //simulate click to redraw canvas - remove if listening for clicks
+            // canvas.dispatchEvent(new Event('click', {bubbles: true, cancelable: true}));
+            // canvas.dispatchEvent(new PointerEvent('click', {bubbles: true, cancelable: true}));
+            // canvas.dispatchEvent(new MouseEvent('click'))
             //consider https://stackoverflow.com/questions/77222633/difference-between-click-and-dispatchevent-click-event
             // In future consider: https://unity.com/how-to/profile-optimize-web-build
             // https://docs.unity3d.com/Manual/webgl-canvas-size.html
@@ -45,7 +47,7 @@
             productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
             productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
             //https://docs.unity3d.com/Manual/web-templates-build-configuration.html
-            matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size. but see: https://forum.unity.com/threads/changing-the-resolution-of-the-canvas-on-html-in-webgl-makes-the-game-screen-smaller.1424694/
+            //matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size. but see: https://forum.unity.com/threads/changing-the-resolution-of-the-canvas-on-html-in-webgl-makes-the-game-screen-smaller.1424694/
             devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
         })
     </script>
