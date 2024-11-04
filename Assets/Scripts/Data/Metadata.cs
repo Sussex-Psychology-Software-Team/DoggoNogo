@@ -6,7 +6,7 @@ using UnityEngine;
 public class Metadata {
     // SESSION-SPECIFIC: Should be NonSerialized
     [System.NonSerialized]
-    public string randomID;        // New for each session
+    public string sessionID;        // New for each session
     [System.NonSerialized]
     public string start;           // Current session start time
     [System.NonSerialized]
@@ -26,7 +26,7 @@ public class Metadata {
 
     // Constructor
     public Metadata() {
-        randomID = Utility.GenerateRandomId(24);
+        sessionID = Utility.GenerateRandomId(7) + DateTime.Now.ToString("ddMMyyyy");
         start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
     }
 
