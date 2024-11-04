@@ -4,8 +4,11 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class DataManager : MonoBehaviour {
+    // Singleton instance - should be NonSerialized since it's runtime-only
+    [System.NonSerialized]
     public static DataManager Instance;
 
+    [System.NonSerialized]
     public Data data = new();
 
     void Awake() {
@@ -16,6 +19,9 @@ public class DataManager : MonoBehaviour {
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        if (data == null){
+            data = new Data();
+        }
     }
 
     public void SendData() {

@@ -15,8 +15,10 @@ public class Trial {
     public bool validTrial;
     public int validTrialCount;
     // Stim spec
-    public float screenWidth;
-    public float screenHeight;
+    [System.NonSerialized]
+    public float screenWidth;     // Current display width
+    [System.NonSerialized]
+    public float screenHeight;    // Current display height
     public float canvasWidth;
     public float canvasHeight;
     public float canvasScaleFactor;
