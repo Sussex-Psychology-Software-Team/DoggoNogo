@@ -4,16 +4,25 @@ using UnityEngine;
 
 [System.Serializable]
 public class Metadata {
-    public string randomID;
-    public string experimentID;
-    public string participantName;
-    public string studyName;
-    public string l1n;
-    public string userAgentString;
-    public string start;
-    public string end;
-    public string startL1;
-    public string endL1;
+    // SESSION-SPECIFIC: Should be NonSerialized
+    [System.NonSerialized]
+    public string randomID;        // New for each session
+    [System.NonSerialized]
+    public string start;           // Current session start time
+    [System.NonSerialized]
+    public string end;            // Current session end time
+    [System.NonSerialized]
+    public string startL1;        // Current L1 start time
+    [System.NonSerialized]
+    public string endL1;         // Current L1 end time
+    [System.NonSerialized]
+    public string userAgentString; // Browser/system info for current session
+
+    // EXPERIMENT CONFIGURATION: Can remain serialized
+    public string experimentID;    // Study configuration identifier
+    public string participantName; // Participant identifier
+    public string studyName;      // Study name
+    public string l1n;            // Language/condition parameter
 
     // Constructor
     public Metadata() {
