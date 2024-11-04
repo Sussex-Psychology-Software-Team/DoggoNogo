@@ -1347,7 +1347,7 @@ MonoBehaviour:
   dog: {fileID: 346966017}
   metalDoor: {fileID: 1828802936}
   dogWhine: {fileID: 1828802935}
-  timeBetweenImages: 3
+  timeBetweenImages: 4
 --- !u!4 &1828802938
 Transform:
   m_ObjectHideFlags: 0

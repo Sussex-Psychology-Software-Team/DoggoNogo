@@ -17,7 +17,7 @@ public class slideshowManager : MonoBehaviour
     public AudioSource metalDoor;
     public AudioSource dogWhine;
 
-    public float timeBetweenImages = 3.0f;
+    public float timeBetweenImages = 4.0f;
 
     // Private globals
     string[] storyText = {
