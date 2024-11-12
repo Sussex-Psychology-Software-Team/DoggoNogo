@@ -34,15 +34,18 @@ public class ScoreManager : MonoBehaviour
         bool validTrial = TestTrialValidity(responseType);
         int trialScore = CalculateTrialScore(responseType, reactionTime);
         UpdateTotalScore(trialScore);
+        
         // Save and feedback
         SaveTrialData(reactionTime, responseType, trialScore, validTrial);
         ProvideFeedback(responseType, trialScore);
+        
         // Handle levels - after presenting trial
         bool pauseTrial = false;
         if(totalScore >= healthBarManager.currentHealthBar.GetMaxHealth()){
             ChangeLevel(); // Switch healthbars if above maximum - confusingly lost in here maybe??
             pauseTrial = true;
         }
+        
         // Get new thresholds and bounds using this trials RT
         if(validTrial || responseType=="missed") UpdateThresholds(reactionTime);
         return pauseTrial;
@@ -119,7 +122,7 @@ public class ScoreManager : MonoBehaviour
     }
 
     void SaveTrialData(double reactionTime, string responseType, int trialScore, bool validTrial){ // This could be better?
-        DataManager.Instance.data.CurrentTrial().SaveTrial(reactionTime, responseType, trialScore, totalScore, medianRT, validTrial, validTrialCount);
+        DataManager.Instance.SaveTrial(reactionTime, responseType, trialScore, totalScore, medianRT, validTrial, validTrialCount);
     }
 
     void ProvideFeedback(string responseType, int trialScore) {
@@ -173,19 +176,11 @@ public class ScoreManager : MonoBehaviour
         Debug.Log("New Target Score: " + targetScore);
         return targetScore;
     }
-
-    int GetL1nQuery(string queryVar, int defaultN = 60){
-        if(int.TryParse(queryVar, out int l1n)){ //inline declaration
-            return l1n;
-        } else {
-            return defaultN;
-        }
-    }
-
-    void Start(){
-        nTrials = GetL1nQuery(DataManager.Instance.data.metadata.l1n, 60);
+    
+    void Start()
+    {
+        nTrials = DataManager.Instance.GetNTrialsFromQuery();
         medianRT = minRT + ((maxRT-minRT)/2); // initialise median to half maximum RT  
-        
     }
     
     // void Update(){
