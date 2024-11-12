@@ -7,7 +7,8 @@ public class Trial {
     public int trialNumber;
     public double isi;
     public double rt;
-    public string datetime;
+    public string start;
+    public string end;
     public int trialScore;
     public int totalScore;
     public string responseType;
@@ -29,14 +30,15 @@ public class Trial {
 
     public Trial(int trialN, double isi) {
         trialNumber = trialN;
+        start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         this.isi = isi;
-        this.screenWidth = Screen.width; // Directly accessing the screen width
-        this.screenHeight = Screen.height;
+        screenWidth = Screen.width; // Directly accessing the screen width
+        screenHeight = Screen.height;
     }
 
     public void SaveTrial(double rt, string type, int score, int total, double threshold, bool validTrial, int validTrialCount) {
         this.rt = rt;
-        this.datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        this.end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         this.responseType = type;
         this.trialScore = score;
         this.totalScore = total;
