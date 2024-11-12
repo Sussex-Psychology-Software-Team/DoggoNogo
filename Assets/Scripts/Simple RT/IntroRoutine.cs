@@ -76,9 +76,10 @@ public class IntroRoutine : MonoBehaviour
     }
 
     void StartGame(){
-        viewingInstructions = false;
         instructions.SetActive(false);
         scoreCard.SetActive(true);
+        viewingInstructions = false;
+        DataManager.Instance.data.metadata.startL1 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
     }
 
 

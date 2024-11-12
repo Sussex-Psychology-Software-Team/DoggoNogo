@@ -59,7 +59,6 @@ public class TrialManager : MonoBehaviour
     // ******************* UNITY *******************
     void Start(){
         DataManager.Instance.data.ClearTrials(); // Incase of retry
-        DataManager.Instance.data.metadata.startL1 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
     }
 
     // Update is called once per frame - maybe use FixedUpdate for inputs?
