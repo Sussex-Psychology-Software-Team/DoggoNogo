@@ -32,7 +32,7 @@ public class TrialManager : MonoBehaviour
         // Get new ISI
         trialISI = UnityEngine.Random.Range(ISIRange[0], ISIRange[1]); // New trialISI
         // Create new trial in data structure
-        DataManager.Instance.data.NewTrial(trialISI); // Create an instance of a Trial
+        DataManager.Instance.NewTrial(trialISI); // Create an instance of a Trial
         // Start timer
         RestartTimer();
     }
@@ -52,13 +52,8 @@ public class TrialManager : MonoBehaviour
     // Consider moving this to trial manager
     public void EndTask(){ // called from feedback
         // Load next scene
-        DataManager.Instance.data.metadata.endL1 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        DataManager.Instance.Level1Ended();
         SceneManager.LoadScene("End");
-    }
-
-    // ******************* UNITY *******************
-    void Start(){
-        DataManager.Instance.data.ClearTrials(); // Incase of retry
     }
 
     // Update is called once per frame - maybe use FixedUpdate for inputs?
@@ -70,7 +65,9 @@ public class TrialManager : MonoBehaviour
         } else if(timer.IsRunning){
             // If ISI ended show bone
             if(timer.Elapsed.TotalSeconds > trialISI && bone.Hidden()){
-                bone.Show(); // End ISI
+                var stimSpec = bone.Show(); // End ISI
+                DataManager.Instance.StimuliShown(stimSpec);
+
             }
             // On down arrow (early or valid press) or if timer runs out
             if(Input.GetKeyDown(KeyCode.DownArrow) || timer.Elapsed.TotalSeconds > (trialISI + scoreManager.maxRT)){
