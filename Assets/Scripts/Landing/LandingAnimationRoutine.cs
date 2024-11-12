@@ -61,10 +61,4 @@ public class LandingAnimationRoutine : MonoBehaviour
     void Start(){
         StartCoroutine(AnimationChain());
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
