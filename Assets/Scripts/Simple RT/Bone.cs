@@ -21,11 +21,11 @@ public class Bone : MonoBehaviour
         return image.enabled == false; // Is bone hidden
     }
 
-    public void Show(){
+    public Dictionary<string, float> Show(){
         RandomTransform(); // Change position
         Dictionary<string, float> stimSpec = GetTransform();
-        DataManager.Instance.data.CurrentTrial().SaveStimulus(stimSpec);
         image.enabled = true; // Show bone
+        return stimSpec;
     }
 
     // TRANSFORMATIONS ------------------
