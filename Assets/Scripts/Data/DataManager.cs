@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -9,7 +10,7 @@ public class DataManager : MonoBehaviour {
     public static DataManager Instance;
 
     [System.NonSerialized]
-    public Data data = new();
+    private Data data = new();
 
     void Awake() {
         if (Instance != null) {
@@ -22,6 +23,41 @@ public class DataManager : MonoBehaviour {
         if (data == null){
             data = new Data();
         }
+    }
+
+    public int GetNTrialsFromQuery()
+    {
+        int defaultN = 60;
+        if(int.TryParse(data.metadata.l1n, out int l1n)){ //inline declaration
+            return l1n;
+        } else {
+            return defaultN;
+        }
+    }
+
+    public void NewTrial(double isi)
+    {
+        data.AddNewTrial(isi);
+    }
+    
+    public void Level1Started() {
+        data.ClearTrials();
+        data.metadata.startL1 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+    }
+
+    public void StimuliShown(Dictionary<string, float> stimSpec)
+    {
+        data.CurrentTrial().SaveStimulus(stimSpec);
+    }
+    
+    public void SaveTrial(double rt, string type, int score, int total, double threshold, bool validTrial, int validTrialCount) {
+        data.CurrentTrial().SaveTrial(rt, type, score, total, threshold, validTrial, validTrialCount);
+        Debug.Log(JsonUtility.ToJson(this));
+    }
+
+    public void Level1Ended()
+    {
+        data.metadata.endL1 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
     }
 
     public void SendData() {
@@ -55,5 +91,11 @@ public class DataManager : MonoBehaviour {
     
     void Start(){
         data.metadata.InitializeWebVariables(); // Needs to be done here to get UNITY_WEBGL to pass
+    }
+
+    public double GetCurrentThreshold()
+    {
+        double threshold = (data.level1.Count > 0) ? data.CurrentTrial().threshold : Calculations.normMean;
+        return threshold;
     }
 }
