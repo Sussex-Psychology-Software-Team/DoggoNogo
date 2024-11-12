@@ -10,7 +10,7 @@ public class Data {
         level1 = new List<Trial>();
     }
 
-    public void NewTrial(double isi) {
+    public void AddNewTrial(double isi) {
         level1.Add(new Trial(level1.Count + 1, isi));
     }
 
