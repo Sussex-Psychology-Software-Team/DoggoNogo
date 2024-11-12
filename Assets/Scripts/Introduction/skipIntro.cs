@@ -7,7 +7,7 @@ using System.Diagnostics; // Stopwatch
 
 public class skipIntro : MonoBehaviour
 {
-    public Stopwatch spacebarHoldTimer = new Stopwatch(); // High precision timer: https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.stopwatch?view=net-8.0&redirectedfrom=MSDN#remarks
+    Stopwatch spacebarHoldTimer = new Stopwatch(); // High precision timer: https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.stopwatch?view=net-8.0&redirectedfrom=MSDN#remarks
     public double timeToSkip = 2.0;
     public Slider slider;
 
