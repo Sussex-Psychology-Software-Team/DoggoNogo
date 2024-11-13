@@ -15,7 +15,7 @@ public class Data {
     }
 
     public Trial CurrentTrial() {
-        return level1[level1.Count - 1];
+        return level1[^1];
     }
 
     public void ClearTrials() {
