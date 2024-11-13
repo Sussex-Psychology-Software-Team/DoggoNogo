@@ -80,7 +80,7 @@ public class IntroRoutine : MonoBehaviour
         instructions.SetActive(false);
         scoreCard.SetActive(true);
         viewingInstructions = false;
-        DataManager.Instance.Level1Started();
+        GameController.Instance.OnLevel1Start();
         
     }
 

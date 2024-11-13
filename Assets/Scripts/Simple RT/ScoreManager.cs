@@ -122,7 +122,7 @@ public class ScoreManager : MonoBehaviour
     }
 
     void SaveTrialData(double reactionTime, string responseType, int trialScore, bool validTrial){ // This could be better?
-        DataManager.Instance.SaveTrial(reactionTime, responseType, trialScore, totalScore, medianRT, validTrial, validTrialCount);
+        GameController.Instance.OnTrialComplete(reactionTime, responseType, trialScore, totalScore, medianRT, validTrial, validTrialCount);
     }
 
     void ProvideFeedback(string responseType, int trialScore) {

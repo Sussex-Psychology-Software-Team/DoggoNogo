@@ -17,7 +17,7 @@ public class EndScreen : MonoBehaviour
     // Score display functions
     void DisplayRelativeScore(){
         // Calculate %
-        double threshold = DataManager.Instance.GetCurrentThreshold();
+        double threshold = GameController.Instance.GetCurrentThreshold();
         double zScore = Calculations.PercentileNormCDF(threshold); // Score under normal as %
         // Change text and Healthbar
         percentileText.text = "You completed the game, congratulations!\n\nYour reflexes were faster and more accurate than " + zScore.ToString("F0") + "% of people. Well done!\n\n<size=70%>You can now close the tab.";
@@ -30,7 +30,7 @@ public class EndScreen : MonoBehaviour
     void Start()
     {
         // Send experimental data
-        DataManager.Instance.SendData();
+        GameController.Instance.OnLevelComplete();
         fullscreenManager.ToggleFullscreen();
         // Clear trials ahead of repeat - probably just do this on a 'repeat' button listener
         //data.ClearTrials();
