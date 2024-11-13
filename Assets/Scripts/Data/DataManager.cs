@@ -52,7 +52,6 @@ public class DataManager : MonoBehaviour {
     
     public void SaveTrial(double rt, string type, int score, int total, double threshold, bool validTrial, int validTrialCount) {
         data.CurrentTrial().SaveTrial(rt, type, score, total, threshold, validTrial, validTrialCount);
-        Debug.Log(JsonUtility.ToJson(this));
     }
 
     public void Level1Ended()
