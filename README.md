@@ -5,8 +5,7 @@ This repository contains the development version of DoggoNogo.
 
 ## Usage
 
-Doggo/Nogo can be played online at https://sussex-psychology-software-team.github.io/DoggoNogo/
-
+Doggo/Nogo can be played online at https://sussexpsychologysoftware.github.io/DoggoNogo/
 
 ### Online
 
@@ -17,7 +16,7 @@ The game can be played via this link with dynamic parameters that can be set via
 - `l1n`: Rough number of trials, used in calculations of the score for each level.
 - `datapipe`: DataPipe Experiment ID (https://pipe.jspsych.org/getting-started)
 
-Example of encoded url variables: https://sussex-psychology-software-team.github.io/DoggoNogo/?osf=AlXXHjfLwVP3&p=John%20Smith&s=Original%20Study&l1n=60
+Example of encoded url variables: https://sussexpsychologysoftware.github.io/DoggoNogo/?datapipe=AlXXHjfLwVP3&p=John%20Smith&s=Original%20Study&l1n=60
 
 ### Local Installation
 
