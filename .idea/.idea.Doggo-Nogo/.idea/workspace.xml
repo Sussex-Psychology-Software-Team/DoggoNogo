@@ -100,7 +100,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1731416573932</updated>
-      <workItem from="1731416578443" duration="11973000" />
+      <workItem from="1731416578443" duration="13593000" />
     </task>
     <servers />
   </component>
@@ -121,6 +121,25 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/Simple RT/TrialManager.cs</url>
+          <line>44</line>
+          <properties documentPath="$PROJECT_DIR$/Assets/Scripts/Simple RT/TrialManager.cs" initialLine="44" containingFunctionPresentation="Method 'EndTrial'">
+            <startOffsets>
+              <option value="2054" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2055" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

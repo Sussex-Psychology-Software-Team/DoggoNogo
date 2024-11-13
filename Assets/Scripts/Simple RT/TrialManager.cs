@@ -67,7 +67,6 @@ public class TrialManager : MonoBehaviour
             if(timer.Elapsed.TotalSeconds > trialISI && bone.Hidden()){
                 var stimSpec = bone.Show(); // End ISI
                 DataManager.Instance.StimuliShown(stimSpec);
-
             }
             // On down arrow (early or valid press) or if timer runs out
             if(Input.GetKeyDown(KeyCode.DownArrow) || timer.Elapsed.TotalSeconds > (trialISI + scoreManager.maxRT)){
