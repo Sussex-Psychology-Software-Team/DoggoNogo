@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "GameConfig", menuName = "DoggoNogo/GameConfig")]
 public class GameConfig : ScriptableObject
@@ -11,23 +12,29 @@ public class GameConfig : ScriptableObject
     [Header("Reaction Time Settings")]
     [SerializeField] private float minReactionTime = 0.15f;
     [SerializeField] private float maxReactionTime = 0.6f;
-    [SerializeField] private float initialMedianRT = 0.375f; // (maxRT + minRT) / 2
+    [SerializeField] private float initialMedianRT = -1f;
 
     [Header("Scoring Settings")]
     [SerializeField] private int minScore = 100;
     [SerializeField] private int maxScore = 200;
     [SerializeField] private int penaltyScore = -100;
 
+    [Header("Audio Settings")]
+    [SerializeField] private float backgroundMusicPitch = 1f;
+    
     // Public accessors
     public int DefaultTrialCount => defaultTrialCount;
     public int MinTrialsPerLevel => minTrialsPerLevel;
     public Vector2 ISIRange => isiRange;
     public float MinReactionTime => minReactionTime;
     public float MaxReactionTime => maxReactionTime;
-    public float InitialMedianRT => initialMedianRT;
+    public float InitialMedianRT => initialMedianRT < 0 
+        ? (minReactionTime + maxReactionTime) / 2 
+        : initialMedianRT;
     public int MinScore => minScore;
     public int MaxScore => maxScore;
     public int PenaltyScore => penaltyScore;
+    public float BackgroundMusicPitch => backgroundMusicPitch;
 }
 
 /*

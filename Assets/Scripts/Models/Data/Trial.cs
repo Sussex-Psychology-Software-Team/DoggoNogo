@@ -1,9 +1,10 @@
 using System;
-using System.Collections.Generic; // Dictionaries
+using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class Trial {
+public class Trial
+{
     public int trialNumber;
     public double isi;
     public double rt;
@@ -25,25 +26,26 @@ public class Trial {
     public float stimulusY;
     public float stimulusOrientation;
     public float stimulusScale;
-
-    public Trial(int trialN, double isi) {
+    
+    public Trial(int trialN, double isi) 
+    {
         trialNumber = trialN;
         start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         this.isi = isi;
-        screenWidth = Screen.width; // Directly accessing the screen width
+        screenWidth = Screen.width;
         screenHeight = Screen.height;
     }
 
-    public void SaveTrial(double rt, string type, int score, int total, double threshold, bool validTrial, int validTrialCount) {
-        this.rt = rt;
-        this.end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        this.responseType = type;
-        this.trialScore = score;
-        this.totalScore = total;
-        this.threshold = threshold;
-        this.validTrial = validTrial;
-        this.validTrialCount = validTrialCount;
-        Debug.Log(JsonUtility.ToJson(this));
+    public void SaveTrial(TrialResult result)
+    {
+        rt = result.ReactionTime;
+        end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        responseType = result.ResponseType;
+        trialScore = result.TrialScore;
+        totalScore = result.TotalScore;
+        threshold = result.Threshold;
+        validTrial = result.ValidTrial;
+        validTrialCount = result.ValidTrialCount;
     }
 
     public void SaveStimulus(Dictionary<string, float> stimSpec){

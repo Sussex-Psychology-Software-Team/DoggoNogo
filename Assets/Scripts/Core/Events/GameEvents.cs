@@ -1,3 +1,5 @@
+using System;
+
 public static class GameEvents {
     public static event Action<TrialResult> OnTrialCompleted;
     public static event Action<GamePhase> OnGamePhaseChanged;

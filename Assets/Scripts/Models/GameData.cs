@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 [System.Serializable]
 public class GameData {
     public Metadata metadata;
@@ -16,4 +18,9 @@ public class GameData {
     }
 
     public Trial CurrentTrial() => level1.Count > 0 ? level1[^1] : null;
+    
+    public void ClearTrials()
+    {
+        level1.Clear();
+    }
 }

@@ -1,3 +1,7 @@
+using System;
+using System.Threading.Tasks;
+using UnityEngine;
+
 public class DataService : IDataService {
     private readonly string apiUrl = "https://pipe.jspsych.org/api/data/";
     private readonly WebService webService;

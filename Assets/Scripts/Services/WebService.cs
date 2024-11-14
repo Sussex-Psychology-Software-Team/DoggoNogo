@@ -1,3 +1,8 @@
+using System;
+using System.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.Networking;
+
 public class WebService {
     public async Task<bool> PostData(string url, string jsonData) {
         using var www = UnityWebRequest.Post(url, jsonData, "application/json");

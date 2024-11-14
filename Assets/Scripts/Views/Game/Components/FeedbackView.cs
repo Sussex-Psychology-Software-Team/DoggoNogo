@@ -17,11 +17,17 @@ public class FeedbackView : MonoBehaviour
     
     public bool changingLevel = false;
 
-    public void GiveFeedback(string trialType, int newTotalScore, int trialScore)
+    public void GiveFeedback(TrialResult result)
     {
-        var (feedback, barColor, textColor, changeTextHex) = GetFeedbackConfig(trialType);
-        DisplayFeedback(feedback, newTotalScore, trialScore, changeTextHex, barColor);
-        PlayAnimations(trialType, trialScore);
+        var feedbackData = FeedbackData.FromTrialResult(result);
+        DisplayFeedback(
+            feedbackData.feedbackText,
+            feedbackData.totalScore,
+            feedbackData.scoreChange,
+            feedbackData.colorHex,
+            feedbackData.barColor
+        );
+        PlayAnimations(feedbackData.responseType, feedbackData.scoreChange);
     }
 
     private (string feedback, Color barColor, Color textColor, string changeTextHex) GetFeedbackConfig(string trialType)
