@@ -87,6 +87,11 @@ public class GameController : MonoBehaviour, IGameState {
         }
     }
     
+    public void EndTrial(TrialResult result)
+    {
+        HandleTrialCompleted(result);
+    }
+    
     private void OnDestroy() {
         GameEvents.OnTrialCompleted -= HandleTrialCompleted;
         GameEvents.OnGamePhaseChanged -= HandleGamePhaseChanged;
