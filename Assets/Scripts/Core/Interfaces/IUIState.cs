@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 public interface IUIState
 {
     // UI State properties
