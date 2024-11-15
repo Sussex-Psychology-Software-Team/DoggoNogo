@@ -14,7 +14,7 @@ public class DataPipeBody
         string pName = string.IsNullOrEmpty(participantName) || participantName == "QUERY VAR NOT FOUND" 
             ? "" 
             : participantName + "_";
-        filename = $"DoggoNogo_{pName}{Utility.GenerateRandomId(10)}.json";
+        filename = $"DoggoNogo_{pName}{StringUtils.GenerateRandomId(10)}.json";
         data = JsonUtility.ToJson(dataObject);
     }
 }
