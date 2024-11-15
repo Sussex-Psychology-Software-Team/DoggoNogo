@@ -17,11 +17,11 @@ public class Level1Data
 
     public void UpdateMedianRT(double newRT)
     {
-        sortedRTs.Add(newRT);
-        sortedRTs.Sort();
-        int mid = sortedRTs.Count / 2;
-        currentMedianRT = sortedRTs.Count % 2 == 0 
-            ? (float)((sortedRTs[mid] + sortedRTs[mid - 1]) / 2)
-            : (float)sortedRTs[mid];
+        SortedRTs.Add(newRT);
+        SortedRTs.Sort();
+        int mid = SortedRTs.Count / 2;
+        currentMedianRT = SortedRTs.Count % 2 == 0 
+            ? (float)((SortedRTs[mid] + SortedRTs[mid - 1]) / 2)
+            : (float)SortedRTs[mid];
     }
 }
