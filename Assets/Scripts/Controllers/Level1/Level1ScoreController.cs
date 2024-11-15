@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 
+// Processes trial result - should be something else?
 public class Level1ScoreController : MonoBehaviour
 {
     [SerializeField] private GameConfig gameConfig;

@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+// List of response stats over trials - Part of GameData structure.
+    // I wonder if this is necessary - could grab these from the current trial.
+    // Missing the initial few trials buffer on threshold, and adding maxRT on missing trial
 [System.Serializable]
 public class GameStats
 {

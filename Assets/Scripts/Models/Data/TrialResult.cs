@@ -1,3 +1,5 @@
+
+// Trial result data structure for saving in Trial
 [System.Serializable]
 public class TrialResult
 {

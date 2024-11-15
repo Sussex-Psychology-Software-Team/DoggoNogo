@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// Manages UI state: Controls screen transitions, Updates UI elements, Handles UI events
 public class UIController : MonoBehaviour
 {
     public static UIController Instance { get; private set; }

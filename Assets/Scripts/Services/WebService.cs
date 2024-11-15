@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
+// Handles HTTP communication
 public class WebService 
 {
     public async Task<bool> PostData(string url, string jsonData) 

@@ -1,6 +1,8 @@
 using UnityEngine;
 
-public class GameController : MonoBehaviour, IGameState {
+// Overall game state and flow: Coordinates between other controllers, and manages game phases (start, end)
+// Generally, controllers manage game logic and connect Models with Views
+public class GameController : MonoBehaviour, IGameState { //Singleton instance for global access
     public static GameController Instance { get; private set; }
 
     [SerializeField] private GameConfig gameConfig;

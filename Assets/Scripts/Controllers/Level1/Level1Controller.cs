@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// Level 1 specific logic: manage and process trials, control flow through level.
 public class Level1Controller : MonoBehaviour
 {
     public static Level1Controller Instance { get; private set; }

@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// Main game screen - I think this is Level1 UI and needs to be updated with dog and bone views, and other methods
 public class MainGameUI : MonoBehaviour
 {
     [SerializeField] private FeedbackView feedbackView;

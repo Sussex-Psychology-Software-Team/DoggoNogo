@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Individual trial data
 [System.Serializable]
 public class Trial
 {
@@ -27,7 +28,7 @@ public class Trial
     public float stimulusOrientation;
     public float stimulusScale;
     
-    public Trial(int trialN, double isi) 
+    public Trial(int trialN, double isi) // Constructor
     {
         trialNumber = trialN;
         start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -36,7 +37,7 @@ public class Trial
         screenHeight = Screen.height;
     }
 
-    public void SaveTrial(TrialResult result)
+    public void SaveTrial(TrialResult result) // Add vars on response
     {
         rt = result.ReactionTime;
         end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");

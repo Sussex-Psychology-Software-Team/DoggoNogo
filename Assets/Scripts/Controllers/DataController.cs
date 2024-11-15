@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Threading.Tasks;
 
+// Handles data operations: Save trial data, Manages web communication, Tracks game progress
+    // Seems to contain the data object too? or just a reference to it?
 public class DataController : MonoBehaviour
 {
     public static DataController Instance { get; private set; }

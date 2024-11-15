@@ -1,6 +1,9 @@
 using TMPro;
 using UnityEngine;
 
+// Shows current score
+// This is probably the text on screen for score in L1.
+// not sure it really needs the onenable/disable stuff? Event shouldn't be firing anyway. 
 public class ScoreDisplay : MonoBehaviour {
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI totalScoreText;

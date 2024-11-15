@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 
+// Intro to Level1
+// do I need dog image or just dogView reference?
 public class IntroScreen : MonoBehaviour
 {
     [Header("UI References")]
@@ -18,8 +20,8 @@ public class IntroScreen : MonoBehaviour
     [SerializeField] private float swingFrequency = 3f;
     [SerializeField] private float swingDampening = 3f;
     
-    private bool viewingInstructions = true;
-    private bool allowContinue = false;
+    private bool _viewingInstructions = true;
+    private bool _allowContinue = false;
 
     private void Start()
     {
@@ -28,7 +30,7 @@ public class IntroScreen : MonoBehaviour
 
     private void Update()
     {
-        if (allowContinue && viewingInstructions && Input.GetKeyDown(KeyCode.Space))
+        if (_allowContinue && _viewingInstructions && Input.GetKeyDown(KeyCode.Space))
         {
             StartGame();
         }
@@ -41,14 +43,14 @@ public class IntroScreen : MonoBehaviour
         yield return StartCoroutine(Swing(instructionsRect));
         yield return new WaitForSeconds(2);
         yield return StartCoroutine(FadeIn(1f, continueText));
-        allowContinue = true;
+        _allowContinue = true;
     }
 
     private void StartGame()
     {
         instructions.SetActive(false);
         scoreCard.SetActive(true);
-        viewingInstructions = false;
+        _viewingInstructions = false;
         GameController.Instance.StartGame();
     }
 

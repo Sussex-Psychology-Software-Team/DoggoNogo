@@ -3,9 +3,10 @@ using System.Runtime.InteropServices;
 using UnityEditor.Playables;
 using UnityEngine;
 
+// Metadata model - grabs url vars as well
 [System.Serializable]
 public partial class Metadata {
-    // SESSION-SPECIFIC: Should be NonSerialized
+    // SESSION-SPECIFIC: Should be NonSerialized?
     public string sessionID = StringUtils.GenerateRandomId(7) + DateTime.Now.ToString("ddMMyyyy");        // New for each session
     public string start = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");           // Current session start time
     public string end;            // Current session end time
@@ -13,7 +14,7 @@ public partial class Metadata {
     public string endL1;         // Current L1 end time
     public string userAgentString; // Browser/system info for current session
 
-    // EXPERIMENT CONFIGURATION: Can remain serialized
+    // EXPERIMENT CONFIGURATION: Can remain serialized?
     public string experimentID;    // Study configuration identifier
     public string participantName; // Participant identifier
     public string studyName;      // Study name

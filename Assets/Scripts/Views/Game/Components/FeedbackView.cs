@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 
+// Shows feedback during trials
 public class FeedbackView : MonoBehaviour
 {
     [Header("UI References")]

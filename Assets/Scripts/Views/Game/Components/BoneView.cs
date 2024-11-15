@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
+// Handles bone visuals and animations
 public class BoneView : MonoBehaviour
 {
     [Header("References")]
@@ -22,6 +23,7 @@ public class BoneView : MonoBehaviour
         return !boneImage.enabled;
     }
 
+    // ReSharper disable Unity.PerformanceAnalysis
     public Dictionary<string, float> Show()
     {
         RandomTransform();
@@ -45,7 +47,7 @@ public class BoneView : MonoBehaviour
         boneRectTransform.localPosition = RandomPosition();
     }
 
-    public Dictionary<string, float> GetTransform()
+    private Dictionary<string, float> GetTransform()
     {
         RectTransform boneRectTransform = boneImage.rectTransform;
         RectTransform canvasRectTransform = canvas.GetComponent<RectTransform>();
@@ -64,6 +66,7 @@ public class BoneView : MonoBehaviour
         };
     }
 
+    // ReSharper disable Unity.PerformanceAnalysis
     private Vector2 RandomPosition()
     {
         // Get component references and calculate offsets

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 
+// Specific overall data for Level 1 (scores, reaction times, medianRT, etc.)
 [System.Serializable]
 public class Level1Data
 {
