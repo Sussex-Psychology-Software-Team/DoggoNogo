@@ -6,7 +6,7 @@ public class Level1Data
     public float currentMedianRT;
     public int currentScore;
     public int validTrialCount;
-    public readonly List<double> sortedRTs = new();
+    public readonly List<double> SortedRTs = new();
 
     public Level1Data(GameConfig config)
     {
