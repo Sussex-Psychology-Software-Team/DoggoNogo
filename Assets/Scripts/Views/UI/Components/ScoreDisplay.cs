@@ -13,7 +13,7 @@ public class ScoreDisplay : MonoBehaviour {
         GameEvents.OnScoreUpdated -= UpdateScore;
     }
 
-    private void UpdateScore(int newScore) {
+    public void UpdateScore(int newScore) {
         scoreText.text = $"Score: {newScore}";
     }
 }
