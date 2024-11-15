@@ -1,23 +1,71 @@
 using UnityEngine;
 
 public class GameController : MonoBehaviour, IGameState {
+    public static GameController Instance { get; private set; }
+
     [SerializeField] private GameConfig gameConfig;
     [SerializeField] private UIController uiController;
     
     private GameData _gameData;
     private IDataService _dataService;
+    private GamePhase _currentPhase;
     private bool _isGameActive;
 
-    public int CurrentTrialNumber => _gameData.level1.Count;
+    // IGameState properties
+    public int CurrentTrialNumber => _gameData?.level1.Count ?? 0;
     public int TotalTrials => gameConfig.DefaultTrialCount;
-    public int CurrentScore => _gameData.gameStats.CurrentScore;
-    public GamePhase CurrentPhase { get; private set; }
+    public int CurrentScore => _gameData?.gameStats.CurrentScore ?? 0;
+    public GamePhase CurrentPhase
+    {
+        get => _currentPhase;
+        set => _currentPhase = value;
+    }
 
-    private void Awake() {
+    // IGameState methods
+    public void StartNewTrial()
+    {
+        if (CurrentTrialNumber >= TotalTrials)
+        {
+            EndGame();
+            return;
+        }
+
+        double isi = CalculateIsi();
+        _gameData.AddNewTrial(isi);
+        GameEvents.GamePhaseChanged(GamePhase.TrialInProgress);
+    }
+
+    public void EndTrial(TrialResult result)
+    {
+        HandleTrialCompleted(result);
+    }
+
+    private void Awake() 
+    {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
         InitializeServices();
         SubscribeToEvents();
     }
 
+    // ReSharper disable Unity.PerformanceAnalysis
+    public void StartGame()
+    {
+        _isGameActive = true;
+        _gameData = new GameData();
+        _gameData.metadata.InitializeWebVariables();
+        
+        Level1Controller.Instance.StartLevel();
+        UIController.Instance.ShowGameScreen();
+        
+        GameEvents.GamePhaseChanged(GamePhase.Level1);
+    }
     private void InitializeServices() {
         var webService = new WebService();
         _dataService = new DataService(webService);
@@ -27,17 +75,6 @@ public class GameController : MonoBehaviour, IGameState {
     private void SubscribeToEvents() {
         GameEvents.OnTrialCompleted += HandleTrialCompleted;
         GameEvents.OnGamePhaseChanged += HandleGamePhaseChanged;
-    }
-
-    public void StartNewTrial() {
-        if (CurrentTrialNumber >= TotalTrials) {
-            EndGame();
-            return;
-        }
-
-        double isi = CalculateIsi();
-        _gameData.AddNewTrial(isi);
-        GameEvents.GamePhaseChanged(GamePhase.TrialInProgress);
     }
     
     private double CalculateIsi()
@@ -85,11 +122,6 @@ public class GameController : MonoBehaviour, IGameState {
                 DataController.Instance.Level1Ended();
                 break;
         }
-    }
-    
-    public void EndTrial(TrialResult result)
-    {
-        HandleTrialCompleted(result);
     }
     
     private void OnDestroy() {
