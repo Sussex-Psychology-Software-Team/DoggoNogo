@@ -48,13 +48,13 @@ public class Trial
         validTrialCount = result.ValidTrialCount;
     }
 
-    public void SaveStimulus(Dictionary<string, float> stimSpec){
-        this.canvasWidth = stimSpec["canvasWidth"];
-        this.canvasHeight = stimSpec["canvasHeight"];
-        this.canvasScaleFactor = stimSpec["canvasScale"];
-        this.stimulusX = stimSpec["x"];
-        this.stimulusY = stimSpec["y"];
-        this.stimulusOrientation = stimSpec["rotation"];
-        this.stimulusScale = stimSpec["scale"];
+    public void SaveStimulus(Dictionary<string, float> stimulusSpecifications){ // Add stimulus specifications on show
+        this.canvasWidth = stimulusSpecifications["canvasWidth"];
+        this.canvasHeight = stimulusSpecifications["canvasHeight"];
+        this.canvasScaleFactor = stimulusSpecifications["canvasScale"];
+        this.stimulusX = stimulusSpecifications["x"];
+        this.stimulusY = stimulusSpecifications["y"];
+        this.stimulusOrientation = stimulusSpecifications["rotation"];
+        this.stimulusScale = stimulusSpecifications["scale"];
     }
 }
