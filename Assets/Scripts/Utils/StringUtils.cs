@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class StringUtils
 {
-    private static readonly Random Random = new();
+    private static readonly System.Random Random = new();
     private const string Characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     public static string GenerateRandomId(int size)
