@@ -29,7 +29,7 @@ public partial class Metadata {
         userAgentString = GetUserAgent();
     }
 
-    static string GetUserAgent() {
+    private static string GetUserAgent() {
         #if UNITY_EDITOR
             return "EDITOR";
         #elif UNITY_WEBGL
@@ -40,5 +40,5 @@ public partial class Metadata {
     }
 
     [DllImport("__Internal")]
-    static extern string userAgent();
+    private static extern string userAgent();
 }
