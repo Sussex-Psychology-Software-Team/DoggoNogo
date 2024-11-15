@@ -2,19 +2,13 @@ using System.Collections.Generic;
 
 [System.Serializable]
 public class GameData {
-    public Metadata metadata;
-    public List<Trial> level1;
-    public GameStats gameStats;
-
-    public GameData() {
-        metadata = new Metadata();
-        level1 = new List<Trial>();
-        gameStats = new GameStats();
-    }
-
+    public Metadata metadata = new();
+    public List<Trial> level1 = new();
+    public GameStats gameStats = new();
+    public int TrialNumber => level1.Count;
+    
     public void AddNewTrial(double isi) {
-        level1.Add(new Trial(level1.Count + 1, isi));
-        GameEvents.TrialCompleted(new TrialResult { TrialNumber = level1.Count });
+        level1.Add(new Trial(TrialNumber + 1, isi));
     }
 
     public Trial CurrentTrial() => level1.Count > 0 ? level1[^1] : null;

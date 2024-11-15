@@ -49,6 +49,9 @@ public class Level1Controller : MonoBehaviour
         _dataController.SaveTrial(result);
         feedbackView.GiveFeedback(result);
         
+        // Trigger trial completed event
+        GameEvents.TrialCompleted(result);
+        
         if (result.ValidTrial || result.ResponseType == "missed")
         {
             _levelData.UpdateMedianRT(reactionTime);
