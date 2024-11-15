@@ -9,7 +9,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private UIAnimationController animationController;
     [SerializeField] private ScoreDisplay scoreDisplay;
     [SerializeField] private GameConfig gameConfig;
-    
+    [SerializeField] private GameObject introScreen;
     private void Awake()
     {
         if (Instance != null)
@@ -62,7 +62,13 @@ public class UIController : MonoBehaviour
             );
         }
     }
-
+    
+    public void ShowGameScreen()
+    {
+        introScreen?.SetActive(false);
+        mainGameUI.gameObject.SetActive(true);
+    }
+    
     private async void ShowGameOver()
     {
         await animationController.FadeOut(mainGameUI.gameObject);
