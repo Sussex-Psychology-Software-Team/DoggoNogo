@@ -8,7 +8,8 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameOverUI gameOverUI;
     [SerializeField] private UIAnimationController animationController;
     [SerializeField] private ScoreDisplay scoreDisplay;
-
+    [SerializeField] private GameConfig gameConfig;
+    
     private void Awake()
     {
         if (Instance != null)
@@ -48,6 +49,17 @@ public class UIController : MonoBehaviour
             case GamePhase.TrialInProgress:
                 UpdateTrialUI();
                 break;
+        }
+    }
+    
+    private void UpdateTrialUI()
+    {
+        if (mainGameUI != null)
+        {
+            mainGameUI.UpdateTrial(
+                Level1Controller.Instance.CurrentTrialNumber,
+                Level1Controller.Instance.TotalTrials
+            );
         }
     }
 

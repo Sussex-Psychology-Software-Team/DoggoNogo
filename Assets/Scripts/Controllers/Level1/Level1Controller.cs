@@ -13,6 +13,10 @@ public class Level1Controller : MonoBehaviour
     private Level1TrialController _trialController;
     private DataController _dataController;
 
+    // Add properties for trial tracking
+    public int CurrentTrialNumber => _levelData.validTrialCount;
+    public int TotalTrials => gameConfig.DefaultTrialCount;
+    
     private void Awake()
     {
         if (Instance != null)
