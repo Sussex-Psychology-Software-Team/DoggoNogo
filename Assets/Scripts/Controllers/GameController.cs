@@ -79,6 +79,18 @@ public class GameController : MonoBehaviour, IGameState { //Singleton instance f
         GameEvents.OnGamePhaseChanged += HandleGamePhaseChanged;
     }
     
+    public double GetCurrentThreshold()
+    {
+        return _gameData?.level1.Count > 0 
+            ? _gameData.level1[^1].threshold 
+            : gameConfig.InitialMedianRT;
+    }
+
+    public void OnLevelComplete()
+    {
+        EndGame();
+    }
+    
     private double CalculateIsi()
     {
         return UnityEngine.Random.Range(gameConfig.ISIRange.x, gameConfig.ISIRange.y);
