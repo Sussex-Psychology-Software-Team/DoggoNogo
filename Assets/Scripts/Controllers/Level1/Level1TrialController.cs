@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using UnityEngine;
 
-// Defines trials in controller - gets reaction times, stimuli show/hide
+// Defines trials in controller: Manages trial flow, Controls stimulus timing, Handles input detection, Manages ISI
 public class Level1TrialController : MonoBehaviour
 {
     [SerializeField] private GameConfig gameConfig;
