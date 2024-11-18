@@ -1,133 +1,168 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
 public class DogView : MonoBehaviour
 {
-    [Header("Components")]
-    [SerializeField] private Animator animator;
+    [Header("Visual Components")]
     [SerializeField] private Image dogImage;
+    [SerializeField] private SparkleEffect sparkleEffect;
+    [SerializeField] private Sprite[] evolutionSprites;
+    
+    [Header("Animation Settings")]
+    [SerializeField] private int maxJumpHeight = 40;
+    [SerializeField] private float jumpDuration = 0.3f;
+    [SerializeField] private float damageShakeAmount = 3.0f;
+    [SerializeField] private float damageFlickerDuration = 1.0f;
     
     [Header("Audio")]
     [SerializeField] private AudioSource barkSound;
-    [SerializeField] private AudioSource whineSound;
     [SerializeField] private AudioSource chewSound;
-    
-    [Header("Dog Sprites")]
-    [SerializeField] private Sprite[] dogEvolutions;
-    [SerializeField] private Sprite damagedSprite;
-    [SerializeField] private Sprite surprisedSprite;
-    [SerializeField] private Sprite chewingSprite;
-    
-    private Sprite normalSprite;
-    private Vector3 startPosition;
+    [SerializeField] private AudioSource whineSound1;
+    [SerializeField] private AudioSource whineSound2;
+    [SerializeField] private AudioSource surprisedSound;
+    [SerializeField] private AudioSource twinkleSound;
+    [SerializeField] private AudioSource levelUpSound;
+    [SerializeField] private AudioSource pantSound;
+
+    private Vector3 _startPosition;
+    private bool _isJumping;
+    private bool _isDamaged;
+    private float _currentYPosition;
 
     private void Awake()
     {
-        normalSprite = dogImage.sprite;
-        startPosition = transform.position;
-    }
-
-    public void Bark()
-    {
-        barkSound.Play();
-        animator.SetTrigger("Bark");
-    }
-
-    public void Whine()
-    {
-        whineSound.Play();
-        animator.SetTrigger("Whine");
-    }
-
-    public void Chew()
-    {
-        chewSound.Play();
-        StartCoroutine(ChewAnimation());
-    }
-
-    public void TakeDamage()
-    {
-        StartCoroutine(DamageAnimation());
-    }
-
-    public void Surprised()
-    {
-        StartCoroutine(SurprisedAnimation());
-    }
-
-    public void StartJump(int height)
-    {
-        StartCoroutine(JumpAnimation(height));
-    }
-
-    private IEnumerator ChewAnimation()
-    {
-        dogImage.sprite = chewingSprite;
-        yield return new WaitForSeconds(0.5f);
-        dogImage.sprite = normalSprite;
-    }
-
-    private IEnumerator DamageAnimation()
-    {
-        dogImage.sprite = damagedSprite;
-        yield return new WaitForSeconds(0.3f);
-        dogImage.sprite = normalSprite;
-    }
-
-    private IEnumerator SurprisedAnimation()
-    {
-        dogImage.sprite = surprisedSprite;
-        yield return new WaitForSeconds(0.3f);
-        dogImage.sprite = normalSprite;
+        _startPosition = transform.localPosition;
+        _currentYPosition = _startPosition.y;
     }
 
     public IEnumerator Evolve(int level)
     {
-        if (level <= 1 || level > dogEvolutions.Length + 1)
-            yield break;
+        sparkleEffect.Play(4.0f);
+        twinkleSound.Play();
+        levelUpSound.Play();
+        
+        yield return StartCoroutine(ShakeAndColorEffect(Color.grey, 4.0f, 3.0f, 0.2f));
+        UpdateSprite(level);
+        pantSound.Play();
+    }
 
-        // Fade out
-        float alpha = 1;
-        while (alpha > 0)
+    public void TakeDamage()
+    {
+        if (!_isDamaged)
         {
-            alpha -= Time.deltaTime * 2;
-            dogImage.color = new Color(1, 1, 1, alpha);
-            yield return null;
-        }
-
-        // Change sprite
-        dogImage.sprite = dogEvolutions[level - 2];
-        normalSprite = dogImage.sprite;
-
-        // Fade in
-        alpha = 0;
-        while (alpha < 1)
-        {
-            alpha += Time.deltaTime * 2;
-            dogImage.color = new Color(1, 1, 1, alpha);
-            yield return null;
+            StartCoroutine(ShakeAndColorEffect(Color.red, damageShakeAmount, damageFlickerDuration, 0.2f));
         }
     }
 
-    private IEnumerator JumpAnimation(int height)
+    public void StartJump(int height)
     {
-        float jumpDuration = 0.5f;
-        float elapsed = 0f;
-        Vector3 startPos = transform.position;
-        
-        while (elapsed < jumpDuration)
+        if (!_isJumping)
         {
-            elapsed += Time.deltaTime;
-            float normalizedTime = elapsed / jumpDuration;
+            maxJumpHeight = height;
+            StartCoroutine(JumpAnimation());
+        }
+    }
+
+    // Audio methods
+    public void Whine() => PlayRandomWhine();
+    public void Chew() => chewSound.Play();
+    public void Bark() => barkSound.Play();
+    public void Surprised() => surprisedSound.Play();
+
+    private void PlayRandomWhine()
+    {
+        (Random.value > 0.5f ? whineSound1 : whineSound2).Play();
+    }
+
+    // ReSharper disable Unity.PerformanceAnalysis
+    private void UpdateSprite(int level)
+    {
+        int spriteIndex = level - 1;
+        if (spriteIndex < evolutionSprites.Length)
+        {
+            dogImage.sprite = evolutionSprites[spriteIndex];
+            dogImage.rectTransform.sizeDelta = new Vector2(
+                dogImage.sprite.texture.width, 
+                dogImage.sprite.texture.height
+            );
+        }
+        else
+        {
+            Debug.LogError($"Evolution sprite index out of range: {spriteIndex}");
+        }
+    }
+
+    private IEnumerator ShakeAndColorEffect(Color color, float shakeAmount, float duration, float interval)
+    {
+        _isDamaged = true;
+        float endTime = Time.time + duration;
+        bool flickerState = false;
+        Vector3 originalPosition = transform.localPosition;
+
+        while (Time.time < endTime)
+        {
+            // Color flicker
+            dogImage.color = flickerState ? color : Color.white;
             
-            // Parabolic jump
-            float yOffset = height * Mathf.Sin(normalizedTime * Mathf.PI);
-            transform.position = startPos + new Vector3(0, yOffset, 0);
+            // Position shake
+            Vector3 randomOffset = new Vector3(
+                Random.Range(-shakeAmount, shakeAmount),
+                Random.Range(-shakeAmount, shakeAmount),
+                0
+            );
+            transform.localPosition = originalPosition + randomOffset;
             
+            flickerState = !flickerState;
+            yield return new WaitForSeconds(interval);
+        }
+
+        // Reset to original state
+        dogImage.color = Color.white;
+        transform.localPosition = originalPosition;
+        _isDamaged = false;
+    }
+
+    private IEnumerator JumpAnimation()
+    {
+        _isJumping = true;
+        float startY = _currentYPosition;
+        float elapsedTime = 0f;
+        float halfJumpTime = jumpDuration / 2f;
+
+        // Ascend
+        while (elapsedTime < halfJumpTime)
+        {
+            float t = elapsedTime / halfJumpTime;
+            _currentYPosition = Mathf.Lerp(startY, startY + maxJumpHeight, t);
+            UpdatePosition();
+            elapsedTime += Time.deltaTime;
             yield return null;
         }
-        
-        transform.position = startPos;
+
+        // Descend
+        elapsedTime = 0f;
+        while (elapsedTime < halfJumpTime)
+        {
+            float t = elapsedTime / halfJumpTime;
+            _currentYPosition = Mathf.Lerp(startY + maxJumpHeight, startY, t);
+            UpdatePosition();
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // Ensure final position is exact
+        _currentYPosition = startY;
+        UpdatePosition();
+        _isJumping = false;
+    }
+
+    private void UpdatePosition()
+    {
+        transform.localPosition = new Vector3(
+            transform.localPosition.x, 
+            _currentYPosition, 
+            transform.localPosition.z
+        );
     }
 }
