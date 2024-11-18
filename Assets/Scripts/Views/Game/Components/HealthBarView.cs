@@ -11,10 +11,10 @@ public class HealthBarView : MonoBehaviour
     [SerializeField] private float smoothSpeed = 5f;
     [SerializeField] private float animationDuration = 0.5f;
 
-    private float currentHealth;
-    private float targetHealth;
-    private float minHealth;
-    private float maxHealth;
+    private float _currentHealth;
+    private float _targetHealth;
+    private float _minHealth;
+    private float _maxHealth;
 
     private void Awake()
     {
@@ -23,14 +23,14 @@ public class HealthBarView : MonoBehaviour
 
     public void SetNewTarget(int target)
     {
-        maxHealth = target;
-        minHealth = 0;
+        _maxHealth = target;
+        _minHealth = 0;
         ResetHealth();
     }
 
     public void SetHealth(float health)
     {
-        targetHealth = Mathf.Clamp(health, minHealth, maxHealth);
+        _targetHealth = Mathf.Clamp(health, _minHealth, _maxHealth);
         
         // Smoothly animate to new health value
         if (gameObject.activeInHierarchy)
@@ -39,7 +39,7 @@ public class HealthBarView : MonoBehaviour
         }
         else
         {
-            currentHealth = targetHealth;
+            _currentHealth = _targetHealth;
             UpdateFillAmount();
         }
     }
@@ -51,21 +51,21 @@ public class HealthBarView : MonoBehaviour
 
     private void ResetHealth()
     {
-        currentHealth = 0;
-        targetHealth = 0;
+        _currentHealth = 0;
+        _targetHealth = 0;
         UpdateFillAmount();
     }
 
     private void UpdateFillAmount()
     {
-        float normalizedHealth = Mathf.InverseLerp(minHealth, maxHealth, currentHealth);
+        float normalizedHealth = Mathf.InverseLerp(_minHealth, _maxHealth, _currentHealth);
         fillImage.fillAmount = Mathf.Clamp01(normalizedHealth);
     }
 
     private System.Collections.IEnumerator AnimateHealthChange()
     {
         float elapsed = 0f;
-        float startHealth = currentHealth;
+        float startHealth = _currentHealth;
 
         while (elapsed < animationDuration)
         {
@@ -75,16 +75,16 @@ public class HealthBarView : MonoBehaviour
             // Use smoothstep for more natural animation
             t = t * t * (3f - 2f * t);
             
-            currentHealth = Mathf.Lerp(startHealth, targetHealth, t);
+            _currentHealth = Mathf.Lerp(startHealth, _targetHealth, t);
             UpdateFillAmount();
             
             yield return null;
         }
 
-        currentHealth = targetHealth;
+        _currentHealth = _targetHealth;
         UpdateFillAmount();
     }
 
-    public float GetMinHealth() => minHealth;
-    public float GetMaxHealth() => maxHealth;
+    public float GetMinHealth() => _minHealth;
+    public float GetMaxHealth() => _maxHealth;
 }
