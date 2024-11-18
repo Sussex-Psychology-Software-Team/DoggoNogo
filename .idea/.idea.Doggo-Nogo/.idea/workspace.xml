@@ -6,30 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="5fe89b5f-2f76-4cfb-bd20-c0a70dd47b44" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Doggo-Nogo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Doggo-Nogo/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Controllers/DataController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Controllers/DataController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Controllers/GameController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Controllers/GameController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Controllers/Level1/Level1Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Controllers/Level1/Level1Controller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Controllers/Level1/Level1ScoreController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Controllers/Level1/Level1ScoreController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Controllers/Level1/Level1TrialController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Controllers/Level1/Level1TrialController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Controllers/UIController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Controllers/UIController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Core/Events/GameEvents.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Core/Events/GameEvents.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Core/Interfaces/IDataService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Core/Interfaces/IDataService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Models/Data/GameStats.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Models/Data/GameStats.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Models/Data/Level1/Level1Data.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Models/Data/Level1/Level1Data.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Models/Data/Metadata.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Models/Data/Metadata.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Models/Data/Trial.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Models/Data/Trial.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Models/Data/TrialResult.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Models/Data/TrialResult.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Models/GameData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Models/GameData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Services/DataService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Services/DataService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Services/WebService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Services/WebService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Views/Game/Components/BoneView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Views/Game/Components/BoneView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Views/Game/Components/FeedbackView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Views/Game/Components/FeedbackView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Views/UI/Components/ScoreDisplay.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Views/UI/Components/ScoreDisplay.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Views/UI/Components/TrialProgressBar.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Views/UI/Components/TrialProgressBar.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Views/UI/Screens/GameOverUI.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Views/UI/Screens/GameOverUI.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Views/UI/Screens/IntroScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Views/UI/Screens/IntroScreen.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Views/UI/Screens/MainGameUI.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Views/UI/Screens/MainGameUI.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,8 +19,6 @@
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Controllers/DataController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Controllers/GameController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Controllers/Level1/Level1Controller.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Controllers/Level1/Level1ScoreController.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Controllers/Level1/Level1TrialController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Controllers/UIController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Core/Events/GameEvents.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Core/Interfaces/IDataService.cs" root0="FORCE_HIGHLIGHTING" />
@@ -55,7 +29,7 @@
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Models/GameData.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Services/DataService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Services/WebService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Views/Animations/UIAnimationController.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Views/Animations/UIAnimationController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Views/Game/Components/BoneView.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Views/UI/Components/ScoreDisplay.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Views/UI/Screens/GameOverUI.cs" root0="FORCE_HIGHLIGHTING" />
@@ -82,6 +56,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "Shell Script.setup_mvc_structure.sh.executor": "Run",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "Refactor-MVC",
     "node.js.detected.package.eslint": "true",
@@ -89,7 +64,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.keymap",
+    "settings.editor.selected.configurable": "CodeInspectionSettingsId",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -171,7 +146,8 @@
       <workItem from="1731416578443" duration="13593000" />
       <workItem from="1731492398763" duration="11192000" />
       <workItem from="1731595729130" duration="7409000" />
-      <workItem from="1731666384018" duration="13782000" />
+      <workItem from="1731666384018" duration="14381000" />
+      <workItem from="1731928975141" duration="15250000" />
     </task>
     <servers />
   </component>
@@ -186,6 +162,9 @@
     <option name="unityProjectFolder" value="true" />
   </component>
   <component name="UnityUnitTestConfiguration" currentTestLauncher="Both" />
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.py" />
+  </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
