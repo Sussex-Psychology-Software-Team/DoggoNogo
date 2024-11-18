@@ -209,7 +209,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 410998609}
-        m_TargetAssemblyTypeName: FullscreenManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: WebUIManager, Assembly-CSharp
         m_MethodName: ToggleFullscreen
         m_Mode: 1
         m_Arguments:
@@ -217,11 +217,11 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Introduction
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 1
       - m_Target: {fileID: 410998608}
-        m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
+        m_TargetAssemblyTypeName: SceneController, Assembly-CSharp
         m_MethodName: LoadScene
         m_Mode: 5
         m_Arguments:
@@ -279,7 +279,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 410998603}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57492bd226ac94796839f7ed2dc02530, type: 3}
+  m_Script: {fileID: 11500000, guid: fd71bd4f89c845749290c3669d4a7447, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &410998609
@@ -291,7 +291,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 410998603}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c37fd5bd4c33f47a6ba2413be981146a, type: 3}
+  m_Script: {fileID: 11500000, guid: 2671b98d7cc94dcab59359275f08544e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &420466786
@@ -607,7 +607,6 @@ GameObject:
   - component: {fileID: 1235142386}
   - component: {fileID: 1235142385}
   - component: {fileID: 1235142388}
-  - component: {fileID: 1235142389}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -701,23 +700,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &1235142389
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1235142383}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a859f1e36f7c4af29c2924e46c1cbf8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  instructions: {fileID: 1483463714}
-  instructionsText: {fileID: 1483463716}
-  button: {fileID: 410998603}
-  titleCardRect: {fileID: 525233029}
-  titleCardImage: {fileID: 525233030}
 --- !u!1 &1323158844
 GameObject:
   m_ObjectHideFlags: 0
@@ -936,7 +918,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1483463714}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5ba793e3b76e4c0ca5ed54d601dd646, type: 3}
+  m_Script: {fileID: 11500000, guid: 9cbec6b8362745578675bb56061bbb2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   textMeshPro: {fileID: 1483463716}
@@ -1030,6 +1012,70 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AspectMode: 4
   m_AspectRatio: 1.75
+--- !u!1 &2066744715
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2066744718}
+  - component: {fileID: 2066744717}
+  - component: {fileID: 2066744716}
+  m_Layer: 0
+  m_Name: LandingScreenView
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2066744716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2066744715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d28a695bc8ca94c68b905eeb33da2315, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultFadeDuration: 0.3
+--- !u!114 &2066744717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2066744715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0eb67921e264a5a99e14316c17eb9eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instructions: {fileID: 1483463714}
+  instructionsText: {fileID: 1483463716}
+  startButton: {fileID: 410998603}
+  titleCardRect: {fileID: 525233029}
+  titleCardImage: {fileID: 525233030}
+  animationController: {fileID: 2066744716}
+--- !u!4 &2066744718
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2066744715}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.5221605, y: 1.6807892, z: 1.3151098}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1037,3 +1083,4 @@ SceneRoots:
   - {fileID: 420466789}
   - {fileID: 1235142387}
   - {fileID: 1323158847}
+  - {fileID: 2066744718}
