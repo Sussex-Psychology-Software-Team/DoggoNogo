@@ -1,7 +1,7 @@
-using UnityEngine;
 using System.Runtime.InteropServices;
+using UnityEngine;
 
-public class FullscreenManager : MonoBehaviour
+public class WebUIManager : MonoBehaviour
 {
     [DllImport("__Internal")]
     private static extern void GoFullscreen();
@@ -9,8 +9,7 @@ public class FullscreenManager : MonoBehaviour
     public void ToggleFullscreen()
     {
         #if !UNITY_EDITOR && UNITY_WEBGL
-            GoFullscreen();
+                    GoFullscreen();
         #endif
-        
     }
 }

@@ -9,7 +9,7 @@ public class EndGameView : MonoBehaviour
     [SerializeField] private EndGameScoreView scoreView;
     
     [Header("Services")]
-    [SerializeField] private FullscreenManager fullscreenManager;
+    [SerializeField] private WebUIManager fullscreenManager;
 
     private EndGameController _controller;
     
