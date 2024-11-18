@@ -575,7 +575,6 @@ GameObject:
   m_Component:
   - component: {fileID: 755822090}
   - component: {fileID: 755822091}
-  - component: {fileID: 755822092}
   m_Layer: 5
   m_Name: Skip
   m_TagString: Untagged
@@ -655,20 +654,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &755822092
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 755822089}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cad63db3b77ba464591403c1d987800d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeToSkip: 2
-  slider: {fileID: 755822091}
 --- !u!1 &1146223145
 GameObject:
   m_ObjectHideFlags: 0
@@ -951,7 +936,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1693115742}
-        m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
+        m_TargetAssemblyTypeName: SceneController, Assembly-CSharp
         m_MethodName: LoadScene
         m_Mode: 5
         m_Arguments:
@@ -1009,7 +994,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1693115737}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57492bd226ac94796839f7ed2dc02530, type: 3}
+  m_Script: {fileID: 11500000, guid: fd71bd4f89c845749290c3669d4a7447, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1805489020
@@ -1126,9 +1111,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1828802938}
-  - component: {fileID: 1828802937}
   - component: {fileID: 1828802936}
   - component: {fileID: 1828802935}
+  - component: {fileID: 1828802939}
+  - component: {fileID: 1828802940}
   m_Layer: 0
   m_Name: SlideshowManager
   m_TagString: Untagged
@@ -1328,26 +1314,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1828802937
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1828802934}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 120cb1c14d4874608b5f55101a1cdae7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textBox: {fileID: 1931398101}
-  textBackground: {fileID: 1322739578}
-  backgroundImage: {fileID: 68796570}
-  garden: {fileID: 21300000, guid: 700e2c6b1ae6942ff87182715f4865b3, type: 3}
-  dog: {fileID: 346966017}
-  metalDoor: {fileID: 1828802936}
-  dogWhine: {fileID: 1828802935}
-  timeBetweenImages: 4
 --- !u!4 &1828802938
 Transform:
   m_ObjectHideFlags: 0
@@ -1363,6 +1329,40 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1828802939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1828802934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e4096a9e9a54b06be5418453c7f2062, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  storyText: {fileID: 1931398101}
+  textBackground: {fileID: 1322739578}
+  backgroundImage: {fileID: 68796570}
+  dogImage: {fileID: 346966017}
+  skipProgressSlider: {fileID: 755822091}
+  metalDoorSound: {fileID: 1828802936}
+  dogWhineSound: {fileID: 1828802935}
+  chapterDuration: 4
+  skipHoldDuration: 2
+--- !u!114 &1828802940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1828802934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d28a695bc8ca94c68b905eeb33da2315, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultFadeDuration: 0.3
 --- !u!1 &1919661408
 GameObject:
   m_ObjectHideFlags: 0
