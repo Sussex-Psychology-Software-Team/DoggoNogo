@@ -10,18 +10,13 @@ public class GameController : MonoBehaviour, IGameState { //Singleton instance f
     
     private GameData _gameData;
     private IDataService _dataService;
-    private GamePhase _currentPhase;
     private bool _isGameActive;
 
     // IGameState properties
     public int CurrentTrialNumber => _gameData?.level1.Count ?? 0;
     public int TotalTrials => gameConfig.DefaultTrialCount;
     public int CurrentScore => _gameData?.gameStats.CurrentScore ?? 0;
-    public GamePhase CurrentPhase
-    {
-        get => _currentPhase;
-        set => _currentPhase = value;
-    }
+    public GamePhase CurrentPhase { get; set; }
 
     // IGameState methods
     public void StartNewTrial()
