@@ -16,7 +16,7 @@ public class GameController : MonoBehaviour, IGameState { //Singleton instance f
     public int CurrentTrialNumber => _gameData?.level1.Count ?? 0;
     public int TotalTrials => gameConfig.DefaultTrialCount;
     public int CurrentScore => _gameData?.gameStats.CurrentScore ?? 0;
-    public GamePhase CurrentPhase { get; set; }
+    public GamePhase CurrentPhase { get; private set; }
 
     // IGameState methods
     public void StartNewTrial()
