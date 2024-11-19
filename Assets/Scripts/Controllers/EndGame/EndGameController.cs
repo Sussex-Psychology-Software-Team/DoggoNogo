@@ -9,7 +9,7 @@ public class EndGameController : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null)
+        if (Instance)
         {
             Destroy(gameObject);
             return;
@@ -22,12 +22,11 @@ public class EndGameController : MonoBehaviour
     private void InitializeEndGame()
     {
         _scoreData = new EndGameScoreData();
-        GameController.Instance.OnLevelComplete();
     }
 
     public float CalculatePercentileScore()
     {
-        double threshold = GameController.Instance.GetCurrentThreshold();
+        double threshold = DataController.Instance.GetCurrentThreshold();
         return (float)MathUtils.CalculatePercentileNormCDF(threshold);
     }
 }

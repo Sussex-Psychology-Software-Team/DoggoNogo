@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 // Calculates scores based on reaction times, Manages scoring rules, Handles score updates
 public class ScoreCalculator

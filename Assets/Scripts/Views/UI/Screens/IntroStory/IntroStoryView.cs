@@ -141,7 +141,7 @@ public class IntroStoryView : MonoBehaviour
         }
     }
 
-    private void LoadGameScene()
+    private static void LoadGameScene()
     {
         SceneManager.LoadScene("Simple RT");
     }

@@ -5,7 +5,7 @@ using System.Collections;
 
 // Intro to Level1
 // do I need dog image or just dogView reference?
-public class IntroScreen : MonoBehaviour
+public class Level1IntroductionView : MonoBehaviour
 {
     [Header("UI References")]
     [SerializeField] private GameObject instructions;
@@ -20,8 +20,10 @@ public class IntroScreen : MonoBehaviour
     [SerializeField] private float swingFrequency = 3f;
     [SerializeField] private float swingDampening = 3f;
     
+    private UIAnimationController _animationController;
     private bool _viewingInstructions = true;
     private bool _allowContinue = false;
+    
 
     private void Start()
     {
@@ -51,7 +53,7 @@ public class IntroScreen : MonoBehaviour
         instructions.SetActive(false);
         scoreCard.SetActive(true);
         _viewingInstructions = false;
-        GameController.Instance.StartGame();
+        Level1Controller.Instance.StartLevel();
     }
 
     private IEnumerator FadeIn(float duration, Graphic graphic)

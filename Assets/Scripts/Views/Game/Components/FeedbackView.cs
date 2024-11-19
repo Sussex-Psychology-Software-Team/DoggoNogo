@@ -114,11 +114,13 @@ public class FeedbackView : MonoBehaviour
         healthBar.SetNewTarget(targetScore);
         scoreText.text = "Score: 0";
 
-        if (level == 2)
-            backgroundMusic.pitch = 1.15f;
-        else if (level == 3)
-            backgroundMusic.pitch = 1.3f;
-            
+        backgroundMusic.pitch = level switch
+        {
+            2 => 1.15f,
+            3 => 1.3f,
+            _ => backgroundMusic.pitch
+        };
+
         changingLevel = false;
     }
 

@@ -24,5 +24,6 @@ public class Level1Data
         currentMedianRT = SortedRTs.Count % 2 == 0 
             ? (float)((SortedRTs[mid] + SortedRTs[mid - 1]) / 2)
             : (float)SortedRTs[mid];
+        Level1Events.MedianRTUpdated(currentMedianRT);
     }
 }

@@ -57,11 +57,9 @@ public class DogView : MonoBehaviour
 
     public void StartJump(int height)
     {
-        if (!_isJumping)
-        {
-            maxJumpHeight = height;
-            StartCoroutine(JumpAnimation());
-        }
+        if (_isJumping) return;
+        maxJumpHeight = height;
+        StartCoroutine(JumpAnimation());
     }
 
     // Audio methods
