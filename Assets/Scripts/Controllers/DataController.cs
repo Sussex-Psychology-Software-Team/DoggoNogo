@@ -29,10 +29,7 @@ public class DataController : MonoBehaviour
 
     private void Start()
     {
-        if (_gameData == null)
-        {
-            _gameData = new GameData();
-        }
+        _gameData ??= new GameData();
         _gameData.metadata.InitializeWebVariables();
     }
 
