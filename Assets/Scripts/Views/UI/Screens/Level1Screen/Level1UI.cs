@@ -1,28 +1,41 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 // Main game screen - I think this is Level1 UI and needs to be updated with dog and bone views, and other methods
 public class Level1UI : MonoBehaviour
 {
-    [SerializeField] private FeedbackView feedbackView;
+    [Header("UI Components")]
+    [SerializeField] private FeedbackView feedbackView; // Feedback view to communicate through
+    [SerializeField] private List<HealthBarView> healthBars; // List of health bars to flip through
+    
+    // Public methods for controller to call
+    public void ShowHealthBar(int index)
+    {
+        for (int i = 0; i < healthBars.Count; i++)
+        {
+            healthBars[i].gameObject.SetActive(i == index);
+        }
+    }
 
-    private void OnEnable()
+    public void UpdateHealthBar(int index, float value)
     {
-        Level1Events.OnStageChanged += HandleStageChange;
+        healthBars[index].SetHealth(value);
     }
-    
-    private void HandleStageChange(int newStage, int targetScore)
+
+    public void ConfigureHealthBar(int index, float maxValue, Color color)
     {
-        // Play evolution animation
-        StartCoroutine(feedbackView.ChangeLevel(newStage, targetScore));
+        healthBars[index].SetMaxValue(maxValue);
+        healthBars[index].SetColor(color);
     }
-    
-    public void Feedback(TrialResult result)
+
+    public void DisplayTrialResult(TrialResult result)
     {
-        feedbackView.GiveFeedback(result);
+        feedbackView.DisplayTrialResult(result); // Use controller to 
     }
-    
-    private void OnDisable()
+
+    public IEnumerator HandleLevelTransition(int newStage)
     {
-        Level1Events.OnStageChanged -= HandleStageChange;
+        yield return StartCoroutine(feedbackView.HandleLevelChange(newStage));
     }
 }

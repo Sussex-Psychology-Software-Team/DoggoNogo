@@ -1,43 +1,69 @@
+using System.Collections;
 using UnityEngine;
 
 public class Level1UIController : MonoBehaviour
 {
-    [SerializeField] private FeedbackView feedbackView;
+    [SerializeField] private Level1UI levelUI;
+    private int _currentHealthBarIndex;
 
     private void OnEnable()
     {
+        Level1Events.OnStageChanged += HandleStageChange;
         Level1Events.OnTrialCompleted += HandleTrialCompleted;
         Level1Events.OnLevelStarted += HandleLevelStarted;
-        Level1Events.OnTrialStateChanged += HandleTrialStateChanged;
-        Level1Events.OnInvalidResponse += HandleInvalidResponse;
+        Level1Events.OnScoreUpdated += HandleScoreUpdated;
     }
-
+    
     private void OnDisable()
     {
+        Level1Events.OnStageChanged -= HandleStageChange;
         Level1Events.OnTrialCompleted -= HandleTrialCompleted;
         Level1Events.OnLevelStarted -= HandleLevelStarted;
-        Level1Events.OnTrialStateChanged -= HandleTrialStateChanged;
-        Level1Events.OnInvalidResponse -= HandleInvalidResponse;
+        Level1Events.OnScoreUpdated -= HandleScoreUpdated;
+    }
+
+    private void Start()
+    {
+        _currentHealthBarIndex = 0;
+        levelUI.ShowHealthBar(_currentHealthBarIndex);
     }
     
+    private void HandleStageChange(int newStage, int targetScore)
+    {
+        StartCoroutine(HandleStageTransition(newStage, targetScore));
+    }
+
+    private IEnumerator HandleStageTransition(int newStage, int targetScore)
+    {
+        // Fill current health bar
+        levelUI.UpdateHealthBar(_currentHealthBarIndex, targetScore);
+        
+        // Switch to new health bar
+        _currentHealthBarIndex = newStage - 1;
+        levelUI.ShowHealthBar(_currentHealthBarIndex);
+        levelUI.ConfigureHealthBar(
+            _currentHealthBarIndex, 
+            targetScore, 
+            new Color(0.06770712f, 0.5817609f, 0f, 1f)
+        );
+
+        // Handle level change animations
+        yield return StartCoroutine(levelUI.HandleLevelTransition(newStage));
+    }
+
     private void HandleLevelStarted()
     {
-        // Maybe show elements here? like feedback view
+        _currentHealthBarIndex = 0;
+        levelUI.ShowHealthBar(_currentHealthBarIndex);
     }
-    private void HandleTrialStateChanged(TrialState state)
-    {
-        // Maybe handle pausing and stuff here?
-    }
+
     private void HandleTrialCompleted(TrialResult result)
     {
-        // Not sure this feels right - handle response recorded here maybe.
-        feedbackView.GiveFeedback(result);
+        levelUI.DisplayTrialResult(result);
     }
-    
-    private void HandleInvalidResponse(string reason)
+
+    private void HandleScoreUpdated(int newScore)
     {
-        // Probably no need for this event - that's extracted elsewhere.
-        // feedbackView.ShowInvalidResponse(reason);
+        levelUI.UpdateHealthBar(_currentHealthBarIndex, newScore);
     }
-    
 }

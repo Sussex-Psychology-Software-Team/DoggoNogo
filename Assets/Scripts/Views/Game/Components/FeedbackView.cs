@@ -1,61 +1,42 @@
-using UnityEngine;
-using TMPro;
 using System.Collections;
+using TMPro;
+using UnityEngine;
 
-// Shows feedback during trials
 public class FeedbackView : MonoBehaviour
 {
     [Header("UI References")]
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI scoreChange;
     [SerializeField] private TextMeshProUGUI feedbackText;
-    [SerializeField] private HealthBarView healthBar;
     
     [Header("Game Objects")]
     [SerializeField] private DogView dogView;
     [SerializeField] private BoneView boneView;
     [SerializeField] private AudioSource backgroundMusic;
-    
+
     public bool changingLevel = false;
 
-    public void GiveFeedback(TrialResult result)
-    {
-        var feedbackData = FeedbackData.FromTrialResult(result);
-        DisplayFeedback(
-            feedbackData.feedbackText,
-            feedbackData.totalScore,
-            feedbackData.scoreChange,
-            feedbackData.colorHex,
-            feedbackData.barColor
-        );
-        PlayAnimations(feedbackData.responseType, feedbackData.scoreChange);
-    }
-
-    private (string feedback, Color barColor, Color textColor, string changeTextHex) GetFeedbackConfig(string trialType)
+    private (string feedback, Color textColor, string changeTextHex) GetFeedbackConfig(string trialType)
     {
         return trialType switch
         {
             "early" => (
                 "TOO QUICK!\nWait until the bone has appeared.",
                 Color.red,
-                Color.red,
                 "#FF0000"
             ),
             "slow" => (
                 "ALMOST!\nDoggo missed the bone",
                 Color.blue,
-                Color.blue,
                 "#0000FF"
             ),
             "fast" => (
                 "GREAT!\nDoggo caught the bone in the air",
-                new Color(0.06770712f, 0.5817609f, 0f, 1f),
                 Color.green,
                 "#119400"
             ),
             "missed" => (
                 "TOO SLOW!\nThe bone has been stolen by another animal...",
-                Color.blue,
                 Color.red,
                 "#0000FF"
             ),
@@ -63,17 +44,17 @@ public class FeedbackView : MonoBehaviour
         };
     }
 
-    private void DisplayFeedback(string feedback, int newTotalScore, int trialScore, string changeTextHex, Color barColor)
+    public void DisplayTrialResult(TrialResult result)
     {
+        var feedbackConfig = GetFeedbackConfig(result.ResponseType);
         scoreChange.enabled = true;
         feedbackText.enabled = true;
-        feedbackText.text = feedback;
-        scoreText.text = $"Score: {newTotalScore}";
-        string sign = trialScore >= 0 ? "+" : "";
-        scoreChange.text = $"<color={changeTextHex}>{sign}{trialScore}";
+        feedbackText.text = feedbackConfig.feedback;
+        scoreText.text = $"Score: {result.TotalScore}";
+        string sign = result.TrialScore >= 0 ? "+" : "";
+        scoreChange.text = $"<color={feedbackConfig.changeTextHex}>{sign}{result.TrialScore}";
         
-        healthBar.SetColour(barColor);
-        healthBar.SetHealth(newTotalScore);
+        PlayAnimations(result.ResponseType, result.TrialScore);
     }
 
     private void PlayAnimations(string trialType, int trialScore)
@@ -100,19 +81,16 @@ public class FeedbackView : MonoBehaviour
         }
     }
 
-    public IEnumerator ChangeLevel(int level, int targetScore)
+    public IEnumerator HandleLevelChange(int level)
     {
         changingLevel = true;
         backgroundMusic.Stop();
         scoreChange.text = "";
         
-        Prompt("What? Doggo is changing...");
+        SetPrompt("What? Doggo is changing...");
         yield return StartCoroutine(dogView.Evolve(level));
         
-        Prompt($"Level {level}!\n<size=80%>Press the down arrow <sprite name=\"down_arrow\"> to continue");
-        
-        healthBar.SetNewTarget(targetScore);
-        scoreText.text = "Score: 0";
+        SetPrompt($"Level {level}!\n<size=80%>Press the down arrow <sprite name=\"down_arrow\"> to continue");
 
         backgroundMusic.pitch = level switch
         {
@@ -124,13 +102,18 @@ public class FeedbackView : MonoBehaviour
         changingLevel = false;
     }
 
+    public void UpdateScore(int score)
+    {
+        scoreText.text = $"Score: {score}";
+    }
+
     public void ResumeBackgroundMusic()
     {
         if (!backgroundMusic.isPlaying)
             backgroundMusic.Play();
     }
 
-    public void Prompt(string text = "")
+    public void SetPrompt(string text)
     {
         scoreChange.text = "";
         feedbackText.color = Color.white;
