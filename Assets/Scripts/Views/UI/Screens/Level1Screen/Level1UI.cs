@@ -10,14 +10,6 @@ public class Level1UI : MonoBehaviour
     [SerializeField] private List<HealthBarView> healthBars; // List of health bars to flip through
     
     // Public methods for controller to call
-    public void ShowHealthBar(int index)
-    {
-        for (int i = 0; i < healthBars.Count; i++)
-        {
-            healthBars[i].gameObject.SetActive(i == index);
-        }
-    }
-
     public void UpdateHealthBar(int index, float value)
     {
         healthBars[index].SetHealth(value);

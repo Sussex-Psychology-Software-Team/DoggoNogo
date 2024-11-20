@@ -4,7 +4,7 @@ using UnityEngine;
 public class Level1UIController : MonoBehaviour
 {
     [SerializeField] private Level1UI levelUI;
-    private int _currentHealthBarIndex;
+    private int _currentHealthBarIndex = 0;
 
     private void OnEnable()
     {
@@ -21,12 +21,6 @@ public class Level1UIController : MonoBehaviour
         Level1Events.OnLevelStarted -= HandleLevelStarted;
         Level1Events.OnScoreUpdated -= HandleScoreUpdated;
     }
-
-    private void Start()
-    {
-        _currentHealthBarIndex = 0;
-        levelUI.ShowHealthBar(_currentHealthBarIndex);
-    }
     
     private void HandleStageChange(int newStage, int targetScore)
     {
@@ -40,7 +34,6 @@ public class Level1UIController : MonoBehaviour
         
         // Switch to new health bar
         _currentHealthBarIndex = newStage - 1;
-        levelUI.ShowHealthBar(_currentHealthBarIndex);
         levelUI.ConfigureHealthBar(
             _currentHealthBarIndex, 
             targetScore, 
@@ -54,7 +47,6 @@ public class Level1UIController : MonoBehaviour
     private void HandleLevelStarted()
     {
         _currentHealthBarIndex = 0;
-        levelUI.ShowHealthBar(_currentHealthBarIndex);
     }
 
     private void HandleTrialCompleted(TrialResult result)
