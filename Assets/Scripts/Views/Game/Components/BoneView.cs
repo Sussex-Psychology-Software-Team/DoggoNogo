@@ -6,12 +6,14 @@ using System.Collections.Generic;
 // Handles bone visuals and animations
 public class BoneView : MonoBehaviour
 {
-    [Header("References")]
+    [Header("Bone")]
     [SerializeField] private Image boneImage;
-    [SerializeField] private Image dogImage;
-    [SerializeField] private Canvas canvas;
-    [SerializeField] private GameObject scoreContainer;
     [SerializeField] private AudioSource boneThrowSound;
+    
+    [Header("References for transform bounds")]
+    [SerializeField] private Canvas canvas;
+    [SerializeField] private Image dogImage;
+    [SerializeField] private GameObject scoreContainer;
 
     public void Hide()
     {
