@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Diagnostics;
 using TMPro;
 using UnityEngine;
@@ -10,7 +11,6 @@ public class IntroStoryView : MonoBehaviour
 {
     [Header("UI Elements")]
     [SerializeField] private TextMeshProUGUI storyText;
-    [SerializeField] private Image textBackground;
     [SerializeField] private Image backgroundImage;
     [SerializeField] private Image dogImage;
     [SerializeField] private Slider skipProgressSlider;
@@ -33,35 +33,93 @@ public class IntroStoryView : MonoBehaviour
     private int _currentChapter;
     private float _chapterTimer;
     private readonly Stopwatch _skipTimer = new();
-    private UIAnimationController _animationController;
-
+    private Coroutine _storyCoroutine;
+    
     private void Start()
     {
-        _animationController = GetComponent<UIAnimationController>();
-        InitializeStory();
+        StartCoroutine(InitializeStory());
     }
 
-    private async void InitializeStory()
+    // NOTE: In a try-catch block, yield return statements must be in the method body itself, not inside the try block.
+    private IEnumerator InitializeStory()
     {
         try
         {
-            // Fades in the story text with a duration of 1 second
-            await _animationController.FadeGraphic(storyText, 1f);
-        
-            // Sets the chapter timer to the specified duration
-            _chapterTimer = chapterDuration;
+            _storyCoroutine = StartCoroutine(RunStorySequence());
         }
         catch (Exception e)
         {
-            // Log the exception for debugging purposes
             Debug.LogError($"Error initializing story: {e.Message}\n{e.StackTrace}");
         }
+        yield break;
     }
+    
+    private IEnumerator RunStorySequence()
+    {
+        // Fades in the story text with a duration of 1 second
+        yield return StartCoroutine(GameController.Instance.Animations.FadeIn(storyText, 1f));
 
+        // Start the main story sequence
+        while (_currentChapter < 7)
+        {
+            yield return new WaitForSeconds(chapterDuration);
+            yield return StartCoroutine(RunAdvanceChapter());
+        }
+    
+        LoadGameScene();
+    }
+    
+    private IEnumerator AdvanceChapter()
+    {
+        try
+        {
+            StartCoroutine(RunAdvanceChapter());
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error advancing chapter: {e.Message}\n{e.StackTrace}");
+        }
+        yield break;
+    }
+    
+    private IEnumerator RunAdvanceChapter()
+    {
+        _currentChapter++;
+
+        switch (_currentChapter)
+        {
+            case 2:
+                metalDoorSound.Play();
+                storyText.text = _storyChapters[1];
+                break;
+    
+            case 3:
+                storyText.text = "";
+                backgroundImage.color = Color.white;
+                yield return StartCoroutine(GameController.Instance.Animations.FadeIn(backgroundImage, 1f));
+                dogWhineSound.Play();
+                break;
+    
+            case 4:
+                dogImage.enabled = true;
+                break;
+    
+            case 5:
+                storyText.text = _storyChapters[2];
+                break;
+    
+            case 6:
+                dogImage.enabled = false;
+                backgroundImage.color = Color.black;
+                storyText.fontSize = 100;
+                storyText.text = _storyChapters[3];
+                break;
+        }
+    }
+    
     private void Update()
     {
         HandleSkipInput();
-        UpdateChapter();
     }
 
     private void HandleSkipInput()
@@ -79,65 +137,9 @@ public class IntroStoryView : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Escape) || _skipTimer.Elapsed.TotalSeconds >= skipHoldDuration)
         {
+            if (_storyCoroutine != null)
+                StopCoroutine(_storyCoroutine);
             LoadGameScene();
-        }
-    }
-
-    private void UpdateChapter()
-    {
-        _chapterTimer -= Time.deltaTime;
-        if (_chapterTimer <= 0f)
-        {
-            AdvanceChapter();
-        }
-    }
-
-    // ReSharper disable Unity.PerformanceAnalysis
-    private async void AdvanceChapter()
-    {
-        try
-        {
-            _currentChapter++;
-        
-            switch (_currentChapter)
-            {
-                case 2:
-                    metalDoorSound.Play();
-                    storyText.text = _storyChapters[1];
-                    break;
-            
-                case 3:
-                    storyText.text = "";
-                    backgroundImage.color = Color.white;
-                    await _animationController.FadeGraphic(backgroundImage, 1f);
-                    dogWhineSound.Play();
-                    break;
-            
-                case 4:
-                    dogImage.enabled = true;
-                    break;
-            
-                case 5:
-                    storyText.text = _storyChapters[2];
-                    break;
-            
-                case 6:
-                    dogImage.enabled = false;
-                    backgroundImage.color = Color.black;
-                    storyText.fontSize = 100;
-                    storyText.text = _storyChapters[3];
-                    break;
-                case 7:
-                    LoadGameScene();
-                    return;
-            }
-
-            _chapterTimer = chapterDuration;
-        }
-        catch (Exception e)
-        {
-            // Log the exception for debugging purposes
-            Debug.LogError($"Error initializing story: {e.Message}\n{e.StackTrace}");
         }
     }
 

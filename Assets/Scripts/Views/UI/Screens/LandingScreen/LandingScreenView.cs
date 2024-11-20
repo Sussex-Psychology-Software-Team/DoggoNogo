@@ -12,23 +12,23 @@ public class LandingScreenView : MonoBehaviour
     [SerializeField] private GameObject startButton;
     [SerializeField] private RectTransform titleCardRect;
     [SerializeField] private Image titleCardImage;
-    [SerializeField] private UIAnimationController animationController;
 
-    private async void Start()
+    private void Start()
     {
-        await PlayIntroAnimation();
+        StartCoroutine(PlayIntroAnimation());
     }
 
-    private async Task PlayIntroAnimation()
+    private IEnumerator PlayIntroAnimation()
     {
-        await animationController.FadeGraphic(titleCardImage, 1f);
-        await Task.Delay(1000); // 1 second
-        await animationController.MoveVertical(titleCardRect, 328f, 1f);
-        
+        yield return StartCoroutine(GameController.Instance.Animations.FadeIn(titleCardImage, 1f));
+        yield return new WaitForSeconds(1f);
+        yield return StartCoroutine(GameController.Instance.Animations.MoveVertical(titleCardRect, 328f, 1f));
+    
         instructions.SetActive(true);
-        await animationController.FadeGraphic(instructionsText, 1f);
-        await Task.Delay(2000); // 2 seconds
-        
+        yield return StartCoroutine(GameController.Instance.Animations.FadeIn(instructionsText, 1f));
+        yield return new WaitForSeconds(2f);
+    
         startButton.SetActive(true);
     }
+
 }
