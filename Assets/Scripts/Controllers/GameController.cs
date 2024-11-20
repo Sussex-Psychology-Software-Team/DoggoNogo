@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour
 {
     public static GameController Instance { get; private set; }
+    [SerializeField] private UIAnimationController animationController;
+    public UIAnimationController Animations => animationController;
 
     [SerializeField] private GameConfig gameConfig;
     
