@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Level1StageData: MonoBehaviour
+public class Level1StageData
 {
 
     // Public
@@ -8,20 +8,9 @@ public class Level1StageData: MonoBehaviour
     public int TotalStages { get; } = 3;
     public int CurrentTargetScore { get; set; }
     // Private
-    private static Level1StageData Instance { get; set; }
     private int MinTrialsPerStage { get; } = 10;
     private int NTrials { get; }
     
-    // Construct
-    private void Awake()
-    {
-        if (Instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-    }
     public Level1StageData(Metadata metadata, GameConfig gameConfig)
     {
         NTrials = int.TryParse(metadata.l1n, out int trials) ? trials : 60;

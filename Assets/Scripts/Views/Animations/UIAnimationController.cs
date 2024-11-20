@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class UIAnimationController : MonoBehaviour
 {
+    // Note this is currently exposed by the GameController but is actually only used in the into sequences - either expand or make local
     public IEnumerator FadeIn(Graphic graphic, float duration=0.3f)
     {
         yield return StartCoroutine(Fade(graphic, 0f, 1f, duration));
