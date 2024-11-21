@@ -5,6 +5,7 @@ using UnityEngine;
 // Essentially TrialManager from before...
 public class Level1TrialController : MonoBehaviour
 {
+    // VARS
     [Header("Configuration")]
     [SerializeField] private GameConfig gameConfig;
 
@@ -16,6 +17,9 @@ public class Level1TrialController : MonoBehaviour
     private bool _isTrialActive;
     private bool _isStimulusShown;
 
+    // FUNCTIONS
+    
+    // TRIAL SETUP
     public void StartNewTrial()
     {
         ResetTrial();
@@ -24,15 +28,7 @@ public class Level1TrialController : MonoBehaviour
         Level1Events.TrialStateChanged(TrialState.WaitingForStimulus);
         StartTimer();
     }
-
-    private void Update()
-    {
-        if (!_isTrialActive) return;
-
-        HandleStimulusPresentation();
-        HandleInput();
-    }
-
+    
     private void ResetTrial()
     {
         _isTrialActive = true;
@@ -42,18 +38,26 @@ public class Level1TrialController : MonoBehaviour
 
     private double GenerateIsi()
     {
+        // Note x and y are just the default names on Vector2s
         return Random.Range(gameConfig.ISIRange.x, gameConfig.ISIRange.y);
     }
+    
+    private void StartTimer()
+    {
+        _timer.Reset();
+        _timer.Start();
+    }
 
+    // DURING TRIAL
     private void HandleStimulusPresentation()
     {
         if (_timer.IsRunning && !_isStimulusShown && 
-            _timer.Elapsed.TotalSeconds > _currentTrialIsi)
+                _timer.Elapsed.TotalSeconds > _currentTrialIsi)
         {
             ShowStimulus();
         }
     }
-
+    
     private void ShowStimulus()
     {
         var stimulusSpecifications = boneView.Show();
@@ -61,11 +65,11 @@ public class Level1TrialController : MonoBehaviour
         Level1Events.StimulusShown(stimulusSpecifications);
         Level1Events.TrialStateChanged(TrialState.WaitingForResponse);
     }
-
+    
     private void HandleInput()
     {
         bool shouldEndTrial = Input.GetKeyDown(KeyCode.DownArrow) || 
-                             _timer.Elapsed.TotalSeconds > (_currentTrialIsi + gameConfig.MaxReactionTime);
+                              _timer.Elapsed.TotalSeconds > (_currentTrialIsi + gameConfig.MaxReactionTime);
 
         if (shouldEndTrial)
         {
@@ -73,6 +77,7 @@ public class Level1TrialController : MonoBehaviour
         }
     }
 
+    // END TRIAL
     private void EndTrial()
     {
         if (!_isTrialActive) return;
@@ -80,24 +85,30 @@ public class Level1TrialController : MonoBehaviour
         _isTrialActive = false;
         _timer.Stop();
         double reactionTime = CalculateReactionTime();
+        // Perhaps remove events?
         Level1Events.ReactionTimeRecorded(reactionTime);
         Level1Events.TrialStateChanged(TrialState.Complete);
         Level1Controller.Instance.ProcessTrialResult(reactionTime);
     }
+    
     private double CalculateReactionTime()
     {
         return _timer.Elapsed.TotalSeconds - _currentTrialIsi;
     }
-
-    private void StartTimer()
-    {
-        _timer.Reset();
-        _timer.Start();
-    }
-
+    
     private void OnDisable()
     {
         _timer.Stop();
         _isTrialActive = false;
     }
+    
+    // RUN UPDATE
+    private void Update()
+    {
+        if (!_isTrialActive) return;
+
+        HandleStimulusPresentation();
+        HandleInput();
+    }
+    
 }

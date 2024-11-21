@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 public static class Level1Events 
 {
+    // Intro
+    public static event Action OnIntroStarted;
+    public static event Action OnIntroComplete;
     // Trial events
     public static event Action<double> OnNewTrialStarted;
     public static event Action<TrialResult> OnTrialCompleted;
@@ -22,6 +25,8 @@ public static class Level1Events
     public static event Action<string> OnInvalidResponse;
 
 
+    public static void IntroStarted() => OnIntroStarted?.Invoke();
+    public static void IntroComplete() => OnIntroComplete?.Invoke();
     public static void LevelStarted() => OnLevelStarted?.Invoke();
     public static void NewTrialStarted(double isi) => OnNewTrialStarted?.Invoke(isi);
     public static void StimulusShown(Dictionary<string, float> stimSpec) => OnStimulusShown?.Invoke(stimSpec);

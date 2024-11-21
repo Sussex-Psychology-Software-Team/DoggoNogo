@@ -1,13 +1,25 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Level1UIController : MonoBehaviour
 {
-    [SerializeField] private Level1UI levelUI;
+    [FormerlySerializedAs("levelUI")] [SerializeField] private Level1ViewManager levelViewManager;
     private int _currentHealthBarIndex = 0;
+    private Level1IntroductionView _introView;
+
+    private void Awake()
+    {
+        _introView = levelViewManager.GetIntroView();
+    }
 
     private void OnEnable()
     {
+        // Intro events
+        Level1Events.OnIntroStarted += HandleIntroStarted;
+        Level1Events.OnIntroComplete += HandleIntroComplete;
+        
+        // Existing gameplay events
         Level1Events.OnStageChanged += HandleStageChange;
         Level1Events.OnTrialCompleted += HandleTrialCompleted;
         Level1Events.OnLevelStarted += HandleLevelStarted;
@@ -16,12 +28,28 @@ public class Level1UIController : MonoBehaviour
     
     private void OnDisable()
     {
+        // Intro events
+        Level1Events.OnIntroStarted -= HandleIntroStarted;
+        Level1Events.OnIntroComplete -= HandleIntroComplete;
+        
+        // Existing gameplay events
         Level1Events.OnStageChanged -= HandleStageChange;
         Level1Events.OnTrialCompleted -= HandleTrialCompleted;
         Level1Events.OnLevelStarted -= HandleLevelStarted;
         Level1Events.OnScoreUpdated -= HandleScoreUpdated;
     }
-    
+
+    private void HandleIntroStarted()
+    {
+        _introView.Initialize();
+    }
+
+    private void HandleIntroComplete()
+    {
+        levelViewManager.SwitchToGameplayUI();
+    }
+
+    // Existing handlers...
     private void HandleStageChange(int newStage, int targetScore)
     {
         StartCoroutine(HandleStageTransition(newStage, targetScore));
@@ -29,19 +57,14 @@ public class Level1UIController : MonoBehaviour
 
     private IEnumerator HandleStageTransition(int newStage, int targetScore)
     {
-        // Fill current health bar
-        levelUI.UpdateHealthBar(_currentHealthBarIndex, targetScore);
-        
-        // Switch to new health bar
+        levelViewManager.UpdateHealthBar(_currentHealthBarIndex, targetScore);
         _currentHealthBarIndex = newStage - 1;
-        levelUI.ConfigureHealthBar(
+        levelViewManager.ConfigureHealthBar(
             _currentHealthBarIndex, 
             targetScore, 
             new Color(0.06770712f, 0.5817609f, 0f, 1f)
         );
-
-        // Handle level change animations
-        yield return StartCoroutine(levelUI.HandleLevelTransition(newStage));
+        yield return StartCoroutine(levelViewManager.HandleLevelTransition(newStage));
     }
 
     private void HandleLevelStarted()
@@ -51,11 +74,11 @@ public class Level1UIController : MonoBehaviour
 
     private void HandleTrialCompleted(TrialResult result)
     {
-        levelUI.DisplayTrialResult(result);
+        levelViewManager.DisplayTrialResult(result);
     }
 
     private void HandleScoreUpdated(int newScore)
     {
-        levelUI.UpdateHealthBar(_currentHealthBarIndex, newScore);
+        levelViewManager.UpdateHealthBar(_currentHealthBarIndex, newScore);
     }
 }

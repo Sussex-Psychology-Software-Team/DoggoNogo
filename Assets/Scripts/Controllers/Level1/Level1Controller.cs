@@ -8,8 +8,11 @@ public class Level1Controller : MonoBehaviour
     [Header("Configuration")]
     [SerializeField] private GameConfig gameConfig;
 
-    [Header("View References")]
+    [Header("Sub Controllers")]
     [SerializeField] private Level1UIController uiController;
+    [SerializeField] private Level1IntroController introController;
+    
+    [Header("View References")]
     [SerializeField] private BoneView boneView;
 
     private GameData _gameData;
@@ -59,6 +62,8 @@ public class Level1Controller : MonoBehaviour
         _stageData = new Level1StageData(_gameData.metadata, gameConfig); // Pass metadata to grab l1n
         _isLevelActive = true;
         GameEvents.GamePhaseChanged(GamePhase.Level1);
+        // Run intro
+        introController.StartIntro(); // Play introduction
     }
 
     public void StartLevel()
