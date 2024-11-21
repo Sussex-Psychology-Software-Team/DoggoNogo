@@ -56,9 +56,9 @@ public class Level1TrialController : MonoBehaviour
 
     private void ShowStimulus()
     {
-        var stimSpec = boneView.Show();
+        var stimulusSpecifications = boneView.Show();
         _isStimulusShown = true;
-        Level1Events.StimulusShown(stimSpec);
+        Level1Events.StimulusShown(stimulusSpecifications);
         Level1Events.TrialStateChanged(TrialState.WaitingForResponse);
     }
 
