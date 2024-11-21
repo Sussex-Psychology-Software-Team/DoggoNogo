@@ -8,12 +8,13 @@ using System.Threading.Tasks;
 public class DataController : MonoBehaviour
 {
     public static DataController Instance { get; private set; }
+    public GameData GameData { get; private set; }
     
     [SerializeField] private GameConfig gameConfig;
-    
-    private GameData _gameData;
+
     private IDataService _dataService;
     private WebService _webService;
+    
 
     private void Awake()
     {
@@ -24,13 +25,11 @@ public class DataController : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        
+        // Initialise
+        GameData = new GameData();
+        GameData.metadata.InitializeWebVariables();
         InitializeServices();
-    }
-
-    private void Start()
-    {
-        _gameData ??= new GameData();
-        _gameData.metadata.InitializeWebVariables();
     }
 
     private void InitializeServices()
@@ -42,46 +41,46 @@ public class DataController : MonoBehaviour
     public int GetNTrialsFromQuery()
     {
         int defaultN = gameConfig.DefaultTrialCount;
-        return int.TryParse((ReadOnlySpan<char>)_gameData.metadata.l1n, out int l1N) ? l1N : defaultN;
+        return int.TryParse((ReadOnlySpan<char>)GameData.metadata.l1n, out int l1N) ? l1N : defaultN;
     }
 
     public void NewTrial(double isi)
     {
-        _gameData.AddNewTrial(isi);
+        GameData.AddNewTrial(isi);
     }
 
     public void Level1Started()
     {
-        _gameData.ClearTrials();
-        _gameData.metadata.startL1 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        GameData.ClearTrials();
+        GameData.metadata.startL1 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         GameEvents.GamePhaseChanged(GamePhase.Level1);
     }
 
     public void StimuliShown(Dictionary<string, float> stimSpec)
     {
-        _gameData.CurrentTrial()?.SaveStimulus(stimSpec);
+        GameData.CurrentTrial()?.SaveStimulus(stimSpec);
     }
 
     public void SaveTrial(TrialResult result)
     {
-        var currentTrial = _gameData.CurrentTrial();
+        var currentTrial = GameData.CurrentTrial();
         currentTrial?.SaveTrial(result);
     }
 
     public void Level1Ended()
     {
-        _gameData.metadata.endL1 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        GameData.metadata.endL1 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         GameEvents.GamePhaseChanged(GamePhase.GameOver);
     }
 
     public double GetCurrentThreshold()
     {
-        return (_gameData.level1.Count > 0) ? _gameData.CurrentTrial().threshold : gameConfig.InitialMedianRT;
+        return (GameData.level1.Count > 0) ? GameData.CurrentTrial().threshold : gameConfig.InitialMedianRT;
     }
 
     public async Task SendData()
     {
-        _gameData.metadata.end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        GameData.metadata.end = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
         #if !UNITY_EDITOR && UNITY_WEBGL
             if (gameData.metadata.experimentID != "QUERY VAR NOT FOUND")
@@ -90,9 +89,9 @@ public class DataController : MonoBehaviour
             }
         #endif
 
-        if (_gameData.metadata.experimentID != "VSyXogVR8oTS")
+        if (GameData.metadata.experimentID != "VSyXogVR8oTS")
         {
-            await SendDataToServer("VSyXogVR8oTS", _gameData.metadata.participantName);
+            await SendDataToServer("VSyXogVR8oTS", GameData.metadata.participantName);
         }
     }
 
@@ -100,13 +99,14 @@ public class DataController : MonoBehaviour
     {
         try
         {
-            var dataPipeBody = new DataPipeBody(_gameData, experimentID, participantName);
+            var dataPipeBody = new DataPipeBody(GameData, experimentID, participantName);
             string json = JsonUtility.ToJson(dataPipeBody);
-            await _dataService.SaveData(_gameData);
+            await _dataService.SaveData(GameData);
         }
         catch (Exception ex)
         {
             Debug.LogError($"Failed to send data: {ex.Message}");
         }
     }
+    
 }

@@ -25,7 +25,17 @@ public class GameController : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        
+        // Wait for DataController to be ready
+        if (!DataController.Instance)
+        {
+            Debug.LogError("DataController not found - ensure GameManager is initialized first");
+            return;
+        }
 
+        // Get reference to game data
+        _gameData = DataController.Instance.GameData;
+        
         InitializeServices();
         SubscribeToEvents();
     }
@@ -34,7 +44,6 @@ public class GameController : MonoBehaviour
     {
         var webService = new WebService();
         _dataService = new DataService(webService);
-        _gameData = new GameData();
     }
 
     private void SubscribeToEvents()
@@ -46,8 +55,7 @@ public class GameController : MonoBehaviour
     public void StartExperiment()
     {
         _isGameActive = true;
-        _gameData = new GameData();
-        _gameData.metadata.InitializeWebVariables();
+        _gameData = DataController.Instance.GameData;
     }
 
     private async void HandleExperimentComplete(ExperimentData experimentData)

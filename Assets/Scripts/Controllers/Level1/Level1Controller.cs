@@ -29,12 +29,22 @@ public class Level1Controller : MonoBehaviour
         }
         Instance = this;
 
+        // Wait for DataController to be ready
+        if (!DataController.Instance || !GameController.Instance)
+        {
+            Debug.LogError("DataController or GameController not found - ensure GameManager is initialized first");
+            return;
+        }
+
+        // Get reference to game data
+        _gameData = DataController.Instance.GameData;
+        // Initialise everything else
         InitializeComponents();
     }
 
     private void Start()
     {
-        if (!GameController.Instance) // Check GameController has been initialised
+        if (!DataController.Instance || !GameController.Instance) // Check GameController has been initialised
         {
             Debug.LogError("GameController not found - ensure GameManager is initialized");
         }
@@ -53,7 +63,6 @@ public class Level1Controller : MonoBehaviour
 
     public void StartLevel()
     {
-        _levelData = new Level1Data(gameConfig);
         Level1Events.LevelStarted(); // Guess nothing happens if nothing attached?
         _trialController.StartNewTrial();
     }
