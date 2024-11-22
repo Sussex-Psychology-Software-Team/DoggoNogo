@@ -16,6 +16,5 @@ public class DataPipeBody
             : participantName + "_";
         filename = $"DoggoNogo_{pName}{StringUtils.GenerateRandomId(10)}.json";
         data = JsonUtility.ToJson(dataObject);
-        // is this returning properly?
     }
 }

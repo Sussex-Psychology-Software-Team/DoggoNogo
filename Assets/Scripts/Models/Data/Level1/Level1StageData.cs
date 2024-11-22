@@ -3,7 +3,6 @@ using UnityEngine;
 [System.Serializable]
 public class Level1StageData
 {
-
     // Public
     public int CurrentStage { get; private set; } = 1;
     public int TotalStages { get; } = 3;

@@ -1,20 +1,12 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// Overall game state and flow: Coordinates between other controllers, and manages game phases (start, end)
-// Generally, controllers manage game logic and connect Models with Views
-
 public class GameController : MonoBehaviour
 {
     public static GameController Instance { get; private set; }
-    [SerializeField] private UIAnimationController animationController;
-    public UIAnimationController Animations => animationController;
-
-    [SerializeField] private GameConfig gameConfig;
     
-    private GameData _gameData;
-    private IDataService _dataService;
-    private bool _isGameActive;
+    private bool _isExperimentActive;
+    private GamePhase _currentPhase;
 
     private void Awake()
     {
@@ -25,40 +17,23 @@ public class GameController : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        
-        // Wait for DataController to be ready
-        if (!DataController.Instance)
-        {
-            Debug.LogError("DataController not found - ensure GameManager is initialized first");
-            return;
-        }
-
-        // Get reference to game data
-        _gameData = DataController.Instance.GameData;
-        
-        InitializeServices();
         SubscribeToEvents();
-    }
-
-    private void InitializeServices()
-    {
-        var webService = new WebService();
-        _dataService = new DataService(webService);
     }
 
     private void SubscribeToEvents()
     {
-        GameEvents.OnExperimentComplete += HandleExperimentComplete;
         GameEvents.OnGamePhaseChanged += HandleGamePhaseChanged;
+        GameEvents.OnExperimentComplete += HandleExperimentComplete;
     }
 
     public void StartExperiment()
     {
-        _isGameActive = true;
-        _gameData = DataController.Instance.GameData;
+        _isExperimentActive = true;
+        SceneManager.LoadScene("Introduction");
     }
 
     private async void HandleExperimentComplete(ExperimentData experimentData)
+    public void StartLevel1()
     {
         if (!_isGameActive) return;
         
@@ -66,9 +41,12 @@ public class GameController : MonoBehaviour
         await _dataService.SaveData(_gameData);
         SceneManager.LoadScene("End");
         GameEvents.GamePhaseChanged(GamePhase.GameOver);
+        if (!_isExperimentActive) return;
+        SceneManager.LoadScene("Simple RT");
     }
 
     private void HandleGamePhaseChanged(GamePhase phase)
+    private void HandleGamePhaseChanged(GamePhase newPhase)
     {
         switch (phase)
         {
@@ -79,11 +57,22 @@ public class GameController : MonoBehaviour
                 _gameData.metadata.endL1 = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 break;
         }
+        _currentPhase = newPhase;
+        DataController.Instance.UpdateGamePhase(newPhase);
+    }
+
+    private async void HandleExperimentComplete(ExperimentData experimentData)
+    {
+        if (!_isExperimentActive) return;
+        
+        _isExperimentActive = false;
+        await DataController.Instance.SaveExperimentData(experimentData);
+        SceneManager.LoadScene("End");
     }
 
     private void OnDestroy()
     {
-        GameEvents.OnExperimentComplete -= HandleExperimentComplete;
         GameEvents.OnGamePhaseChanged -= HandleGamePhaseChanged;
+        GameEvents.OnExperimentComplete -= HandleExperimentComplete;
     }
 }
