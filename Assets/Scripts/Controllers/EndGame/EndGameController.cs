@@ -24,9 +24,9 @@ public class EndGameController : MonoBehaviour
         _scoreData = new EndGameScoreData();
     }
 
-    public float CalculatePercentileScore()
-    {
-        double threshold = DataController.Instance.GetCurrentThreshold();
-        return (float)MathUtils.CalculatePercentileNormCDF(threshold);
-    }
+    // public float CalculatePercentileScore()
+    // {
+    //     double threshold = DataController.Instance.GetCurrentThreshold();
+    //     return (float)MathUtils.CalculatePercentileNormCDF(threshold);
+    // }
 }

@@ -22,7 +22,7 @@ public class EndGameView : MonoBehaviour
     private void InitializeEndScreen()
     {
         fullscreenManager.ToggleFullscreen();
-        DisplayScore(_controller.CalculatePercentileScore());
+        //DisplayScore(_controller.CalculatePercentileScore());
     }
 
     private void DisplayScore(float percentileScore)
