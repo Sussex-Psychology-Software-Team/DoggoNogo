@@ -31,26 +31,26 @@ public class Level1Controller : MonoBehaviour
             return;
         }
         Instance = this;
-
-        // Wait for DataController to be ready
-        if (!DataController.Instance || !GameController.Instance)
+        
+        if (!ValidateControllers())
         {
-            Debug.LogError("DataController or GameController not found - ensure GameManager is initialized first");
+            Debug.LogError("Required controllers not found - ensure GameManager is initialized first");
             return;
+        }
+
+        InitializeComponents();
+    }
+    
+    private bool ValidateControllers()
+    {
+        if (DataController.Instance == null || GameController.Instance == null)
+        {
+            return false;
         }
 
         // Get reference to game data
         _gameData = DataController.Instance.GameData;
-        // Initialise everything else
-        InitializeComponents();
-    }
-
-    private void Start()
-    {
-        if (!DataController.Instance || !GameController.Instance) // Check GameController has been initialised
-        {
-            Debug.LogError("GameController not found - ensure GameManager is initialized");
-        }
+        return _gameData != null;
     }
 
     private void InitializeComponents()
@@ -59,11 +59,12 @@ public class Level1Controller : MonoBehaviour
         _scoreCalculator = new ScoreCalculator(gameConfig);
         _trialController = GetComponent<Level1TrialController>();
         _levelData = new Level1Data(gameConfig);
-        _stageData = new Level1StageData(_gameData.metadata, gameConfig); // Pass metadata to grab l1n
+        _stageData = new Level1StageData(_gameData.metadata, gameConfig);
         _isLevelActive = true;
         GameEvents.GamePhaseChanged(GamePhase.Level1);
+        
         // Run intro
-        introController.StartIntro(); // Play introduction
+        introController.StartIntro();
     }
 
     public void StartLevel()

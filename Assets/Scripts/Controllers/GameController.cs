@@ -32,31 +32,14 @@ public class GameController : MonoBehaviour
         SceneManager.LoadScene("Introduction");
     }
 
-    private async void HandleExperimentComplete(ExperimentData experimentData)
     public void StartLevel1()
     {
-        if (!_isGameActive) return;
-        
-        _isGameActive = false;
-        await _dataService.SaveData(_gameData);
-        SceneManager.LoadScene("End");
-        GameEvents.GamePhaseChanged(GamePhase.GameOver);
         if (!_isExperimentActive) return;
         SceneManager.LoadScene("Simple RT");
     }
 
-    private void HandleGamePhaseChanged(GamePhase phase)
     private void HandleGamePhaseChanged(GamePhase newPhase)
     {
-        switch (phase)
-        {
-            case GamePhase.Level1:
-                _gameData.metadata.startL1 = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                break;
-            case GamePhase.GameOver:
-                _gameData.metadata.endL1 = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                break;
-        }
         _currentPhase = newPhase;
         DataController.Instance.UpdateGamePhase(newPhase);
     }

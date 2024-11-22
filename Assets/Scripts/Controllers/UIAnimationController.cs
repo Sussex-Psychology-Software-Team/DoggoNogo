@@ -1,23 +1,38 @@
 using System.Collections;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UIAnimationController : MonoBehaviour
 {
-    // Note this is currently exposed by the GameController but is actually only used in the into sequences - either expand or make local
-    public IEnumerator FadeIn(Graphic graphic, float duration=0.3f)
+    public static UIAnimationController Instance { get; private set; }
+
+    private void Awake()
     {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
+    public IEnumerator FadeIn(Graphic graphic, float duration = 0.3f)
+    {
+        if (graphic == null) yield break;
         yield return StartCoroutine(Fade(graphic, 0f, 1f, duration));
     }
 
-    public IEnumerator FadeOut(Graphic graphic, float duration=0.3f)
+    public IEnumerator FadeOut(Graphic graphic, float duration = 0.3f)
     {
+        if (graphic == null) yield break;
         yield return StartCoroutine(Fade(graphic, 1f, 0f, duration));
     }
     
     public IEnumerator MoveVertical(RectTransform rect, float targetY, float duration)
     {
+        if (rect == null) yield break;
+        
         float startY = rect.anchoredPosition.y;
         float elapsed = 0;
 
@@ -32,11 +47,10 @@ public class UIAnimationController : MonoBehaviour
             yield return null;
         }
 
-        // Ensure we end up exactly at the target position
         rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, targetY);
     }
 
-    private static IEnumerator Fade(Graphic graphic, float startAlpha, float endAlpha, float duration=0.3f)
+    private static IEnumerator Fade(Graphic graphic, float startAlpha, float endAlpha, float duration = 0.3f)
     {
         var color = graphic.color;
         color.a = startAlpha;
@@ -55,5 +69,4 @@ public class UIAnimationController : MonoBehaviour
         color.a = endAlpha;
         graphic.color = color;
     }
-    
 }

@@ -20,12 +20,12 @@ public class LandingScreenView : MonoBehaviour
 
     private IEnumerator PlayIntroAnimation()
     {
-        yield return StartCoroutine(GameController.Instance.Animations.FadeIn(titleCardImage, 1f));
+        yield return StartCoroutine(UIAnimationController.Instance.FadeIn(titleCardImage, 1f));
         yield return new WaitForSeconds(1f);
-        yield return StartCoroutine(GameController.Instance.Animations.MoveVertical(titleCardRect, 328f, 1f));
+        yield return StartCoroutine(UIAnimationController.Instance.MoveVertical(titleCardRect, 328f, 1f));
     
         instructions.SetActive(true);
-        yield return StartCoroutine(GameController.Instance.Animations.FadeIn(instructionsText, 1f));
+        yield return StartCoroutine(UIAnimationController.Instance.FadeIn(instructionsText, 1f));
         yield return new WaitForSeconds(2f);
     
         startButton.SetActive(true);

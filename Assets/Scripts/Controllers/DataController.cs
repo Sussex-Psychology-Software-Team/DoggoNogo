@@ -5,11 +5,24 @@ using UnityEngine;
 public class DataController : MonoBehaviour
 {
     public static DataController Instance { get; private set; }
-    public GameData GameData { get; private set; }
     
     [SerializeField] private GameConfig gameConfig;
-
+    
+    private GameData _gameData;
     private IDataService _dataService;
+    
+    // Public accessor for GameData with initialization check
+    public GameData GameData 
+    { 
+        get
+        {
+            if (_gameData == null)
+            {
+                InitializeGameData();
+            }
+            return _gameData;
+        }
+    }
 
     private void Awake()
     {
@@ -20,15 +33,7 @@ public class DataController : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        
-        // Initialise
-        GameData = new GameData();
-        GameData.metadata.InitializeWebVariables();
         InitializeServices();
-    }
-
-    private void Start()
-    {
         InitializeGameData();
     }
 
@@ -77,5 +82,4 @@ public class DataController : MonoBehaviour
             Debug.LogError($"Failed to save experiment data: {ex.Message}");
         }
     }
-    
 }

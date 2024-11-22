@@ -28,11 +28,11 @@ public class Level1IntroductionView : MonoBehaviour
     // ReSharper disable Unity.PerformanceAnalysis
     private IEnumerator IntroSequence()
     {
-        yield return StartCoroutine(GameController.Instance.Animations.FadeIn(dogImage, fadeInDuration));
+        yield return StartCoroutine(UIAnimationController.Instance.FadeIn(dogImage, fadeInDuration));
         woodenSign.SetActive(true); // technically should be handled by ViewManager - but here so it doesn't appear to early
         yield return StartCoroutine(Swing(woodenSign.GetComponent<RectTransform>()));
         yield return new WaitForSeconds(2);
-        yield return StartCoroutine(GameController.Instance.Animations.FadeIn(continueText, 1f));
+        yield return StartCoroutine(UIAnimationController.Instance.FadeIn(continueText, 1f));
     }
     
     private void Update()

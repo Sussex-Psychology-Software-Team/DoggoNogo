@@ -57,7 +57,7 @@ public class IntroStoryView : MonoBehaviour
     private IEnumerator RunStorySequence()
     {
         // Fades in the story text with a duration of 1 second
-        yield return StartCoroutine(GameController.Instance.Animations.FadeIn(storyText, 1f));
+        yield return StartCoroutine(UIAnimationController.Instance.FadeIn(storyText, 1f));
 
         // Start the main story sequence
         while (_currentChapter < 7)
@@ -96,7 +96,7 @@ public class IntroStoryView : MonoBehaviour
             case 3:
                 storyText.text = "";
                 backgroundImage.color = Color.white;
-                yield return StartCoroutine(GameController.Instance.Animations.FadeIn(backgroundImage, 1f));
+                yield return StartCoroutine(UIAnimationController.Instance.FadeIn(backgroundImage, 1f));
                 dogWhineSound.Play();
                 break;
     
