@@ -6,7 +6,6 @@ public class GameController : MonoBehaviour
     public static GameController Instance { get; private set; }
     
     private bool _isExperimentActive;
-    private GamePhase _currentPhase;
 
     private void Awake()
     {
@@ -32,16 +31,9 @@ public class GameController : MonoBehaviour
         SceneManager.LoadScene("Introduction");
     }
 
-    public void StartLevel1()
+    private static void HandleGamePhaseChanged(GamePhase newPhase)
     {
-        if (!_isExperimentActive) return;
-        SceneManager.LoadScene("Simple RT");
-    }
-
-    private void HandleGamePhaseChanged(GamePhase newPhase)
-    {
-        _currentPhase = newPhase;
-        DataController.Instance.UpdateGamePhase(newPhase);
+        DataController.Instance.SavePhaseTimeStamp(newPhase);
     }
 
     private async void HandleExperimentComplete(ExperimentData experimentData)
@@ -49,7 +41,7 @@ public class GameController : MonoBehaviour
         if (!_isExperimentActive) return;
         
         _isExperimentActive = false;
-        await DataController.Instance.SaveExperimentData(experimentData);
+        await DataController.Instance.SaveExperimentData();
         SceneManager.LoadScene("End");
     }
 
