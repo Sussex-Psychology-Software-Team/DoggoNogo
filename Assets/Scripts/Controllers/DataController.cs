@@ -49,7 +49,8 @@ public class DataController : MonoBehaviour
         _gameData.metadata.InitializeWebVariables();
     }
     
-    public void UpdateGamePhase(GamePhase phase)
+    // Save start and end times of levels
+    public void SavePhaseTimeStamp(GamePhase phase)
     {
         string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         
@@ -68,7 +69,8 @@ public class DataController : MonoBehaviour
         }
     }
 
-    public async Task SaveExperimentData(ExperimentData experimentData)
+    // Save the experimental data
+    public async Task SaveExperimentData()
     {
         if (_gameData == null) return;
 
