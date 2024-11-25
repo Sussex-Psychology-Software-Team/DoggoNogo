@@ -10,7 +10,6 @@ public class Level1Controller : MonoBehaviour
 
     [Header("Sub Controllers")]
     [SerializeField] private Level1UIController uiController;
-    [SerializeField] private Level1IntroController introController;
     
     [Header("View References")]
     [SerializeField] private BoneView boneView;
@@ -22,6 +21,9 @@ public class Level1Controller : MonoBehaviour
     private ReactionTimeProcessor _rtProcessor;
     private ScoreCalculator _scoreCalculator;
     private bool _isLevelActive;
+    private bool _waitingForInstructionsContinueInput;
+    private bool _waitingForReadyInput;
+    private bool _changeStagePaused;
 
     private void Awake() // initialised this controller and related processes
     {
@@ -39,6 +41,7 @@ public class Level1Controller : MonoBehaviour
         }
 
         InitializeComponents();
+        PlayIntroAnimation();
     }
     
     private bool ValidateControllers()
@@ -60,19 +63,51 @@ public class Level1Controller : MonoBehaviour
         _trialController = GetComponent<Level1TrialController>();
         _levelData = new Level1Data(gameConfig);
         _stageData = new Level1StageData(_gameData.metadata, gameConfig);
+        // Level control bools
         _isLevelActive = true;
+        _waitingForInstructionsContinueInput = false;
+        _waitingForReadyInput = false;
+        _changeStagePaused = false;
         GameEvents.GamePhaseChanged(GamePhase.Level1);
-        
-        // Run intro
-        introController.StartIntro();
     }
 
-    public void StartLevel()
+    private static void PlayIntroAnimation()
     {
-        Level1Events.LevelStarted(); // Guess nothing happens if nothing attached?
-        _trialController.StartNewTrial();
+        Level1Events.Level1Start(); // Trigger level1
     }
 
+    public void AllowIntroContinue()
+    {
+        _waitingForInstructionsContinueInput = true;
+    }
+    
+    public void AllowReadyContinue()
+    {
+        _waitingForReadyInput = true;
+    }
+    
+    private void Update()
+    {
+        if (_waitingForInstructionsContinueInput && Input.GetKeyDown(KeyCode.Space))
+        {
+            _waitingForInstructionsContinueInput = false;
+            Level1Events.IntroComplete();
+        } else if (_waitingForReadyInput && Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            _waitingForReadyInput = false;
+            Level1Events.LevelStarted();
+            _trialController.StartNewTrial();
+        }
+        else if (_changeStagePaused && Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            _changeStagePaused = false;
+            Level1Events.StageInputReceived();
+            _trialController.StartNewTrial();
+        }
+    }
+
+    
+    // Processing data
     public void ProcessTrialResult(double reactionTime)
     {
         if (!_isLevelActive) return;
@@ -111,6 +146,7 @@ public class Level1Controller : MonoBehaviour
     private void CheckStageProgress(TrialResult result)
     {
         if (result.TotalScore < _stageData.CurrentTargetScore || !_stageData.AdvanceStage()) return;
+        
         int newTargetScore = _stageData.CalculateTargetScore(
             _levelData.validTrialCount,
             gameConfig.MinScore
@@ -118,6 +154,10 @@ public class Level1Controller : MonoBehaviour
             
         Level1Events.StageChanged(_stageData.CurrentStage, newTargetScore);
         _stageData.CurrentTargetScore = newTargetScore;
+        
+        // Wait for input after stage change
+        _changeStagePaused = true;
+        Level1Events.WaitingForStageInput();
     }
 
     private void UpdateLevelData(bool isValidTrial, double reactionTime)
@@ -147,6 +187,7 @@ public class Level1Controller : MonoBehaviour
         };
     }
 
+    // Ending level
     private bool ShouldEndLevel()
     {
         return _stageData.CurrentStage == _stageData.TotalStages && _levelData.currentScore >= _stageData.CurrentTargetScore;

@@ -2,9 +2,12 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Serialization;
 
+// So this contains references to the views and UI, whilst level 1 controller doesn't.
+// Really some of the handlers should feature in level1 controller
 public class Level1UIController : MonoBehaviour
 {
-    [FormerlySerializedAs("levelUI")] [SerializeField] private Level1ViewManager levelViewManager;
+    
+    [SerializeField] private Level1ViewManager levelViewManager;
     private int _currentHealthBarIndex = 0;
     private Level1IntroductionView _introView;
 
@@ -15,38 +18,54 @@ public class Level1UIController : MonoBehaviour
 
     private void OnEnable()
     {
-        // Intro events
-        Level1Events.OnIntroStarted += HandleIntroStarted;
-        Level1Events.OnIntroComplete += HandleIntroComplete;
+        // Setup events
+        Level1Events.OnLevel1Start += HandleLevel1Start;
+        Level1Events.OnIntroAnimationComplete += HandleIntroAnimationComplete;
         
-        // Existing gameplay events
+        Level1Events.OnIntroComplete += HandleIntroComplete;
+        Level1Events.OnLevelStarted += HandleLevelStarted;
+        
+        // Level change events
         Level1Events.OnStageChanged += HandleStageChange;
         Level1Events.OnTrialCompleted += HandleTrialCompleted;
-        Level1Events.OnLevelStarted += HandleLevelStarted;
         Level1Events.OnScoreUpdated += HandleScoreUpdated;
     }
     
     private void OnDisable()
     {
-        // Intro events
-        Level1Events.OnIntroStarted -= HandleIntroStarted;
-        Level1Events.OnIntroComplete -= HandleIntroComplete;
+        // Setup events
+        Level1Events.OnLevel1Start -= HandleLevel1Start;
+        Level1Events.OnIntroAnimationComplete -= HandleIntroAnimationComplete;
         
-        // Existing gameplay events
+        Level1Events.OnIntroComplete -= HandleIntroComplete;
+        Level1Events.OnLevelStarted -= HandleLevelStarted;
+
+        // Level change events
         Level1Events.OnStageChanged -= HandleStageChange;
         Level1Events.OnTrialCompleted -= HandleTrialCompleted;
-        Level1Events.OnLevelStarted -= HandleLevelStarted;
         Level1Events.OnScoreUpdated -= HandleScoreUpdated;
     }
-
-    private void HandleIntroStarted()
+    
+    private void HandleLevel1Start()
     {
-        _introView.Initialize();
+        _introView.PlayInstructionsSignAnimation();
     }
 
+    private void HandleIntroAnimationComplete()
+    {
+        Level1Controller.Instance.AllowIntroContinue();
+    }
+    
     private void HandleIntroComplete()
     {
         levelViewManager.SwitchToGameplayUI();
+        Level1Controller.Instance.AllowReadyContinue();
+    }
+    
+    private void HandleLevelStarted()
+    {
+        levelViewManager.ClearInstructions();
+        _currentHealthBarIndex = 0;
     }
 
     // Existing handlers...
@@ -65,11 +84,6 @@ public class Level1UIController : MonoBehaviour
             new Color(0.06770712f, 0.5817609f, 0f, 1f)
         );
         yield return StartCoroutine(levelViewManager.HandleLevelTransition(newStage));
-    }
-
-    private void HandleLevelStarted()
-    {
-        _currentHealthBarIndex = 0;
     }
 
     private void HandleTrialCompleted(TrialResult result)

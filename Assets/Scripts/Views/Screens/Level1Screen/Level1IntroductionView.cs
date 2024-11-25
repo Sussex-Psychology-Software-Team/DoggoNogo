@@ -17,10 +17,8 @@ public class Level1IntroductionView : MonoBehaviour
     [SerializeField] private float swingDuration = 4f;
     [SerializeField] private float swingFrequency = 3f;
     [SerializeField] private float swingDampening = 3f;
-
-    private bool _viewingInstructions = true; // Toggle to stop double presses of spacebar
     
-    public void Initialize()
+    public void PlayInstructionsSignAnimation()
     {
         StartCoroutine(IntroSequence());
     }
@@ -33,19 +31,11 @@ public class Level1IntroductionView : MonoBehaviour
         yield return StartCoroutine(Swing(woodenSign.GetComponent<RectTransform>()));
         yield return new WaitForSeconds(2);
         yield return StartCoroutine(UIAnimationController.Instance.FadeIn(continueText, 1f));
-    }
-    
-    private void Update()
-    {
-        if (_viewingInstructions && Input.GetKeyDown(KeyCode.Space))
-        {
-            CompleteIntro();
-        }
+        Level1Events.IntroAnimationComplete(); // See level 1 intro controller
     }
 
-    private void CompleteIntro()
+    private void CompleteLevel1Intro()
     {
-        _viewingInstructions = false;
         woodenSign.SetActive(false);
         Level1Events.IntroComplete(); // Triggers OnIntroComplete Event loaded in L1IntroController, 
     }

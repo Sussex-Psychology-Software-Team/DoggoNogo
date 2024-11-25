@@ -42,6 +42,11 @@ public class Level1ViewManager : MonoBehaviour
         feedbackView.DisplayTrialResult(result);
     }
 
+    public void ClearInstructions()
+    {
+        feedbackView.SetPrompt("");
+    }
+
     public IEnumerator HandleLevelTransition(int newStage)
     {
         yield return StartCoroutine(feedbackView.HandleLevelChange(newStage));
