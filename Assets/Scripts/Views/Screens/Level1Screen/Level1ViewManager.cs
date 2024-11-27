@@ -18,14 +18,33 @@ public class Level1ViewManager : MonoBehaviour
     [SerializeField] private GameObject scoreContainer;
     [SerializeField] private FeedbackView feedbackView;
     [SerializeField] private List<HealthBarView> healthBars;
-
-    public void SwitchToGameplayUI()
+    
+    // Initial continue on Ready
+    private bool _allowReadyContinue = false;
+    public Level1IntroductionView GetIntroView() => introView;
+    
+    public void PromptAndAllowStartLevel() // Set this after intro signpost is hidden
     {
         scoreContainer.SetActive(true);
+        _allowReadyContinue = true;
+    }
+    
+    private void Update()
+    {
+        if (_allowReadyContinue && Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            _allowReadyContinue = false;
+            StartLevel();
+        }
+    }
+    
+    private void StartLevel()
+    {
+        ClearInstructions();
+        Level1Controller.Instance.StartLevel();
     }
 
-    public Level1IntroductionView GetIntroView() => introView;
-
+    // Manage gameplay views
     public void UpdateHealthBar(int index, float value)
     {
         healthBars[index].SetHealth(value);
@@ -42,7 +61,7 @@ public class Level1ViewManager : MonoBehaviour
         feedbackView.DisplayTrialResult(result);
     }
 
-    public void ClearInstructions()
+    private void ClearInstructions()
     {
         feedbackView.SetPrompt("");
     }

@@ -17,8 +17,9 @@ public class Level1IntroductionView : MonoBehaviour
     [SerializeField] private float swingDuration = 4f;
     [SerializeField] private float swingFrequency = 3f;
     [SerializeField] private float swingDampening = 3f;
-    
-    public void PlayInstructionsSignAnimation()
+
+    private bool _allowContinue = false;
+    public void PlayInstructionsAnimation()
     {
         StartCoroutine(IntroSequence());
     }
@@ -31,13 +32,21 @@ public class Level1IntroductionView : MonoBehaviour
         yield return StartCoroutine(Swing(woodenSign.GetComponent<RectTransform>()));
         yield return new WaitForSeconds(2);
         yield return StartCoroutine(UIAnimationController.Instance.FadeIn(continueText, 1f));
-        Level1Events.IntroAnimationComplete(); // See level 1 intro controller
+        _allowContinue = true;
+    }
+
+    private void Update() {
+        if (_allowContinue && Input.GetKeyDown(KeyCode.Space))
+        {
+            _allowContinue = false;
+            CompleteLevel1Intro();  // Tells controller WHAT happened
+        }
     }
 
     private void CompleteLevel1Intro()
     {
-        woodenSign.SetActive(false);
-        Level1Events.IntroComplete(); // Triggers OnIntroComplete Event loaded in L1IntroController, 
+        woodenSign.SetActive(false); // Need to call this after down press
+        Level1Controller.Instance.PromptStartLevel(); // Show the UI and allow downpress start
     }
     
     // Swing Animation - move to separate location!

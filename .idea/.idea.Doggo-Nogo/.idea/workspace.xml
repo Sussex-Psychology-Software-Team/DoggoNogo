@@ -5,11 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5fe89b5f-2f76-4cfb-bd20-c0a70dd47b44" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Doggo-Nogo/.idea/projectSettingsUpdater.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Doggo-Nogo/.idea/projectSettingsUpdater.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Doggo-Nogo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Doggo-Nogo/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Simple RT.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Simple RT.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Controllers/Level1/Level1Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Controllers/Level1/Level1Controller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Controllers/Level1/Level1IntroController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Controllers/Level1/Level1IntroController.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Controllers/Level1/Level1UIController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Controllers/Level1/Level1UIController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Core/Events/Level1Events.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Core/Events/Level1Events.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Views/Screens/Level1Screen/Level1IntroductionView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Views/Screens/Level1Screen/Level1IntroductionView.cs" afterDir="false" />
@@ -76,6 +74,13 @@
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "CodeLensConfigurable",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "rider.external.source.directories": [
+      "/Users/maxlovell/Library/Application Support/JetBrains/Rider2023.2/resharper-host/DecompilerCache",
+      "/Users/maxlovell/Library/Application Support/JetBrains/Rider2023.2/resharper-host/SourcesCache",
+      "/Users/maxlovell/.local/share/Symbols/src"
+    ]
   }
 }]]></component>
   <component name="RunManager" selected="Shell Script.setup_mvc_structure.sh">
@@ -115,9 +120,6 @@
       <option name="listenPortForConnections" value="false" />
       <option name="pid" />
       <option name="projectPathOnTarget" />
-      <option name="runtimes">
-        <list />
-      </option>
       <option name="selectedOptions">
         <list />
       </option>
@@ -128,9 +130,6 @@
       <option name="listenPortForConnections" value="false" />
       <option name="pid" />
       <option name="projectPathOnTarget" />
-      <option name="runtimes">
-        <list />
-      </option>
       <option name="selectedOptions">
         <list />
       </option>
@@ -164,6 +163,7 @@
       <workItem from="1732122475212" duration="565000" />
       <workItem from="1732182495619" duration="18508000" />
       <workItem from="1732533265964" duration="11607000" />
+      <workItem from="1732704572728" duration="10120000" />
     </task>
     <servers />
   </component>

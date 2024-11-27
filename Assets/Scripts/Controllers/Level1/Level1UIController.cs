@@ -18,13 +18,6 @@ public class Level1UIController : MonoBehaviour
 
     private void OnEnable()
     {
-        // Setup events
-        Level1Events.OnLevel1Start += HandleLevel1Start;
-        Level1Events.OnIntroAnimationComplete += HandleIntroAnimationComplete;
-        
-        Level1Events.OnIntroComplete += HandleIntroComplete;
-        Level1Events.OnLevelStarted += HandleLevelStarted;
-        
         // Level change events
         Level1Events.OnStageChanged += HandleStageChange;
         Level1Events.OnTrialCompleted += HandleTrialCompleted;
@@ -33,39 +26,21 @@ public class Level1UIController : MonoBehaviour
     
     private void OnDisable()
     {
-        // Setup events
-        Level1Events.OnLevel1Start -= HandleLevel1Start;
-        Level1Events.OnIntroAnimationComplete -= HandleIntroAnimationComplete;
-        
-        Level1Events.OnIntroComplete -= HandleIntroComplete;
-        Level1Events.OnLevelStarted -= HandleLevelStarted;
-
         // Level change events
         Level1Events.OnStageChanged -= HandleStageChange;
         Level1Events.OnTrialCompleted -= HandleTrialCompleted;
         Level1Events.OnScoreUpdated -= HandleScoreUpdated;
     }
     
-    private void HandleLevel1Start()
+    // Level1 Setup and ready states
+    public void PlayInstructionsAnimation()
     {
-        _introView.PlayInstructionsSignAnimation();
-    }
-
-    private void HandleIntroAnimationComplete()
-    {
-        Level1Controller.Instance.AllowIntroContinue();
+        _introView.PlayInstructionsAnimation();
     }
     
-    private void HandleIntroComplete()
+    public void TriggerStartLevelPrompt()
     {
-        levelViewManager.SwitchToGameplayUI();
-        Level1Controller.Instance.AllowReadyContinue();
-    }
-    
-    private void HandleLevelStarted()
-    {
-        levelViewManager.ClearInstructions();
-        _currentHealthBarIndex = 0;
+        levelViewManager.PromptAndAllowStartLevel();
     }
 
     // Existing handlers...

@@ -5,12 +5,6 @@ public static class Level1Events
 {
     
     // Intro
-    public static event Action OnLevel1Start;
-    public static void Level1Start() => OnLevel1Start?.Invoke(); // Start intro animation on load
-    
-    public static event Action OnIntroAnimationComplete;
-    public static void IntroAnimationComplete() => OnIntroAnimationComplete?.Invoke(); // On end intro animation allow spacebar to move the scene on
-    
     public static event Action OnIntroComplete;
     public static void IntroComplete() => OnIntroComplete?.Invoke(); // Allow for 'ready? press down arrow' continue
     

@@ -21,8 +21,6 @@ public class Level1Controller : MonoBehaviour
     private ReactionTimeProcessor _rtProcessor;
     private ScoreCalculator _scoreCalculator;
     private bool _isLevelActive;
-    private bool _waitingForInstructionsContinueInput;
-    private bool _waitingForReadyInput;
     private bool _changeStagePaused;
 
     private void Awake() // initialised this controller and related processes
@@ -41,7 +39,7 @@ public class Level1Controller : MonoBehaviour
         }
 
         InitializeComponents();
-        PlayIntroAnimation();
+        PlayInstructionsAnimation();
     }
     
     private bool ValidateControllers()
@@ -65,40 +63,30 @@ public class Level1Controller : MonoBehaviour
         _stageData = new Level1StageData(_gameData.metadata, gameConfig);
         // Level control bools
         _isLevelActive = true;
-        _waitingForInstructionsContinueInput = false;
-        _waitingForReadyInput = false;
         _changeStagePaused = false;
-        GameEvents.GamePhaseChanged(GamePhase.Level1);
-    }
-
-    private static void PlayIntroAnimation()
-    {
-        Level1Events.Level1Start(); // Trigger level1
-    }
-
-    public void AllowIntroContinue()
-    {
-        _waitingForInstructionsContinueInput = true;
     }
     
-    public void AllowReadyContinue()
+    // Level 1 Setup and ready states
+    private void PlayInstructionsAnimation()
     {
-        _waitingForReadyInput = true;
+        uiController.PlayInstructionsAnimation();
+    }
+
+    public void PromptStartLevel()
+    {
+        uiController.TriggerStartLevelPrompt();
+    }
+
+    public void StartLevel()
+    {
+        _trialController.StartNewTrial();
     }
     
+    // -------
     private void Update()
-    {
-        if (_waitingForInstructionsContinueInput && Input.GetKeyDown(KeyCode.Space))
-        {
-            _waitingForInstructionsContinueInput = false;
-            Level1Events.IntroComplete();
-        } else if (_waitingForReadyInput && Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            _waitingForReadyInput = false;
-            Level1Events.LevelStarted();
-            _trialController.StartNewTrial();
-        }
-        else if (_changeStagePaused && Input.GetKeyDown(KeyCode.DownArrow))
+    { 
+        // Changing level code
+        if (_changeStagePaused && Input.GetKeyDown(KeyCode.DownArrow))
         {
             _changeStagePaused = false;
             Level1Events.StageInputReceived();
