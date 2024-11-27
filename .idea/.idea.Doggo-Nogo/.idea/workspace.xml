@@ -6,12 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="5fe89b5f-2f76-4cfb-bd20-c0a70dd47b44" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Doggo-Nogo/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Doggo-Nogo/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Simple RT.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Simple RT.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Controllers/Level1/Level1Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Controllers/Level1/Level1Controller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Controllers/Level1/Level1UIController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Controllers/Level1/Level1UIController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Core/Events/Level1Events.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Core/Events/Level1Events.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Views/Screens/Level1Screen/Level1IntroductionView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Views/Screens/Level1Screen/Level1IntroductionView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Views/Screens/Level1Screen/Level1ViewManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Views/Screens/Level1Screen/Level1ViewManager.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,11 +30,15 @@
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Models/GameData.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Services/DataService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Services/WebService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Views/Animations/UIAnimationController.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Views/Game/Components/BoneView.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Views/UI/Screens/GameOverUI.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.2d.animation@9.0.4/Editor/SkinningModule/UI/WeightPainterPanel.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.burst@1.8.9/Tests/Editor/LongTextAreaTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.burst@1.8.9/Tests/Runtime/Shared/050-TestStructs.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.burst@1.8.9/Unity.Burst.CodeGen/FunctionPointerInvokeTransform.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.burst@1.8.9/Unity.Burst.CodeGen/GenericContext.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.burst@1.8.9/Unity.Burst.CodeGen/ILPostProcessingLegacy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Editor/TMPro_FontAssetCreatorWindow.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.timeline@1.7.6/Editor/Manipulators/EditMode.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.timeline@1.7.6/Editor/Window/TimelineWindow_PlaybackControls.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Editor/UI/SelectableEditor.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Tests/Runtime/Slider/SliderTests.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
@@ -163,7 +161,7 @@
       <workItem from="1732122475212" duration="565000" />
       <workItem from="1732182495619" duration="18508000" />
       <workItem from="1732533265964" duration="11607000" />
-      <workItem from="1732704572728" duration="10120000" />
+      <workItem from="1732704572728" duration="14880000" />
     </task>
     <servers />
   </component>
