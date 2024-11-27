@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 // Level 1 main controller: Initializes components, High-level level management, Communicates with GameController
@@ -93,9 +94,13 @@ public class Level1Controller : MonoBehaviour
             _trialController.StartNewTrial();
         }
     }
-
     
     // Processing data
+    public void SaveStimulusSpecifications(Dictionary<string, float> stimulusSpecifications)
+    {
+        _gameData.CurrentTrial().SaveStimulus(stimulusSpecifications);
+    }
+    
     public void ProcessTrialResult(double reactionTime)
     {
         if (!_isLevelActive) return;
